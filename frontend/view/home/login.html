@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Soccer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .dialog-overlay {
+      position: fixed;
+      z-index: 9999;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .dialog-content {
+      background: #111;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+      color: #fff;
+      text-align: center;
+    }
+
+    .dialog-content h3 {
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .dialog-item {
+      background: #222;
+      margin-bottom: 10px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .dialog-item:hover {
+      background-color: #e50914;
+      border: 1px solid #fff;
+      color: white;
+    }
+
+    .login-page-wrapper {
+      background: url('images/bg_3.jpg') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .custom-login-box-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .custom-login-box {
+      max-width: 520px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 40px;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .custom-login-box h2 {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .custom-login-input {
+      background: transparent;
+      border: 1px solid #fff;
+      color: #fff;
+    }
+
+    .custom-login-input::placeholder {
+      color: #ccc;
+    }
+
+    .custom-login-button {
+      background-color: #e50914;
+      border: none;
+      padding: 10px;
+      font-weight: bold;
+      width: 100%;
+    }
+
+    .custom-login-links {
+      font-size: 0.9rem;
+      color: #ccc;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .custom-login-links a {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .custom-header {
+      background-color: rgba(0, 0, 0, 0.7) !important;
+    }
+
+    .footer-section {
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body class="login-page-wrapper">
+<!-- DIALOG CHỌN ĐỘI -->
+<div id="dialog-chon-doi" style="display: none;" class="dialog-overlay">
+  <div class="dialog-content">
+    <h3>Chọn đội bạn muốn quản lý</h3>
+    <div id="danhSachDoi"></div>
+  </div>
+</div>
+
+  <!-- HEADER -->
+  <header class="site-navbar py-4 custom-header" role="banner">
+    <div class="container">
+      <div class="d-flex align-items-center">
+        <div class="site-logo">
+          <a href="index.html"><img src="images/logo.png" alt="Logo"></a>
+        </div>
+        <div class="ml-auto">
+          <nav class="site-navigation position-relative text-right" role="navigation">
+            <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
+              <li><a href="index.html" class="nav-link">Home</a></li>
+              <li><a href="matches.html" class="nav-link">Matches</a></li>
+              <li><a href="players.html" class="nav-link">Players</a></li>
+              <li><a href="blog.html" class="nav-link">Blog</a></li>
+              <li><a href="contact.html" class="nav-link">Contact</a></li>
+              <li class="active"><a href="login.html" class="nav-link">Login</a></li>
+            </ul>
+          </nav>
+          <a href="#" class="d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black float-right text-white">
+            <span class="icon-menu h3 text-white"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- LOGIN BOX -->
+  <main class="custom-login-box-wrapper">
+    <div class="custom-login-box">
+      <h2>Đăng nhập</h2>
+      <form id ="loginForm" method="POST">
+        <div class="form-group">
+          <input type="text" id="taiKhoan" class="form-control custom-login-input" placeholder="Tài khoản" required>
+        </div>
+        <div class="form-group">
+          <input type="password" id="matKhau" class="form-control custom-login-input" placeholder="Mật khẩu" required>
+        </div>
+        <button type="submit" class="btn btn-primary custom-login-button">Đăng nhập</button>
+      </form>
+      <div class="custom-login-links">
+        <p><a href="#">Quên mật khẩu?</a></p>
+        <p>Không có tài khoản? <a href="#">Đăng ký</a></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer-section">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <div class="pt-2">
+            <p>
+              &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved |
+              Made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="/backend/services/doi_tuong/dang_nhap/dangNhap.js"></script>
+  <script type="module" src="/backend/services/global/global.js"></script>
+  <script type="module" src="/backend/services/global/hamChung.js"></script>
+</body>
+
+</html>
