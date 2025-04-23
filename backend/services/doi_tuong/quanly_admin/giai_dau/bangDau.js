@@ -89,6 +89,14 @@ function button_sua(data) {
             maBangDau.value = item.ma_bang_dau;
             tenBangDau.value = item.ten_bang_dau;
             maGiaiDau.value = item.ma_giai_dau;
+
+
+            
+            // Scroll lên đầu trang
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         });
     });
 }

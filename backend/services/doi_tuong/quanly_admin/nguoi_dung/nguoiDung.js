@@ -110,6 +110,13 @@ function button_sua(data) {
             email.value = item.email;
             soDienThoai.value = item.so_dien_thoai;
             ngayTao.value = item.ngay_tao;
+
+            
+            // Scroll lên đầu trang
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         });
     });
 }

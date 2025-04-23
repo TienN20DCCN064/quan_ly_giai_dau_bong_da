@@ -1,5 +1,5 @@
 const congAPI = 4002;
-const IPv4_Address =  "192.168.110.122";
+const IPv4_Address =  "192.168.1.46";
 // const linkCongAPI = "http://localhost:" + congAPI + "/api/";
 // ex : http://192.168.1.136:4002/api
 // ex : http://localhost:4002/api
@@ -26,6 +26,9 @@ const GlobalStore = {
     getLinkCongAPI() {
         return linkCongAPI;
     },
+    getLinkCongApi_image(){
+        return "http://"+IPv4_Address +":"+ 5000 + "/api/image";
+    }
 
 
 };

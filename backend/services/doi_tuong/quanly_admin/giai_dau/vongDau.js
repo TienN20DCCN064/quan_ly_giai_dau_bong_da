@@ -31,6 +31,14 @@ function button_sua(data) {
             document.getElementById("maVongDau").value = item.ma_vong_dau;
             document.getElementById("tenVong").value = item.ten_vong;
             document.getElementById("moTa").value = item.mo_ta;
+
+
+            
+            // Scroll lên đầu trang
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         });
     });
 }

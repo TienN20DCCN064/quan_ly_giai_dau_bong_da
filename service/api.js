@@ -11,7 +11,7 @@ const cors = require("cors");   // cho phép các tài nguyên được tải t�
 // const fs = require('fs');     
 // const upload = multer({ dest: 'uploads/' }); // Lưu file tạm trước khi upload lên Cloudinary
 
-                     // đọc file
+// đọc file
 // const path = require('path'); // Import path module  
 
 
@@ -34,13 +34,14 @@ app.use(cors());
 
 // Middleware để phân tích cú pháp JSON
 app.use(express.json());
+// cd "C:\Users\vanti\Desktop\5_2\6A _ NMCN Phần Mềm_ Châu Văn Vân\DO_AN\quan_ly_tran_dau\service"
 
 // Kết nối cơ sở dữ liệu
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: "quan_ly_giai_dau_1",
+    database: "quan_ly_giai_dau_new",
 });
 
 // Kiểm tra kết nối
@@ -57,19 +58,25 @@ db.connect((err) => {
 // Danh sách bảng và khóa chính tương ứng
 const tables = {
     "tai_khoan": ["tai_khoan"],         // Khóa chính là tài khoản
-    "vai_tro": ["ma_vai_tro"],           // Khóa chính là mã vai trò
     "nguoi_dung": ["ma_nguoi_dung"],      // Giữ mã người dùng thay vì tài khoản vì có thể có thông tin bổ sung
+    "vai_tro": ["ma_vai_tro"],           // Khóa chính là mã vai trò
     "giai_dau": ["ma_giai_dau"],          // Khóa chính là mã giải đấu
     "doi_bong": ["ma_doi_bong"],          // Khóa chính là mã đội bóng
     "vi_tri_cau_thu": ["ma_vi_tri"],      // Đổi tên từ "vi_tri" thành "vi_tri_cau_thu" để khớp với CSDL
     "cau_thu": ["ma_cau_thu"],            // Khóa chính là mã cầu thủ
     "cau_thu_giai_dau": ["ma_cau_thu", "ma_giai_dau"], // Khóa chính là (ma_cau_thu, ma_giai_dau)
+    "doi_bong_giai_dau": ["ma_doi_bong", "ma_giai_dau"], //// newwwww
+    "trong_tai": ["ma_trong_tai"],        // Bảng trọng tài, khóa chính là mã trọng tài
+
     "vong_dau": ["ma_vong_dau"],         // Thêm bảng vòng đấu
     "tran_dau": ["ma_tran_dau"],          // Khóa chính là mã trận đấu
     "ket_qua_tran_dau": ["ma_tran_dau"],  // Sử dụng ma_tran_dau làm khóa chính thay vì tạo ma_ket_qua riêng
-    "trong_tai": ["ma_trong_tai"],        // Bảng trọng tài, khóa chính là mã trọng tài
     "bang_dau": ["ma_bang_dau"],          // Thêm bảng bảng đấu
-    "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"] // Khóa chính là (ma_doi_bong, ma_bang_dau)
+    "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
+    "dang_ky_tham_gia_giai": ["ma_giai_dau","ma_doi_bong"],         // Thêm bảng vòng đấu
+    "loai_trong_tai":["ma_loai_trong_tai"],
+    "trong_tai_tran_dau":["ma_tran_dau","ma_trong_tai"],
+    "san_van_dong":["ma_san"],
 };
 
 

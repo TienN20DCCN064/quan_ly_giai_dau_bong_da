@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<c:set var="root" value="${pageContext.servletContext.contextPath}" />
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Quản lý nhân viên</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link href="/frontend/public/src/styles/resources/quanly/css/styles.css" rel="stylesheet" />
+
+    <link href="/frontend/public/src/styles/resources/table/table.css" rel="stylesheet" />
+    <link href="/frontend/public/src/styles/resources/table/time.css" rel="stylesheet" />
+    <link rel="icon" href="/frontend/public/src/styles/resources/img/logowebsite.png" type="image/png" />
+
+
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&amp;display=swap" rel="stylesheet" />
+
+    <style>
+        label {
+            display: block;
+            font: 1rem 'Fira Sans', sans-serif;
+        }
+
+        input,
+        label {
+            margin: 0.4rem 0;
+        }
+
+        /* body {
+            font-family: "Roboto", sans-serif;
+        } */
+    </style>
+
+
+
+</head>
+
+<body class="sb-nav-fixed">
+
+    <div id="chen"></div>
+    <script>
+        // Sử dụng Fetch API để tải nội dung file HTML và chèn vào vị trí div
+        fetch('/frontend/public/src/common/quanly/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('chen').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading HTML:', error));
+    </script>
+    <style>
+        #layoutSidenav_content {
+            margin-left: 225px;
+            /* Đảm bảo có không gian cho menu bên trái */
+            margin-top: 100px;
+            /* Giữ khoảng cách với phần trên cùng của trang */
+            position: relative;
+            /* Đảm bảo phần tử này giữ vị trí ổn định */
+            min-height: 100vh;
+
+            /* Đảm bảo chiều cao luôn đủ để chứa nội dung */
+            #calendar {
+                display: none;
+            }
+        }
+    </style>
+    <div id="layoutSidenav_content">
+        <main>
+
+            <div class="container-fluid px-4">
+                <div
+                    class="bg-[#1b4d00] text-white px-4 py-3 flex items-center space-x-6 text-sm sm:text-base font-semibold">
+                    <div id="ranking" class="flex items-center space-x-2">
+                        <button class="fas fa-calendar-alt"></button>
+                        <span>Bảng xếp hạng</span>
+                    </div>
+                    <div id="result" class="flex items-center space-x-2">
+                        <button class="fas fa-calendar-alt"></button>
+                        <span>Kết quả thi đấu</span>
+                    </div>
+
+                </div>
+
+                <!-- Date navigation -->
+                <div class="flex items-center border-b border-gray-300 py-3 space-x-2 overflow-x-auto no-scrollbar">
+                    <button id="prev-btn" aria-label="Previous"
+                        class="flex items-center justify-center w-8 h-8 rounded-full border border-gray-300 text-gray-600 shrink-0">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <div id="day-list"
+                        class="flex space-x-6 text-center text-xs text-gray-600 font-normal whitespace-nowrap">
+                        <!-- JavaScript sẽ thêm các ngày vào đây -->
+                    </div>
+
+                    <button id="next-btn" aria-label="Next"
+                        class="flex items-center justify-center w-8 h-8 rounded-full border border-gray-300 text-gray-600 shrink-0">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                    <button id="lich" aria-label="Calendar"
+                        class="ml-3 flex items-center justify-center w-10 h-10 rounded-lg bg-orange-500 text-white shrink-0">
+                        <i class="fas fa-calendar-alt text-lg"></i>
+                    </button>
+
+                    <div id="calendarContainer" class="col-md-3 hidden">
+                        <input type="date" id="ngayDienRa" class="form-control" required
+                            style="opacity: 0; position: absolute; pointer-events: none;" />
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+
+                <div class="flex mt-6 space-x-6">
+                    <!-- Left main content -->
+                    <div id="schedule" class="flex-1 max-w-4xl"></div>
+
+                    <!-- Right sidebar -->
+                    <!-- <div
+                        class="w-60 border-l border-gray-300 pl-4 max-h-[480px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                        <div class="flex items-center space-x-2 text-green-600 font-semibold mb-4">
+                            <i class="fas fa-futbol text-lg">
+                            </i>
+                            <span>
+                                Lịch thi đấu hôm nay
+                            </span>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-900">
+                            <li class="flex items-center space-x-2">
+                                <img alt="Ngoại hạng Anh logo, purple lion" class="w-5 h-5" height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/61fd04c8-1fc8-4ad5-08d2-ce0f728387d2.jpg"
+                                    width="20" />
+                                <span>
+                                    Ngoại hạng Anh
+                                </span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <img alt="CUP C1 logo, black and white soccer ball" class="w-5 h-5" height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/fe042404-326a-4f5e-8312-30a44854d87c.jpg"
+                                    width="20" />
+                                <span>
+                                    CUP C1
+                                </span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <img alt="La Liga logo, red stylized L" class="w-5 h-5" height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/e844892e-1b86-4fb2-b2fd-5b3267ea7c10.jpg"
+                                    width="20" />
+                                <span>
+                                    La Liga
+                                </span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <img alt="V.League 1 logo, red stylized W" class="w-5 h-5" height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/582f57ae-08b1-4fff-d06f-bc5e88ba5f1c.jpg"
+                                    width="20" />
+                                <span>
+                                    V.League 1
+                                </span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <img alt="FA Cup logo, red lion" class="w-5 h-5" height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/8cb82f55-7f71-417e-f3f0-948fd152bbf9.jpg"
+                                    width="20" />
+                                <span>
+                                    FA Cup
+                                </span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <img alt="UEFA Europa League logo, orange and black trophy" class="w-5 h-5" height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/a9dc6fb6-964d-49a2-8891-79cbede8b26a.jpg"
+                                    width="20" />
+                                <span>
+                                    UEFA Europa League
+                                </span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <img alt="Serie A logo, blue A letter" class="w-5 h-5" height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/f690e020-6c66-48de-ee11-0ec5559e6983.jpg"
+                                    width="20" />
+                                <span>
+                                    Serie A
+                                </span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <img alt="Bundesliga logo, red player kicking ball" class="w-5 h-5" height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/d431122f-00d5-49b6-a7bf-dd08a7af060d.jpg"
+                                    width="20" />
+                                <span>
+                                    Bundesliga
+                                </span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <img alt="Ligue 1 logo, black and yellow hexagon" class="w-5 h-5" height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/5a0f5688-051c-4da7-473a-e690388fac4b.jpg"
+                                    width="20" />
+                                <span>
+                                    Ligue 1
+                                </span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <img alt="Giao Hữu logo, two hands shaking" class="w-5 h-5" height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/908c2d97-cabc-4b26-2758-3d582bd64a24.jpg"
+                                    width="20" />
+                                <span>
+                                    Giao Hữu
+                                </span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <img alt="Vòng loại World Cup châu Âu logo, blue and red FIFA badge" class="w-5 h-5"
+                                    height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/720046fc-5e79-4f29-c2a1-5b6ea702f0e2.jpg"
+                                    width="20" />
+                                <span>
+                                    Vòng loại World Cup châu Âu
+                                </span>
+                            </li>
+                            <li class="flex items-center space-x-2">
+                                <img alt="Vòng loại World Cup châu Á logo, blue and red FIFA badge" class="w-5 h-5"
+                                    height="20"
+                                    src="https://storage.googleapis.com/a1aa/image/9e5c4550-1a98-40aa-1871-4197c2139626.jpg"
+                                    width="20" />
+                                <span>
+                                    Vòng loại World Cup châu Á
+                                </span>
+                            </li>
+                        </ul>
+                    </div> -->
+                    <div id="lichThiDauHomNay_list"
+                        class="w-60 border-l border-gray-300 pl-4 max-h-[480px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                        <div class="flex items-center space-x-2 text-green-600 font-semibold mb-4">
+                            <i class="fas fa-futbol text-lg"></i>
+                            <span id="tieuDeLichThi">Lịch thi ngày ???/</span>
+
+                        </div>
+                        <div id="matches" class="space-y-3 text-sm text-gray-900">
+                            <!-- Các lựa chọn sẽ được tạo bởi JS -->
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </main>
+
+
+
+
+
+
+    </div>
+
+    <script src="/backend/services/doi_tuong/nguoihammo/home.js"></script>
+    <script type="module" src="/backend/services/global/global.js"></script>
+    <script type="module" src="/backend/services/global/hamChung.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+
+    <script src="/frontend/public/src/styles/resources/quanly/js/datatables-simple-demo.js"></script>
+</body>
+
+</html>
+
+

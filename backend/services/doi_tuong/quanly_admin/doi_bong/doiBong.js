@@ -129,6 +129,14 @@ function button_sua(data) {
             maGioiTinh.value = item.gioi_tinh;
             logo.value = item.logo;
             maQlDoiBong.value = item.ma_ql_doi_bong;
+
+
+            
+            // Scroll lên đầu trang
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         });
     });
 }

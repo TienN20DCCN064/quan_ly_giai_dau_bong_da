@@ -66,20 +66,26 @@ async function layThongTinTheo_ID(table, id) {
 
 async function taoID_theoBang(table) {
     const primaryKeys = {
-        "tai_khoan": ["tai_khoan"],           // Khóa chính là tài khoản
-        "vai_tro": ["ma_vai_tro"],             // Khóa chính là mã vai trò
-        "nguoi_dung": ["ma_nguoi_dung"],       // Khóa chính là mã người dùng
-        "giai_dau": ["ma_giai_dau"],           // Khóa chính là mã giải đấu
-        "doi_bong": ["ma_doi_bong"],           // Khóa chính là mã đội bóng
-        "vi_tri_cau_thu": ["ma_vi_tri"],       // Khóa chính là mã vị trí cầu thủ
-        "cau_thu": ["ma_cau_thu"],             // Khóa chính là mã cầu thủ
+        "tai_khoan": ["tai_khoan"],         // Khóa chính là tài khoản
+        "nguoi_dung": ["ma_nguoi_dung"],      // Giữ mã người dùng thay vì tài khoản vì có thể có thông tin bổ sung
+        "vai_tro": ["ma_vai_tro"],           // Khóa chính là mã vai trò
+        "giai_dau": ["ma_giai_dau"],          // Khóa chính là mã giải đấu
+        "doi_bong": ["ma_doi_bong"],          // Khóa chính là mã đội bóng
+        "vi_tri_cau_thu": ["ma_vi_tri"],      // Đổi tên từ "vi_tri" thành "vi_tri_cau_thu" để khớp với CSDL
+        "cau_thu": ["ma_cau_thu"],            // Khóa chính là mã cầu thủ
         "cau_thu_giai_dau": ["ma_cau_thu", "ma_giai_dau"], // Khóa chính là (ma_cau_thu, ma_giai_dau)
-        "vong_dau": ["ma_vong_dau"],           // Khóa chính là mã vòng đấu
-        "tran_dau": ["ma_tran_dau"],           // Khóa chính là mã trận đấu
-        "ket_qua_tran_dau": ["ma_tran_dau"],   // Khóa chính là mã trận đấu
-        "trong_tai": ["ma_trong_tai"],         // Khóa chính là mã trọng tài
-        "bang_dau": ["ma_bang_dau"],           // Khóa chính là mã bảng đấu
-        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"] // Khóa chính là (ma_doi_bong, ma_bang_dau)
+        "doi_bong_giai_dau": ["ma_doi_bong", "ma_giai_dau"], //// newwwww
+        "trong_tai": ["ma_trong_tai"],        // Bảng trọng tài, khóa chính là mã trọng tài
+
+        "vong_dau": ["ma_vong_dau"],         // Thêm bảng vòng đấu
+        "tran_dau": ["ma_tran_dau"],          // Khóa chính là mã trận đấu
+        "ket_qua_tran_dau": ["ma_tran_dau"],  // Sử dụng ma_tran_dau làm khóa chính thay vì tạo ma_ket_qua riêng
+        "bang_dau": ["ma_bang_dau"],          // Thêm bảng bảng đấu
+        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
+        "dang_ky_tham_gia_giai": ["ma_giai_dau", "ma_doi_bong"],         // Thêm bảng vòng đấu
+        "loai_trong_tai": ["ma_loai_trong_tai"],
+        "trong_tai_tran_dau": ["ma_tran_dau", "ma_trong_tai"],
+        "san_van_dong": ["ma_san"],
     };
     try {
         const response = await fetch(GlobalStore.getLinkCongAPI() + table);
@@ -126,20 +132,25 @@ function them(data, table_name) {
 
     const primaryKeys = {
         "tai_khoan": ["tai_khoan"],         // Khóa chính là tài khoản
-        "vai_tro": ["ma_vai_tro"],           // Khóa chính là mã vai trò
         "nguoi_dung": ["ma_nguoi_dung"],      // Giữ mã người dùng thay vì tài khoản vì có thể có thông tin bổ sung
+        "vai_tro": ["ma_vai_tro"],           // Khóa chính là mã vai trò
         "giai_dau": ["ma_giai_dau"],          // Khóa chính là mã giải đấu
         "doi_bong": ["ma_doi_bong"],          // Khóa chính là mã đội bóng
         "vi_tri_cau_thu": ["ma_vi_tri"],      // Đổi tên từ "vi_tri" thành "vi_tri_cau_thu" để khớp với CSDL
         "cau_thu": ["ma_cau_thu"],            // Khóa chính là mã cầu thủ
         "cau_thu_giai_dau": ["ma_cau_thu", "ma_giai_dau"], // Khóa chính là (ma_cau_thu, ma_giai_dau)
+        "doi_bong_giai_dau": ["ma_doi_bong", "ma_giai_dau"], //// newwwww
+        "trong_tai": ["ma_trong_tai"],        // Bảng trọng tài, khóa chính là mã trọng tài
+
         "vong_dau": ["ma_vong_dau"],         // Thêm bảng vòng đấu
         "tran_dau": ["ma_tran_dau"],          // Khóa chính là mã trận đấu
         "ket_qua_tran_dau": ["ma_tran_dau"],  // Sử dụng ma_tran_dau làm khóa chính thay vì tạo ma_ket_qua riêng
-        "trong_tai": ["ma_trong_tai"],        // Bảng trọng tài, khóa chính là mã trọng tài
         "bang_dau": ["ma_bang_dau"],          // Thêm bảng bảng đấu
-        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"] // Khóa chính là (ma_doi_bong, ma_bang_dau)
-
+        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
+        "dang_ky_tham_gia_giai": ["ma_giai_dau", "ma_doi_bong"],         // Thêm bảng vòng đấu
+        "loai_trong_tai": ["ma_loai_trong_tai"],
+        "trong_tai_tran_dau": ["ma_tran_dau", "ma_trong_tai"],
+        "san_van_dong": ["ma_san"],
     }[table_name];
 
     if (!data) {
@@ -179,20 +190,25 @@ function sua(data, table_name) {
 
     const primaryKeys = {
         "tai_khoan": ["tai_khoan"],         // Khóa chính là tài khoản
-        "vai_tro": ["ma_vai_tro"],           // Khóa chính là mã vai trò
         "nguoi_dung": ["ma_nguoi_dung"],      // Giữ mã người dùng thay vì tài khoản vì có thể có thông tin bổ sung
+        "vai_tro": ["ma_vai_tro"],           // Khóa chính là mã vai trò
         "giai_dau": ["ma_giai_dau"],          // Khóa chính là mã giải đấu
         "doi_bong": ["ma_doi_bong"],          // Khóa chính là mã đội bóng
         "vi_tri_cau_thu": ["ma_vi_tri"],      // Đổi tên từ "vi_tri" thành "vi_tri_cau_thu" để khớp với CSDL
         "cau_thu": ["ma_cau_thu"],            // Khóa chính là mã cầu thủ
         "cau_thu_giai_dau": ["ma_cau_thu", "ma_giai_dau"], // Khóa chính là (ma_cau_thu, ma_giai_dau)
+        "doi_bong_giai_dau": ["ma_doi_bong", "ma_giai_dau"], //// newwwww
+        "trong_tai": ["ma_trong_tai"],        // Bảng trọng tài, khóa chính là mã trọng tài
+    
         "vong_dau": ["ma_vong_dau"],         // Thêm bảng vòng đấu
         "tran_dau": ["ma_tran_dau"],          // Khóa chính là mã trận đấu
         "ket_qua_tran_dau": ["ma_tran_dau"],  // Sử dụng ma_tran_dau làm khóa chính thay vì tạo ma_ket_qua riêng
-        "trong_tai": ["ma_trong_tai"],        // Bảng trọng tài, khóa chính là mã trọng tài
         "bang_dau": ["ma_bang_dau"],          // Thêm bảng bảng đấu
-        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"] // Khóa chính là (ma_doi_bong, ma_bang_dau)
-
+        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
+        "dang_ky_tham_gia_giai": ["ma_giai_dau","ma_doi_bong"],         // Thêm bảng vòng đấu
+        "loai_trong_tai":["ma_loai_trong_tai"],
+        "trong_tai_tran_dau":["ma_tran_dau","ma_trong_tai"],
+        "san_van_dong":["ma_san"],
     }[table_name];
 
     if (!data) {
@@ -246,20 +262,26 @@ function sua(data, table_name) {
 }
 async function xoa(keys, table_name) {
     const primaryKeysMap = {
-        "tai_khoan": ["tai_khoan"],
-        "vai_tro": ["ma_vai_tro"],
-        "nguoi_dung": ["ma_nguoi_dung"],
-        "giai_dau": ["ma_giai_dau"],
-        "doi_bong": ["ma_doi_bong"],
-        "vi_tri_cau_thu": ["ma_vi_tri"],
-        "cau_thu": ["ma_cau_thu"],
-        "cau_thu_giai_dau": ["ma_cau_thu", "ma_giai_dau"],
-        "vong_dau": ["ma_vong_dau"],
-        "tran_dau": ["ma_tran_dau"],
-        "ket_qua_tran_dau": ["ma_tran_dau"],
-        "trong_tai": ["ma_trong_tai"],
-        "bang_dau": ["ma_bang_dau"],
-        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"]
+        "tai_khoan": ["tai_khoan"],         // Khóa chính là tài khoản
+        "nguoi_dung": ["ma_nguoi_dung"],      // Giữ mã người dùng thay vì tài khoản vì có thể có thông tin bổ sung
+        "vai_tro": ["ma_vai_tro"],           // Khóa chính là mã vai trò
+        "giai_dau": ["ma_giai_dau"],          // Khóa chính là mã giải đấu
+        "doi_bong": ["ma_doi_bong"],          // Khóa chính là mã đội bóng
+        "vi_tri_cau_thu": ["ma_vi_tri"],      // Đổi tên từ "vi_tri" thành "vi_tri_cau_thu" để khớp với CSDL
+        "cau_thu": ["ma_cau_thu"],            // Khóa chính là mã cầu thủ
+        "cau_thu_giai_dau": ["ma_cau_thu", "ma_giai_dau"], // Khóa chính là (ma_cau_thu, ma_giai_dau)
+        "doi_bong_giai_dau": ["ma_doi_bong", "ma_giai_dau"], //// newwwww
+        "trong_tai": ["ma_trong_tai"],        // Bảng trọng tài, khóa chính là mã trọng tài
+    
+        "vong_dau": ["ma_vong_dau"],         // Thêm bảng vòng đấu
+        "tran_dau": ["ma_tran_dau"],          // Khóa chính là mã trận đấu
+        "ket_qua_tran_dau": ["ma_tran_dau"],  // Sử dụng ma_tran_dau làm khóa chính thay vì tạo ma_ket_qua riêng
+        "bang_dau": ["ma_bang_dau"],          // Thêm bảng bảng đấu
+        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
+        "dang_ky_tham_gia_giai": ["ma_giai_dau","ma_doi_bong"],         // Thêm bảng vòng đấu
+        "loai_trong_tai":["ma_loai_trong_tai"],
+        "trong_tai_tran_dau":["ma_tran_dau","ma_trong_tai"],
+        "san_van_dong":["ma_san"],
     };
 
     // Kiểm tra xem bảng có hợp lệ không
@@ -313,23 +335,26 @@ async function xoa(keys, table_name) {
 }
 
 async function getImage(publicId) {
-    if(!publicId) {
-       // console.error("publicId không hợp lệ:", publicId);
+    if (!publicId) {
+        // console.error("publicId không hợp lệ:", publicId);
         return null;
     }
     try {
-        const response = await fetch(`http://localhost:5000/api/image/${publicId}`);
+        const url = GlobalStore.getLinkCongApi_image() + "/" + publicId;
+        const response = await fetch(url);
+        // const response = await fetch(`http://localhost:5000/api/image/${publicId}`);
+        console.log("Đường dẫn ảnh:", url);
         const data = await response.json();
 
         if (data.imageUrl) {
-        //    console.log("Link ảnh:", data.imageUrl);
+            //    console.log("Link ảnh:", data.imageUrl);
             return data.imageUrl;
         } else {
-           // console.error("Không lấy được link ảnh", data);
+            // console.error("Không lấy được link ảnh", data);
             return null;
         }
     } catch (error) {
-      //  console.error("Lỗi khi gọi API lấy ảnh:", error);
+        //  console.error("Lỗi khi gọi API lấy ảnh:", error);
         return null;
     }
 }
@@ -344,7 +369,8 @@ async function uploadImage(file) {
 
     try {
         alert("Đang upload ảnh...");
-        const response = await fetch('http://localhost:5000/api/upload', {
+        const url = GlobalStore.getLinkCongApi_image()
+        const response = await fetch(url, {
             method: 'POST',
             body: formData
         });
@@ -371,9 +397,9 @@ async function deleteImage(publicId) {
         alert('Thiếu public_id để xóa ảnh.');
         return;
     }
-
+    const url = GlobalStore.getLinkCongApi_image() + "/" + publicId;
     try {
-        const response = await fetch(`http://localhost:5000/api/image/${publicId}`, {
+        const response = await fetch(url, {
             method: 'DELETE'
         });
 
@@ -392,6 +418,8 @@ async function deleteImage(publicId) {
 }
 
 
+// lúc mà upload ảnh lên thì public_id không được có khoảng trắng, nó sẽ tự động thay thế bằng dấu gạch dưới
+// nên khi lấy về thì phải thay thế lại bằng khoảng trắng
 function doiKhoangTrangThanhGachDuoi(tenFile) {
     return tenFile.replace(/\s+/g, '_');
 }

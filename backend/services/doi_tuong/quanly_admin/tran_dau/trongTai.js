@@ -136,6 +136,12 @@ function button_sua(data) {
             // hinhAnhText.value = item.hinh_anh;
             // // Xóa giá trị của input file (nếu có)
             // hinhAnh.value = "";
+            
+            // Scroll lên đầu trang
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         });
     });
 }

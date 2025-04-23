@@ -114,6 +114,15 @@ function button_sua(data) {
             ngayKetThuc.value = item.ngay_ket_thuc;
             maGioiTinh.value = item.gioi_tinh;
             moTa.value = item.mo_ta || "";
+
+
+
+            
+            // Scroll lên đầu trang
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         });
     });
 }

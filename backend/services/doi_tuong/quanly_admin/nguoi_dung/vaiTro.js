@@ -76,6 +76,12 @@ function button_sua(data) {
             const item = data[index];
             maVaiTro.value = item.ma_vai_tro;
             tenVaiTro.value = item.ten_vai_tro;
+            
+            // Scroll lên đầu trang
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         });
     });
 }

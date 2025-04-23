@@ -75,8 +75,13 @@ async function viewTbody(data) {
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
-    data.forEach(item => {
+    data.forEach(async item => {
         const row = document.createElement("tr");
+        // const data_tranDau = hamChung.layThongTinTheo_ID("tran_dau", item.ma_tran_dau);
+     //   const data_maDoi1 = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_thang);
+
+        // console.log(item.ma_doi_thang);
+        // console.log(data_maDoi1);
         row.innerHTML = `
             <td style="text-align: center;">${item.ma_tran_dau ?? "----"}</td>
             <td style="text-align: center;">${item.ma_doi_thang ?? "----"}</td>
@@ -204,6 +209,13 @@ function button_sua(data) {
             maTranDau.value = item.ma_tran_dau;
             maDoiThang.value = item.ma_doi_thang;
             ghiChu.value = item.ghi_chu || "";
+
+
+            // Scroll lên đầu trang
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
 
         });
     });

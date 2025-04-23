@@ -31,7 +31,7 @@ from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 import cloudinary.uploader
 
-@app.route('/api/upload', methods=['POST'])
+@app.route('/api/image', methods=['POST'])
 def upload_image():
     if 'image' not in request.files:
         return jsonify({"error": "Không tìm thấy file ảnh"}), 400
@@ -59,7 +59,7 @@ def upload_image():
         return jsonify({
             "imageUrl": result.get('secure_url'),
             "publicId": result.get('public_id'),
-            "originalFilename": result.get('original_filename')
+            # "originalFilename": result.get('original_filename')
         })
     except Exception as e:
         print(e)
@@ -72,6 +72,7 @@ def get_image_url(public_id):
         # Tạo đường dẫn ảnh từ public_id
         url = cloudinary.CloudinaryImage(public_id).build_url()
         print(url)
+        
         return jsonify({"imageUrl": url})
     except Exception as e:
         print(e)
