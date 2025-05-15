@@ -12,10 +12,12 @@ const sanVanDong = document.getElementById("sanVanDong");
 // const maTrongTai = document.getElementById("maTrongTai");
 const button_xem_ds_trongTai = document.getElementById("button_xem_ds_trongTai");
 
+const button_luu_danhSachTranDau = document.getElementById("bt_luuDanhSachTranDau_tuDong");
 const trangThai = document.getElementById("trangThai");
 const maVongDau = document.getElementById("maVongDau");
 // const link = "http://localhost:5000/";
 
+let danhSach_doiBong_theoBang;
 
 document.addEventListener("DOMContentLoaded", async function () {
     loadDanhSachGiaiDau();
@@ -62,8 +64,30 @@ document.addEventListener("DOMContentLoaded", async function () {
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
     button_xepLich.addEventListener("click", handleXepLich);
-    button_xem_ds_trongTai.addEventListener("click", handleXemDanhSachTrongTai)
+    button_xem_ds_trongTai.addEventListener("click", handleXemDanhSachTrongTai);
+    button_luu_danhSachTranDau.addEventListener("click", themDanhSachTranDau_vaoDaTa);
+
+    document.getElementById("chon_hinhThuc_tao_tran").addEventListener("change", async function () {
+        // console.log(document.getElementById("chon_hinhThuc_tao_tran").value);
+        thongBao_tonTaiTranDau();
+    });
 });
+async function thongBao_tonTaiTranDau() {
+    document.getElementById("thong_bao").innerText = "";
+    if (document.getElementById("chon_hinhThuc_tao_tran").value === "chia-bang") {
+        const tonTai = await check_giaiDau_coTrong_tranDau(document.getElementById("maGiaiDau_chon").value);
+        if (tonTai) {
+            document.getElementById("thong_bao").innerText = "Đã tồn tại trận đấu trong giải!";
+        }
+    }
+}
+async function check_giaiDau_coTrong_tranDau(ma_giai_dau) {
+    const data_tranDau = await hamChung.layDanhSach("tran_dau");
+
+    // Kiểm tra xem có trận đấu nào có ma_giai_dau trùng không
+    return data_tranDau.some(tranDau => tranDau.ma_giai_dau === ma_giai_dau);
+}
+
 
 // Hiển thị danh sách trận đấu
 async function layKetQua(ma_tran_dau) {
@@ -465,6 +489,7 @@ function handleXepLich(event) {
     // Gắn sự kiện cho cả hai
     document.getElementById("maGiaiDau_chon").addEventListener("change", async function () {
         console.log(document.getElementById("chon_hinhThuc_tao_tran").value);
+        thongBao_tonTaiTranDau();
         if (document.getElementById("chon_hinhThuc_tao_tran").value === "chia-bang") {
             document.getElementById("danhSachBangContainer").style.display = "block";
 
@@ -574,7 +599,7 @@ async function taoTranDau(hinhThucTaoTran) {
 
         const bangDau_tranDau = await hamChung.taoTranDau_chiaBang(getSelectedCheckboxes(), getSelectedCheckboxes_hatGiong(), data_bangDau_giaiDau, false);
         console.log(bangDau_tranDau);
-
+        danhSach_doiBong_theoBang = bangDau_tranDau;
         // Tạo danh sách bảng đấu với đội bóng
         let danhSachBang = "<ul>"; // Bắt đầu danh sách
 
@@ -860,14 +885,6 @@ function incrementTime(time, soGioTangThem = 1) {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 }
 
-
-
-
-
-
-
-
-
 async function view_danhSachTranDau_duocTao(danhSanhTranDau_theoBang) {
     const tbody = document.getElementById("bodyBangTaoTran");
     tbody.innerHTML = ""; // ❗️XÓA TOÀN BỘ CŨ
@@ -1130,3 +1147,105 @@ async function callAll_taoTranDau(url, form) {
         return { error: "Gọi API thất bại" };
     }
 }
+
+async function themDanhSachTranDau_vaoDaTa() {
+
+    document.getElementById("bangTaoTran").classList.add("hidden"); // Ẩn thẻ <div id="bangTaoTran">
+    document.getElementById("popupOverlay").classList.remove("disabled-overlay");
+    const tbody = document.getElementById("bodyBangTaoTran");
+    const rows = tbody.querySelectorAll("tr");
+    //const danhSachTranDauDaChon = [];
+
+    const ma_giai_dau = document.getElementById("maGiaiDau_chon").value;
+
+    let formData_so2;
+    let index = 0; // Khởi tạo biến đếm
+
+    for (const row of rows) {
+
+        const cells = row.querySelectorAll("td");
+
+        const ma_tran_dau = await hamChung.taoID_theoBang("tran_dau");
+        const ma_doi_1 = cells[2]?.innerText.trim();
+        const ma_doi_2 = cells[3]?.innerText.trim();
+        const ngay_dien_ra = cells[4]?.querySelector("input")?.value || null;
+
+        const gio_dien_ra_raw = cells[5]?.querySelector("input")?.value || null;
+        const gio_dien_ra = gio_dien_ra_raw ? gio_dien_ra_raw + ":00" : null;
+
+        const ma_san = cells[6]?.querySelector("select")?.value || null;
+        const ma_vong_dau = "V1"; // Cứng mã vòng đấu
+        let formData = {
+            ma_tran_dau: ma_tran_dau,
+            ma_giai_dau: ma_giai_dau,
+            ma_doi_1: ma_doi_1,
+            ma_doi_2: ma_doi_2,
+            ngay_dien_ra: ngay_dien_ra,
+            gio_dien_ra: gio_dien_ra,
+            ma_san: ma_san,
+            ma_vong_dau: ma_vong_dau
+        };
+        console.log(index);
+        console.log(formData);
+
+        if (index === 1) {
+            formData_so2 = formData;
+        }
+        else {
+            hamChung.them(formData, "tran_dau");
+        }
+
+        // console.log("✅ Dữ liệu trận đấu lấy từ DOM:", danhSachTranDauDaChon);
+
+        // //    Nếu bạn muốn thêm từng trận vào database:
+        // for (const tran of danhSachTranDauDaChon) {
+        //     await hamChung.them(tran, "tran_dau");
+        // }
+
+        // Hoặc nếu API chấp nhận danh sách:
+        // await hamChung.themNhieu(danhSachTranDauDaChon, "tran_dau");
+        index++;
+    }
+    if (index >= 1) {
+        const ma_tran_dau_2 = await hamChung.taoID_theoBang("tran_dau");
+        formData_so2.ma_tran_dau = ma_tran_dau_2;
+        console.log(formData_so2);
+        hamChung.them(formData_so2, "tran_dau");
+
+    }
+
+    // nếu là trường hợp tảo bảng thì phải đổi bảng cho cái kia 
+
+    if ((document.getElementById("chon_hinhThuc_tao_tran").value) === "chia-bang") {
+        // console.log(danhSach_doiBong_theoBang);
+        await capNhat_bangDau_doi_bong_giai_dau(danhSach_doiBong_theoBang);
+    }
+
+}
+async function capNhat_bangDau_doi_bong_giai_dau(danhSach_doiBong_theoBang) {
+    console.log(danhSach_doiBong_theoBang.bangs);
+    const data = danhSach_doiBong_theoBang.bangs;
+    let form_update_bang_cho_doiBongGiaiDau = {
+        ma_bang_dau: "",
+        ma_giai_dau: "",
+        ma_doi_bong: ""
+    }
+
+    data.forEach((bang, index) => {
+
+        form_update_bang_cho_doiBongGiaiDau.ma_bang_dau = bang.bang.ma_bang_dau;
+        form_update_bang_cho_doiBongGiaiDau.ma_giai_dau = bang.bang.ma_giai_dau;
+
+
+        bang.doi.forEach(async (doi) => {
+            // Hiển thị thông tin đội bóng. Giả sử 'doi' là mã đội, bạn có thể thay đổi nếu có thêm thông tin đội.
+            // danhSachBang += `<li>Đội ${doiIndex + 1}: ${doi}</li>`;
+            form_update_bang_cho_doiBongGiaiDau.ma_doi_bong = doi;
+            console.log(form_update_bang_cho_doiBongGiaiDau);
+            await hamChung.sua(form_update_bang_cho_doiBongGiaiDau, "doi_bong_giai_dau");
+        });
+
+
+    });
+}
+

@@ -124,12 +124,12 @@ async function taoID_theoBang(table) {
         // Chuyển "don_dat_ban" -> "ddb_"
         const prefix = table.split("_").map(word => word.charAt(0)).join("") + "_";
 
-        console.log(prefix);
+     //   console.log(prefix);
         if (!Array.isArray(danhSach) || danhSach.length === 0) {
             console.log(prefix);
             return `${prefix}0001`; // Nếu bảng rỗng, tạo ID đầu tiên
         }
-        console.log(prefix);
+     //s   console.log(prefix);
 
         // Tìm ID lớn nhất trong danh sách theo các khóa chính đã xác định
         const lastID = danhSach

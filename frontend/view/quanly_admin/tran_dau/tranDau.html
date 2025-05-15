@@ -360,22 +360,6 @@
                             <label class="font-weight-bold">Danh Sách Bảng</label>
                             <ul id="danhSachBang"></ul> <!-- Nơi hiển thị danh sách bảng -->
                         </div>
-
-                        <!-- <div class="col-md-4">
-                            <label class="font-weight-bold">Ngày giờ diễn ra</label>
-                            <select class="form-control" id="nnn_chon" required>
-                                <option value="All">Tất Cả</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="font-weight-bold">Trạng Thái</label>
-                            <select path="trangThai" class="form-control" id="trangThai_chon">
-                                <option value="All">Tất Cả</option>
-                                <option value="Chờ duyệt">Chờ duyệt</option>
-                                <option value="Đã duyệt">Đã duyệt</option>
-                                <option value="Từ chối">Từ chối</option>
-                            </select>
-                        </div> -->
                     </form>
                 </div>
                 <div class="col-md-12 mt-3">
@@ -385,14 +369,10 @@
                     <!-- <button id="closePopup" class="btn btn-secondary"><Đóng/button> -->
                     <button id="closePopup" class="btn btn-danger " style="margin-top: 0;">Đóng</button>
                 </div>
-                <!-- Popup xác nhận -->
-                <!-- <div id="confirmModal" class="overlay hidden">
-                    <div class="popup-content text-center" >
-                        <p>Bạn có chắc chắn muốn duyệt tất cả không?</p>
-                        <button id="confirmYes" class="btn btn-success m-2">Có</button>
-                        <button id="confirmNo" class="btn btn-danger m-2">Không</button>
-                    </div>
-                </div> -->
+                <div class="col-md-12 mt-3">
+                    <div id="thong_bao" style="text-align: center; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; padding: 10px; border-radius: 5px; font-weight: bold;"></div>
+
+                </div>
 
                 <div class="card mb-4" style="padding-top: 10px;">
                     <table id="dataTable_chon">
@@ -444,7 +424,6 @@
                 </div>
                 <div class="col-md-4">
                     <button id="bt_luuDanhSachTranDau_tuDong" type="button" class="btn btn-success">Lưu kết quả</button>
-                    <!-- <button id="btnCloseBangTaoTran" class="btn btn-danger btn-sm float-right">Đóng</button> -->
                     <button id="btnCloseBangTaoTran" class="btn btn-danger float-end me-2">Đóng</button>
                 </div>
             </form>

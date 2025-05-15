@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<c:set var="root" value="${pageContext.servletContext.contextPath}" />
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>GIẢI ĐẤU ĐÃ THAM GIA</title>
+    <style>
+        label {
+            display: block;
+            font: 1rem 'Fira Sans', sans-serif;
+        }
+
+        input,
+        label {
+            margin: 0.4rem 0;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link href="/frontend/public/src/styles/resources/quanly/css/styles.css" rel="stylesheet" />
+
+    <link href="/frontend/public/src/styles/resources/table/table.css" rel="stylesheet" />
+    <link href="/frontend/public/src/styles/resources/table/time.css" rel="stylesheet" />
+    <link rel="icon" href="/frontend/public/src/styles/resources/img/logowebsite.png" type="image/png" />
+
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="sb-nav-fixed">
+
+    <div id="chen"></div>
+    <script>
+        // Sử dụng Fetch API để tải nội dung file HTML và chèn vào vị trí div
+        fetch('/frontend/public/src/common/quanly_doiBong/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('chen').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading HTML:', error));
+    </script>
+    <style>
+        #layoutSidenav_content {
+            margin-left: 200px;
+            margin-top: 100px;
+        }
+    </style>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div class="card-header">
+                    <label class="font-weight-bold" style="font-size: 20px; color: #800000">GIẢI ĐẤU ĐÃ THAM GIA</label>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i> GIẢI ĐẤU ĐÃ THAM GIA
+                    </div>
+                    <div class="card-body">
+                        <table id="table">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;">Tên Giải Đấu</th>
+                                    <th style="text-align: center;">Tên Tổ Chức</th>
+                                    <th style="text-align: center;">Ngày Bắt Đầu</th>
+                                    <th style="text-align: center;">Ngày Kết Thúc</th>
+                                    <th style="text-align: center;">Giới Tính</th>
+                                    <th style="text-align: center;">Thông tin giải</th>
+                                    <th style="text-align: center;">Cầu thủ tham gia</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataTable">
+                                <!-- Dữ liệu sẽ được chèn vào đây bằng JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        
+        
+        <style>
+            #bangTaoTran {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: block;
+                /* Đảm bảo bảng hiển thị khi cần */
+                z-index: 1100;
+                /* Đảm bảo bảng này luôn ở trên cùng */
+            }
+
+            /* CSS để làm mờ và ngăn tương tác */
+            .disabled-overlay {
+                filter: blur(2px);
+                pointer-events: none;
+                opacity: 0.6;
+            }
+
+
+            #popupOverlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow-y: auto;
+                padding: 20px;
+                z-index: 1000;
+                /* Đảm bảo overlay không che mất bảng thứ 2 */
+            }
+
+
+            .popup-content {
+                background-color: #fff;
+                /* Màu nền của popup */
+                padding: 20px;
+                border-radius: 8px;
+                max-height: 80vh;
+                /* Giới hạn chiều cao của popup, có thể cuộn nội dung */
+                overflow-y: auto;
+                /* Cho phép cuộn dọc bên trong popup */
+                width: 100%;
+                /* Đảm bảo chiếm hết chiều rộng của overlay */
+                box-sizing: border-box;
+            }
+
+            .card {
+                max-height: 60vh;
+                /* Giới hạn chiều cao của card để có thể cuộn nội dung bên trong */
+                overflow-y: auto;
+                /* Cho phép cuộn dọc */
+            }
+
+            /* Bảng ẩn mặc định */
+            /* Kiểm tra xem lớp hidden có áp dụng đúng hay không */
+            .hidden {
+                display: none !important;
+            }
+
+            /* Overlay để làm nền tối khi hiển thị bảng */
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                /* Màu nền mờ */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                /* Đảm bảo bảng nằm trên tất cả các phần tử khác */
+            }
+
+            /* Nội dung bảng */
+            .popup-content {
+                background-color: white;
+                padding: 20px;
+                border-radius: 10px;
+                width: 80%;
+                max-width: 800px;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Nút đóng */
+            #closePopup {
+                margin-top: 20px;
+            }
+
+            #confirmModal p {
+                font-size: 18px;
+                font-weight: bold;
+            }
+        </style>
+
+        <div id="danhSachCauThu" class="overlay hidden">
+            <div class="popup-content">
+                <h3 id="name_giai_dau">Danh sách cầu thủ</h3>
+
+                <div class="card-header">
+                    
+                </div>
+                <div class="col-md-12 mt-3">
+                    <button id="closePopup1" class="btn btn-danger " style="margin-top: 0;">Đóng</button>
+                </div>
+            
+
+                <div class="card mb-4" style="padding-top: 10px;">
+                    <table id="dataTable_danhSachCauThu">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Họ Tên</th>
+                                <th style="text-align: center;">Số Áo</th>
+                                <th style="text-align: center;">Hình Ảnh</th>
+                                <th style="text-align: center;">Vị Trí</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dữ liệu bảng sẽ được thêm vào đây -->
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div id="thongTinGiai" class="overlay hidden">
+            <div class="popup-content">
+                <h3 id="name_giai_dau">Thông tin giải</h3>
+
+                <div class="card-header">
+                    
+                </div>
+                <div class="col-md-12 mt-3">
+                    <button id="closePopup2" class="btn btn-danger " style="margin-top: 0;">Đóng</button>
+                </div>
+            
+
+                <div class="card mb-4" style="padding-top: 10px;">
+                    <table id="dataTable_thongTinGiaiDau">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Tên Giải Đấu</th>
+                                <th style="text-align: center;">Mô tả</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dữ liệu bảng sẽ được thêm vào đây -->
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+
+
+
+
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2024</div>
+                    <div>
+                        <a href="#">Privacy Policy</a> &middot; <a href="#">Terms
+                            &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        function confirmDelete() {
+            if (window.confirm("Nhân viên hiện đang được cấp 1 tài khoản, xóa nhân viên sẽ dẫn đến xóa tài khoản. Bạn có muốn xóa?")) {
+                // perform the delete action
+            }
+        }
+    </script>
+
+    <script src="/backend/services/doi_tuong/quanly_doituyen/qldt_giaiDauDaThamGia.js"></script>
+    <script type="module" src="/backend/services/global/global.js"></script>
+    <script type="module" src="/backend/services/global/hamChung.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <!-- <script src=" /public/src/styles/resources/quanly/js/scripts.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+
+    <script src="/frontend/public/src/styles/resources/quanly/js/datatables-simple-demo.js"></script>
+</body>
+
+</html>
