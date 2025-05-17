@@ -61,7 +61,7 @@
                             <input path="maCauThu" type="text" class="form-control" id="maCauThu" required readonly />
                         </div> -->
                         <div class="col-md-3">
-                            <label class="font-weight-bold">Mã Giải Đấu</label>
+                            <label class="font-weight-bold">Giải Đấu</label>
                             <select class="form-control" id="maGiaiDau" required>
                                 <option value="">-- Chọn Giải Đấu --</option>
                             </select>
@@ -73,14 +73,30 @@
                                 <option value="">-- Chọn Đội Bóng --</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                          <div class="col-md-3">
+                            <label class="font-weight-bold">Bảng Đấu</label>
+                            <select class="form-control" id="maBangDau" required>
+                                <option value="">-- Chọn Bảng Đấu --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
                             <label class="font-weight-bold">Tên Đội Bóng</label>
                             <input path="tenDoiBong" type="text" class="form-control" id="tenDoiBong" required />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="font-weight-bold">Quốc Gia</label>
                             <input path="quocGia" type="text" class="form-control" id="quocGia" required />
                         </div>
+
+                        <div class="col-md-3">
+                            <label class="font-weight-bold">Hạt Gióng</label>
+                            <select class="form-control" id="hatGiong" required>
+                                <option value="khong">khong</option>
+                                <option value="co">co</option>
+                            </select>
+                        </div>
+
+
                         <div class="col-md-3">
                             <label class="font-weight-bold">logo</label>
                             <!-- Input hiển thị tên file hoặc URL ảnh -->
@@ -88,6 +104,7 @@
                             <!-- Input cho phép người dùng chọn file ảnh -->
                             <input type="file" class="form-control" id="logoFile" />
                         </div>
+
                         <!-- <div class="col-md-4">
                             <label class="font-weight-bold">Mã Giải Đấu</label>
                             <input path="maGiaiDau" type="text" class="form-control" id="maGiaiDau" required />
@@ -105,17 +122,19 @@
                 <div class="card mb-4">
                     <div class="card-header">
                         <i class="fas fa-table me-1"></i> DANH SÁCH CẦU THỦ
-                        
+
                     </div>
 
                     <div class="card-body">
                         <table id="table">
                             <thead>
                                 <tr>
-                                    <th style="text-align: center;">Mã Giải Đấu</th>
-                                    <th style="text-align: center;">Mã Đội Bóng</th>
-                                    <th style="text-align: center;">Tên Đội Bóng</th>
+                                    <th style="text-align: center;">Giải Đấu</th>
+                                   <th style="text-align: center;">Tên Hiện Tại</th>
+                                    <th style="text-align: center;">Tên Trong Giải</th>
                                     <th style="text-align: center;">Quốc Gia</th>
+                                    <th style="text-align: center;">Bảng Đấu</th>
+                                    <th style="text-align: center;">Hạt Giống</th>
                                     <th style="text-align: center;">Logo</th>
 
                                     <th style="text-align: center;">Sửa</th>
@@ -124,10 +143,12 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th style="text-align: center;">Mã Giải Đấu</th>
-                                    <th style="text-align: center;">Mã Đội Bóng</th>
-                                    <th style="text-align: center;">Tên Đội Bóng</th>
+                                    <th style="text-align: center;">Giải Đấu</th>
+                                    <th style="text-align: center;">Tên Hiện Tại</th>
+                                    <th style="text-align: center;">Tên Trong Giải</th>
                                     <th style="text-align: center;">Quốc Gia</th>
+                                    <th style="text-align: center;">Bảng Đấu</th>
+                                    <th style="text-align: center;">Hạt Giống</th>
                                     <th style="text-align: center;">Logo</th>
 
                                     <th style="text-align: center;">Sửa</th>

@@ -11,6 +11,9 @@ const inputFile = document.getElementById("logoFile");
 
 const form = document.getElementById("inputForm");
 const quocGia = document.getElementById("quocGia");
+const hatGiong = document.getElementById("hatGiong");
+
+const maBangDau = document.getElementById("maBangDau");
 
 
 
@@ -21,10 +24,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loadDanhSachDoiBong();
     loadDanhSachGiaiDau();
+
     viewTbody();
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
-  
+    document.getElementById("maGiaiDau").addEventListener("change", (e) => {
+        loadDanhSachBangDau();
+    });
+
 });
 
 // Hiển thị danh sách cầu thủ trong giải đấu
@@ -34,7 +41,7 @@ async function viewTbody() {
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
-    const rows = await Promise.all(data.map(async item => {
+    for (const item of data) {
         // const hinh_anh = await hamChung.getImage(item.hinh_anh);
         // console.log(item.hinh_anh);
         let hinh_anh;
@@ -47,17 +54,31 @@ async function viewTbody() {
             hinh_anh = await hamChung.getImage(item.logo);
 
         }
+
+        let bangDau = "---";
+        if (item.ma_bang_dau != null) {
+            const lay1BangDau = await hamChung.layThongTinTheo_ID("bang_dau", item.ma_bang_dau);
+            bangDau = lay1BangDau.ten_bang_dau;
+        }
+
+
+
+        const lay1giaiDau = await hamChung.layThongTinTheo_ID("giai_dau", item.ma_giai_dau);
+        const lay1doiBong = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_bong);
+        console.log(item.ma_doi_bong);
         row.innerHTML = `
-            <td style="text-align: center;">${item.ma_giai_dau}</td>
-            <td style="text-align: center;">${item.ma_doi_bong}</td>
+            <td style="text-align: center;">${lay1giaiDau.ten_giai_dau}</td>
+            <td style="text-align: center;">${lay1doiBong.ten_doi_bong}</td>
             <td style="text-align: center;">${item.ten_doi_bong}</td>
             <td style="text-align: center;">${item.quoc_gia}</td>
+            <td style="text-align: center;">${bangDau}</td>
+            <td style="text-align: center;">${item.hat_giong}</td>
             <td style="text-align: center;"><img src="${hinh_anh}" alt="Logo" width="50"></td>
             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
         tableBody.appendChild(row);
-    }));
+    }
 
     button_sua(data);
     button_xoa(data);
@@ -84,8 +105,10 @@ async function handleLuuThayDoi(event) {
     let formData = {
         ma_doi_bong: maDoiBong.value,
         ma_giai_dau: maGiaiDau.value,
+        ma_bang_dau: maBangDau.value,
         ten_doi_bong: tenDoiBong.value,
         quoc_gia: quocGia.value,
+        hat_giong: hatGiong.value,
         logo: id_Hinh_anh_thay
     };
     // th đang chỉnh sửa
@@ -110,25 +133,27 @@ function handleTaiLaiTrang(event) {
     event.preventDefault();
     location.reload();
 }
-
-// Xử lý nút "Sửa"
-function button_sua(data) {
+async function button_sua(data) {
     document.querySelectorAll(".edit-btn").forEach((btn, index) => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", async () => {
             const item = data[index];
 
             maGiaiDau.value = item.ma_giai_dau;
+            await loadDanhSachBangDau();  // 🔹 Đợi load xong danh sách bảng đấu
+
             maDoiBong.value = item.ma_doi_bong;
             tenDoiBong.value = item.ten_doi_bong;
             quocGia.value = item.quoc_gia;
+            hatGiong.value = item.hat_giong;
+            maBangDau.value = item.ma_bang_dau;
             logo.value = item.logo;
-            // Ngăn không cho thay đổi
 
             maGiaiDau.setAttribute("disabled", true);
             maDoiBong.setAttribute("disabled", true);
         });
     });
 }
+
 
 // Xử lý nút "Xóa"
 function button_xoa(data) {
@@ -161,7 +186,7 @@ async function loadDanhSachDoiBong() {
 }
 async function loadDanhSachGiaiDau() {
     const selectElement = document.getElementById("maGiaiDau");
-    selectElement.innerHTML = '<option value="">-- Chọn Mã Giải Đấu --</option>'; // Reset danh sách
+    selectElement.innerHTML = '<option value="">-- Chọn Giải Đấu --</option>'; // Reset danh sách
     const data = await hamChung.layDanhSach("giai_dau");
     data.forEach(item => {
         const option = document.createElement("option");
@@ -169,4 +194,25 @@ async function loadDanhSachGiaiDau() {
         option.textContent = `${item.ma_giai_dau} - ${item.ten_giai_dau}`;
         selectElement.appendChild(option);
     });
+}
+async function loadDanhSachBangDau() {
+    const selectElement = document.getElementById("maBangDau");
+
+    const maGiaiDau_chon = document.getElementById("maGiaiDau");
+
+    const data = await hamChung.layDanhSach("giai_dau");
+    const data_bangDau = await hamChung.layDanhSach("bang_dau");
+
+    if (maGiaiDau_chon != null) {
+        selectElement.innerHTML = '<option value="">-- Chọn Bảng Đấu --</option>'; // Reset danh sách
+        const data_load = data_bangDau.filter(item => item.ma_giai_dau === maGiaiDau_chon.value);
+        console.log(data_load)
+        data_load.forEach(item => {
+            const option = document.createElement("option");
+            option.value = item.ma_bang_dau;
+            option.textContent = `${item.ten_bang_dau}`;
+            selectElement.appendChild(option);
+        });
+    }
+
 }

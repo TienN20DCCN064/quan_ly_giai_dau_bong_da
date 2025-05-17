@@ -124,7 +124,7 @@ function button_sua(data) {
 
 
 
-            
+
             // Scroll lên đầu trang
             window.scrollTo({
                 top: 0,
@@ -142,7 +142,7 @@ function button_xoa(data) {
                 const formData = {
                     ma_giai_dau: data[index].ma_giai_dau,
                 };
-                await hamChung.xoa( formData, "giai_dau");
+                await hamChung.xoa(formData, "giai_dau");
                 viewTbody(); // Refresh danh sách sau khi xóa
             }
         });
@@ -207,7 +207,10 @@ async function viewTbody_chon(maGiaiDau_chon, maDoiBong_chon) {
     console.log(data); // hoặc gọi hàm render ra tbody
 
 
-    const tableBody = document.getElementById("dataTable_chon");
+    // const tableBody = document.getElementById("dataTable_chon");
+    // tableBody.innerHTML = "";
+
+    const tableBody = document.querySelector("#dataTable_chon tbody");
     tableBody.innerHTML = "";
 
     const rows = await Promise.all(data.map(async item => {
@@ -223,13 +226,17 @@ async function viewTbody_chon(maGiaiDau_chon, maDoiBong_chon) {
             hinh_anh = await hamChung.getImage(item.logo);
 
         }
+        const lay1giaiDau = await hamChung.layThongTinTheo_ID("giai_dau", item.ma_giai_dau);
+        const lay1DoiBong_hienTai = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_bong);
+        const lay1BangDau = await hamChung.layThongTinTheo_ID("bang_dau", item.ma_bang_dau);
         row.innerHTML = `
-            <td style="text-align: center;">${item.ma_giai_dau}</td>
-            <td style="text-align: center;">${item.ma_doi_bong}</td>
+            <td style="text-align: center;">${lay1giaiDau.ten_giai_dau}</td>
+            <td style="text-align: center;">${lay1DoiBong_hienTai.ten_doi_bong}</td>
             <td style="text-align: center;">${item.ten_doi_bong}</td>
+            <td style="text-align: center;">${lay1BangDau.ten_bang_dau}</td>
             <td style="text-align: center;">${item.quoc_gia}</td>
             <td style="text-align: center;"><img src="${hinh_anh}" alt="Logo" width="50"></td>
-             <td style="text-align: center;">
+            <td style="text-align: center;">
                 <select class="status-select form-control form-control-sm">
                     <option value="Co" ${item.hat_giong === 'co' ? 'selected' : ''} style="background-color: #f0ad4e; color: white;">Có</option>
                     <option value="Khong" ${item.hat_giong === 'khong' ? 'selected' : ''} style="background-color: #5bc0de; color: white;">Không</option>
@@ -237,7 +244,7 @@ async function viewTbody_chon(maGiaiDau_chon, maDoiBong_chon) {
             </td>
         `;
         tableBody.appendChild(row);
-        
+
         // Lắng nghe sự kiện change của select
         const select = row.querySelector('.status-select');
         const options = select.querySelectorAll('option');

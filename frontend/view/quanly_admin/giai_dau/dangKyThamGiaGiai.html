@@ -142,6 +142,9 @@
                 </div>
                 <div class="col-md-12 mt-3">
                     <button id="button_duyet_tat_ca" class="btn btn-success">Duyệt Tất Cả</button>
+                    <button id="closePopup" class="btn btn-secondary"
+                        style="position: relative; top: -10px; left: 100px;">Đóng</button>
+
                 </div>
                 <!-- Popup xác nhận -->
                 <div id="confirmModal" class="overlay hidden">
@@ -171,22 +174,28 @@
                         </tbody>
                     </table>
                 </div>
-                <button id="closePopup" class="btn btn-secondary">Đóng</button>
+
             </div>
         </div>
 
         <!-- Overlay hiển thị danh sách cầu thủ -->
         <div id="overlayCauThu" class="overlay hidden">
             <div class="popup-content">
-                <h3 id="value_thongTinCT">Danh sách Cầu Thủ</h3>
-                <table class="table table-bordered">
+                <h3 id="value_thongTinCT"></h3>
+                <div class="col-md-12 mt-3">
+                    <button id="btnChinhSua_cauThuThamGia" class="btn btn-primary" style="color: aqua;">Chỉnh danh sách cầu thủ đá</button>
+                    <button id="backToPopup" class="btn btn-secondary" style="left: 100px;">Quay lại</button>
+                </div>
+
+                <table style="margin-top: 25px;">
                     <thead>
                         <tr>
-                            <th>Tên</th>
-                            <th>Số Áo</th>
-                            <th>Vị Trí</th>
-                            <th>Hình Ảnh</th>
-                            <th>Cầu Thủ Tham Gia</th>
+                            <!-- <th style="text-align: center;">Mã Đội Bóng</th> -->
+                            <th style="text-align: center;">Họ Tên</th>
+                            <th style="text-align: center;">Số Áo</th>
+                            <th style="text-align: center;">Vị Trí</th>
+                            <th style="text-align: center;">Hình Ảnh</th>
+                            <th style="text-align: center;">Cầu Thủ Tham Gia</th>
                         </tr>
                     </thead>
                     <tbody id="playerListBody">
@@ -194,7 +203,7 @@
                     </tbody>
                 </table>
                 <div class="text-end mt-3">
-                    <button id="backToPopup" class="btn btn-secondary">Quay lại</button>
+                    <button id="btn_luuThongTinCauThuDa" class="btn btn-secondary hidden">Lưu thông tin</button>
                 </div>
             </div>
         </div>

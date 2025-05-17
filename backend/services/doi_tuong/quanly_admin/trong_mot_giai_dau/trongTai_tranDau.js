@@ -25,7 +25,7 @@ async function viewTbody() {
     tableBody.innerHTML = "";
 
     // Dùng Promise.all để chờ tất cả hình ảnh tải xong
-    const rows = await Promise.all(data.map(async item => {
+    for (const item of data) {
 
         const row = document.createElement("tr");
         row.innerHTML = `
@@ -36,7 +36,7 @@ async function viewTbody() {
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
         return row;
-    }));
+    }
 
     // Thêm tất cả hàng vào bảng cùng lúc
     rows.forEach(row => tableBody.appendChild(row));
@@ -57,7 +57,7 @@ async function handleLuuThayDoi(event) {
         form.reportValidity();
         return;
     }
-   
+
     let formData = {
         ma_tran_dau: maTranDau.value,
         ma_trong_tai: maTrongTai.value,
@@ -90,7 +90,7 @@ function button_sua(data) {
             maTranDau.value = item.ma_tran_dau;
             maTrongTai.value = item.ma_trong_tai;
             maLoaiTrongTai.value = item.ma_loai_trong_tai;
-            
+
             maTranDau.setAttribute("disabled", true);
             maTrongTai.setAttribute("disabled", true);
             window.scrollTo({
