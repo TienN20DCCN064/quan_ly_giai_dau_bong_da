@@ -19,18 +19,30 @@ async function viewTbody() {
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
-    data.forEach(item => {
+    // data.forEach(item => {
+    //     const row = document.createElement("tr");
+    //     row.innerHTML = `
+    //        <td style="text-align: center;">${item.ma_giai_dau}</td>
+    //         <td style="text-align: center;">${item.ma_bang_dau}</td>
+    //         <td style="text-align: center;">${item.ten_bang_dau}</td>
+    //         <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
+    //         <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
+    //     `;
+    //     tableBody.appendChild(row);
+    // });
+
+    for (const item of data) {
         const row = document.createElement("tr");
+        const data1giaiDau = await hamChung.layThongTinTheo_ID("giai_dau", item.ma_giai_dau);
         row.innerHTML = `
-           <td style="text-align: center;">${item.ma_giai_dau}</td>
+           <td style="text-align: center;">${data1giaiDau.ten_giai_dau}</td>
             <td style="text-align: center;">${item.ma_bang_dau}</td>
             <td style="text-align: center;">${item.ten_bang_dau}</td>
             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
         tableBody.appendChild(row);
-    });
-
+    }
     button_sua(data);
     button_xoa(data);
 }
@@ -40,7 +52,7 @@ async function handleLuuThayDoi(event) {
     event.preventDefault(); // Ngăn chặn reload
 
     const form = document.getElementById("inputForm");
-    
+
 
     if (!form.checkValidity()) {
         form.reportValidity();
@@ -91,7 +103,7 @@ function button_sua(data) {
             maGiaiDau.value = item.ma_giai_dau;
 
 
-            
+
             // Scroll lên đầu trang
             window.scrollTo({
                 top: 0,
@@ -121,7 +133,7 @@ async function loadDanhSachGiaiDau() {
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_giai_dau;
-        option.textContent = `${item.ma_giai_dau} - ${item.ten_giai_dau}`;
+        option.textContent = `${item.ten_giai_dau}`;
         selectElement.appendChild(option);
     });
 }

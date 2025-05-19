@@ -25,9 +25,34 @@ async function viewTbody() {
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
     // Dùng Promise.all để chờ tất cả hình ảnh tải xong
-    const rows = await Promise.all(data.map(async item => {
-        // const hinh_anh = await hamChung.getImage(item.hinh_anh);
-        // console.log(item.hinh_anh);
+    // const rows = await Promise.all(data.map(async item => {
+    //     // const hinh_anh = await hamChung.getImage(item.hinh_anh);
+    //     // console.log(item.hinh_anh);
+    //     let hinh_anh;
+    //     const row = document.createElement("tr");
+    //     // C:\Users\vanti\Desktop\quan_ly_tran_dau\frontend\public\images\cat-2.png
+
+    //     if (item.logo === null) {
+    //         hinh_anh = "/frontend/public/images/cat-2.png";
+    //     } else {
+    //         hinh_anh = await hamChung.getImage(item.logo);
+
+    //     }
+    //     row.innerHTML = `
+    //         <td style="text-align: center;">${item.ma_doi_bong}</td>
+    //         <td style="text-align: center;">${item.ten_doi_bong}</td>
+    //         <td style="text-align: center;">${item.quoc_gia}</td>
+    //         <td style="text-align: center;">${item.gioi_tinh}</td>
+    //         <td style="text-align: center;"><img src="${hinh_anh}" alt="Logo" width="50"></td>
+    //         <td style="text-align: center;">${item.ma_ql_doi_bong}</td>
+    //         <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
+    //         <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
+    //     `;
+    //     return row;
+    // }));
+
+
+    for (const item of data) {
         let hinh_anh;
         const row = document.createElement("tr");
         // C:\Users\vanti\Desktop\quan_ly_tran_dau\frontend\public\images\cat-2.png
@@ -36,23 +61,29 @@ async function viewTbody() {
             hinh_anh = "/frontend/public/images/cat-2.png";
         } else {
             hinh_anh = await hamChung.getImage(item.logo);
-            
+
         }
+        let qllDoiBong = item.ma_ql_doi_bong;
+        if (qllDoiBong != null) {
+            const data1NguoiDung = await hamChung.layThongTinTheo_ID("nguoi_dung", item.ma_ql_doi_bong);
+
+            qllDoiBong = data1NguoiDung.ho_ten;
+        }
+
         row.innerHTML = `
             <td style="text-align: center;">${item.ma_doi_bong}</td>
             <td style="text-align: center;">${item.ten_doi_bong}</td>
             <td style="text-align: center;">${item.quoc_gia}</td>
             <td style="text-align: center;">${item.gioi_tinh}</td>
             <td style="text-align: center;"><img src="${hinh_anh}" alt="Logo" width="50"></td>
-            <td style="text-align: center;">${item.ma_ql_doi_bong}</td>
+            <td style="text-align: center;">${qllDoiBong}</td>
             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
-        return row;
-    }));
+        tableBody.appendChild(row);
+    }
 
-    // Thêm tất cả hàng vào bảng cùng lúc
-    rows.forEach(row => tableBody.appendChild(row));
+
 
     button_sua(data);
     button_xoa(data);
@@ -109,7 +140,7 @@ async function handleLuuThayDoi(event) {
     if (inputFile.value != "") {
         await hamChung.uploadImage(inputFile.files[0]);
     }
- //   viewTbody();
+    //   viewTbody();
 }
 
 // Xử lý tải lại trang
@@ -131,7 +162,7 @@ function button_sua(data) {
             maQlDoiBong.value = item.ma_ql_doi_bong;
 
 
-            
+
             // Scroll lên đầu trang
             window.scrollTo({
                 top: 0,

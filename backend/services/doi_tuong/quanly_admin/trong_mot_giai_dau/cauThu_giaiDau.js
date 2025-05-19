@@ -30,7 +30,7 @@ async function viewTbody() {
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
-     for (const item of data) {
+    for (const item of data) {
         let hinh_anh;
         const row = document.createElement("tr");
         // C:\Users\vanti\Desktop\quan_ly_tran_dau\frontend\public\images\cat-2.png
@@ -40,14 +40,19 @@ async function viewTbody() {
         } else {
             hinh_anh = await hamChung.getImage(item.hinh_anh);
         }
+        const dataCauThu = await hamChung.layThongTinTheo_ID("cau_thu",item.ma_cau_thu);
+        const dataDoiBong = await hamChung.layThongTinTheo_ID("doi_bong",item.ma_doi_bong);
+        const dataGiaiDau = await hamChung.layThongTinTheo_ID("giai_dau",item.ma_giai_dau);
+        const dataViTri = await hamChung.layThongTinTheo_ID("vi_tri_cau_thu",item.ma_vi_tri);
         row.innerHTML = `
-            <td style="text-align: center;">${item.ma_cau_thu}</td>
-            <td style="text-align: center;">${item.ma_doi_bong}</td>
-            <td style="text-align: center;">${item.ma_giai_dau}</td>
-            <td style="text-align: center;">${item.ho_ten}</td>
+            <td style="text-align: center;">${dataCauThu.ho_ten}</td>
+             <td style="text-align: center;">${item.ho_ten}</td>
+            <td style="text-align: center;">${dataDoiBong.ten_doi_bong}</td>
+            <td style="text-align: center;">${dataGiaiDau.ten_giai_dau}</td>
+           
             <td style="text-align: center;"><img src="${hinh_anh}" alt="Hình ảnh" width="50"></td>
             <td style="text-align: center;">${item.so_ao}</td>
-            <td style="text-align: center;">${item.ma_vi_tri}</td>
+            <td style="text-align: center;">${dataViTri.ten_vi_tri}</td>
             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
@@ -99,7 +104,7 @@ async function handleLuuThayDoi(event) {
     if (inputFile.value != "") {
         await hamChung.uploadImage(inputFile.files[0]);
     }
-   // viewTbody();
+    // viewTbody();
 }
 
 // Xử lý tải lại trang
@@ -154,29 +159,29 @@ async function loadDanhSachCauThu() {
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_cau_thu;
-        option.textContent = `${item.ma_cau_thu} - ${item.ho_ten}`;
+        option.textContent = `${item.ho_ten}`;
         selectElement.appendChild(option);
     });
 }
 async function loadDanhSachDoiBong() {
     const selectElement = document.getElementById("maDoiBong");
-    selectElement.innerHTML = '<option value="">-- Chọn Đội Bong --</option>'; // Reset danh sách
+    selectElement.innerHTML = '<option value="">-- Chọn Đội Bóng --</option>'; // Reset danh sách
     const data = await hamChung.layDanhSach("doi_bong");
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_doi_bong;
-        option.textContent = `${item.ma_doi_bong} - ${item.ten_doi_bong}`;
+        option.textContent = `${item.ten_doi_bong}`;
         selectElement.appendChild(option);
     });
 }
 async function loadDanhSachGiaiDau() {
     const selectElement = document.getElementById("maGiaiDau");
-    selectElement.innerHTML = '<option value="">-- Chọn Mã Giải Đấu --</option>'; // Reset danh sách
+    selectElement.innerHTML = '<option value="">-- Chọn Giải Đấu --</option>'; // Reset danh sách
     const data = await hamChung.layDanhSach("giai_dau");
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_giai_dau;
-        option.textContent = `${item.ma_giai_dau} - ${item.ten_giai_dau}`;
+        option.textContent = `${item.ten_giai_dau}`;
         selectElement.appendChild(option);
     });
 }

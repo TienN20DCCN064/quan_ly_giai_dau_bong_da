@@ -28,11 +28,28 @@ async function viewTbody() {
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
-    data.forEach(item => {
+    // data.forEach(item => {
+    //     const row = document.createElement("tr");
+    //     row.innerHTML = `
+    //         <td style="text-align: center;">${item.ma_giai_dau}</td>
+    //         <td style="text-align: center;">${item.ma_doi_bong}</td>
+    //         <td style="text-align: center;">${item.thoi_gian_dang_ky}</td>
+    //         <td style="text-align: center;">${item.trang_thai}</td>
+    //         <td style="text-align: center;">${item.ly_do_tu_choi || ""}</td>
+    //         <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
+    //         <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
+    //     `;
+    //     tableBody.appendChild(row);
+    // });
+
+    for (const item of data) {
         const row = document.createElement("tr");
+        const data1giaiDau = await hamChung.layThongTinTheo_ID("giai_dau", item.ma_giai_dau);
+        const data1doiBong = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_bong);
+
         row.innerHTML = `
-            <td style="text-align: center;">${item.ma_giai_dau}</td>
-            <td style="text-align: center;">${item.ma_doi_bong}</td>
+            <td style="text-align: center;">${data1giaiDau.ten_giai_dau}</td>
+            <td style="text-align: center;">${data1doiBong.ten_doi_bong}</td>
             <td style="text-align: center;">${item.thoi_gian_dang_ky}</td>
             <td style="text-align: center;">${item.trang_thai}</td>
             <td style="text-align: center;">${item.ly_do_tu_choi || ""}</td>
@@ -40,7 +57,7 @@ async function viewTbody() {
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
         tableBody.appendChild(row);
-    });
+    }
 
     button_sua(data);
     button_xoa(data);
@@ -86,10 +103,13 @@ function handleTaiLaiTrang(event) {
 
 function button_sua(data) {
     document.querySelectorAll(".edit-btn").forEach((btn, index) => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", async () => {
             const item = data[index];
-            maGiaiDau.value = item.ma_giai_dau;
-            maDoiBong.value = item.ma_doi_bong;
+            const data1GiaiDau = await hamChung.layThongTinTheo_ID("giai_dau", item.ma_giai_dau);
+            const data1DoiBong = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_bong);
+            maGiaiDau.value = data1GiaiDau.ten_giai_dau;
+           
+            maDoiBong.value = data1DoiBong.ten_doi_bong;
             trangThai.value = item.trang_thai;
             lyDoTuChoi.value = item.ly_do_tu_choi || "";
 
@@ -275,11 +295,76 @@ async function viewTbody_chon(maGiaiDau, trangThai_chon) {
     const tableBody = document.getElementById("dataTable_chon");
     tableBody.innerHTML = "";
 
-    data.forEach(item => {
+    // data.forEach(item => {
+    //     const row = document.createElement("tr");
+    //     row.innerHTML = `
+    //         <td style="text-align: center;">${item.ma_giai_dau}</td>
+    //         <td style="text-align: center;">${item.ma_doi_bong}</td>
+    //         <td style="text-align: center;">${item.thoi_gian_dang_ky}</td>
+    //         <td style="text-align: center;">${item.ly_do_tu_choi || ""}</td>
+    //         <td style="text-align: center;">
+    //             <select class="status-select form-control form-control-sm">
+    //                 <option value="Chờ duyệt" ${item.trang_thai === 'Chờ duyệt' ? 'selected' : ''} style="background-color: #f0ad4e; color: white;">Chờ duyệt</option>
+    //                 <option value="Đã duyệt" ${item.trang_thai === 'Đã duyệt' ? 'selected' : ''} style="background-color: #5bc0de; color: white;">Đã duyệt</option>
+    //                 <option value="Từ chối" ${item.trang_thai === 'Từ chối' ? 'selected' : ''} style="background-color: #d9534f; color: white;">Từ chối</option>
+    //             </select>
+    //         </td>
+    //         <td style="text-align: center;"><button class="xem_doi btn btn-warning btn-sm">Xem Đội</button></td>
+    //     `;
+    //     tableBody.appendChild(row);
+
+    //     // Lắng nghe sự kiện change của select
+    //     const select = row.querySelector('.status-select');
+    //     const options = select.querySelectorAll('option');
+
+    //     const xemDoiBtn = row.querySelector('.xem_doi');
+    //     // Hàm thay đổi màu nền của select khi thay đổi giá trị
+    //     select.addEventListener('change', (e) => {
+    //         const selectedOption = e.target.options[e.target.selectedIndex];
+    //         const selectedColor = selectedOption.style.backgroundColor;
+    //         e.target.style.backgroundColor = selectedColor;
+    //         // Cập nhật giá trị trang_thai khi người dùng thay đổi
+    //         const newTrangThai = e.target.value;
+    //         const maDoiBong = row.querySelector('td:nth-child(2)').textContent; // Lấy mã đội bóng (có thể thay đổi tuỳ theo cấu trúc dữ liệu)
+
+    //         console.log(`Trạng thái đã thay đổi: ${newTrangThai} cho đội bóng: ${maDoiBong}`);
+    //         const formData = {
+    //             "ma_doi_bong": item.ma_doi_bong,
+    //             "ma_giai_dau": item.ma_giai_dau,
+    //             "trang_thai": newTrangThai
+    //         };
+    //         hamChung.sua(formData, "dang_ky_tham_gia_giai");
+    //         console.log(formData);
+
+    //     });
+
+    //     // Đặt màu nền ban đầu của select khi trang thái đã chọn
+    //     const selectedOption = Array.from(options).find(option => option.selected);
+    //     if (selectedOption) {
+    //         select.style.backgroundColor = selectedOption.style.backgroundColor;
+    //     }
+    //     xemDoiBtn.addEventListener('click', async () => {
+    //         const maDoiBong = item.ma_doi_bong;
+    //         const maGiaiDau = item.ma_giai_dau;
+
+    //         console.log(`Xem đội: ${maDoiBong} trong giải đấu: ${maGiaiDau}`);
+
+
+    //         await hienOverlayCauThu(maGiaiDau, maDoiBong); // Gọi hàm mở danh sách cầu thủ với mã đội bóng
+
+    //         document.getElementById("btn_luuThongTinCauThuDa").classList.add("hidden");
+
+    //     });
+
+    // });
+    for (const item of data) {
         const row = document.createElement("tr");
+        const data1giaiDau = await hamChung.layThongTinTheo_ID("giai_dau", item.ma_giai_dau);
+        const data1doiBong = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_bong);
+
         row.innerHTML = `
-            <td style="text-align: center;">${item.ma_giai_dau}</td>
-            <td style="text-align: center;">${item.ma_doi_bong}</td>
+            <td style="text-align: center;">${data1giaiDau.ten_giai_dau}</td>
+            <td style="text-align: center;">${data1doiBong.ten_doi_bong}</td>
             <td style="text-align: center;">${item.thoi_gian_dang_ky}</td>
             <td style="text-align: center;">${item.ly_do_tu_choi || ""}</td>
             <td style="text-align: center;">
@@ -335,8 +420,7 @@ async function viewTbody_chon(maGiaiDau, trangThai_chon) {
             document.getElementById("btn_luuThongTinCauThuDa").classList.add("hidden");
 
         });
-
-    });
+    }
 
 
 }
@@ -349,7 +433,7 @@ async function loadDanhSachGiaiDau_chon() {
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_giai_dau;
-        option.textContent = `${item.ma_giai_dau} - ${item.ten_giai_dau}`;
+        option.textContent = `${item.ten_giai_dau}`;
         selectElement.appendChild(option);
     });
 }

@@ -35,11 +35,12 @@ async function viewTbody() {
     tableBody.innerHTML = "";
 
     // Dùng Promise.all để chờ tất cả hình ảnh tải xong
-    const rows = await Promise.all(data.map(async item => {
-
+    // const rows = await Promise.all(data.map(async item => {
+    for (let i = 0; i < data.length; i++) {
         // const row = document.createElement("tr");
         // const hinh_anh = await hamChung.getImage(item.hinh_anh);
         // console.log(item.hinh_anh);
+        const item = data[i];
         let hinh_anh;
         const row = document.createElement("tr");
         // C:\Users\vanti\Desktop\quan_ly_tran_dau\frontend\public\images\cat-2.png
@@ -50,23 +51,26 @@ async function viewTbody() {
             hinh_anh = await hamChung.getImage(item.hinh_anh);
         }
         // console.log(item.maGioiTinh)
+        const dataDoiBong1 = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_bong);
+        const data1VT = await hamChung.layThongTinTheo_ID("vi_tri_cau_thu", item.ma_vi_tri);
+
         row.innerHTML = `
             <td style="text-align: center;">${item.ma_cau_thu}</td>
             <td style="text-align: center;">${item.ho_ten}</td>
             <td style="text-align: center;">${item.ngay_sinh}</td>
             <td style="text-align: center;">${item.so_ao}</td>
             <td style="text-align: center;">${item.gioi_tinh}</td>
-            <td style="text-align: center;">${item.ma_vi_tri}</td>
-            <td style="text-align: center;">${item.ma_doi_bong}</td>
+            <td style="text-align: center;">${data1VT.ten_vi_tri}</td>
+            <td style="text-align: center;">${dataDoiBong1.ten_doi_bong}</td>
             <td style="text-align: center;"><img src="${hinh_anh}" alt="Hình ảnh" width="50"></td>
             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
-        return row;
-    }));
+        tableBody.appendChild(row);
+    }
 
     // Thêm tất cả hàng vào bảng cùng lúc
-    rows.forEach(row => tableBody.appendChild(row));
+    // rows.forEach(row => tableBody.appendChild(row));
 
     button_sua(data);
     button_xoa(data);
@@ -198,7 +202,7 @@ async function loadDanhSachDoiBong() {
     // Đặt giá trị mặc định
     selectElement.value = doiTuyenDangChon;
 
-    
+
     // const option = document.createElement("option");
     // option.value = doiTuyenDangChon.ma_doi_bong;
     // option.textContent = `${doiTuyenDangChon.ma_doi_bong} - ${doiTuyenDangChon.ten_doi_bong}`;

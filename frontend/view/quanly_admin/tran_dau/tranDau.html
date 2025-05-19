@@ -49,7 +49,7 @@
         }
     </style>
 
-    <div id="bangTrongTaiContainer" class="modal">
+    <div id="modalSuaKetQua" class="modal">
         <div class="modal-content">
 
             <h5>Sửa kết quả trận đấu</h5>
@@ -105,26 +105,26 @@
                             <input path="maGiaiDau" type="text" class="form-control" id="maGiaiDau" />
                         </div> -->
                         <div class="col-md-3">
-                            <label class="font-weight-bold">Mã Giải Đấu</label>
+                            <label class="font-weight-bold">Giải Đấu</label>
                             <select class="form-control" id="maGiaiDau" required>
                                 <option value="">-- Chọn Giải Đấu --</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="font-weight-bold">Mã Vòng Đấu</label>
+                            <label class="font-weight-bold">Vòng Đấu</label>
                             <select class="form-control" id="maVongDau" required>
                                 <option value="">-- Chọn Vòng Đấu --</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="font-weight-bold">Mã Đội 1</label>
+                            <label class="font-weight-bold">Đội 1</label>
                             <select class="form-control" id="maDoi1" required>
                                 <option value="">-- Chọn Đội 1 --</option>
                             </select>
                         </div>
 
                         <div class="col-md-3">
-                            <label class="font-weight-bold">Mã Đội 2</label>
+                            <label class="font-weight-bold">Đội 2</label>
                             <select class="form-control" id="maDoi2" required>
                                 <option value="">-- Chọn Đội 2 --</option>
                             </select>
@@ -164,11 +164,7 @@
                                 <option value="">-- Chọn Trọng Tài --</option>
                             </select>
                         </div> -->
-                        <div class="col-md-3">
-                            <label class="font-weight-bold">Danh Sách Trọng Tài</label>
-                            <button id="button_xem_ds_trongTai">Xem Danh Sách</button>
-                        </div>
-
+                        
                         <div class="col-md-3">
                             <label class="font-weight-bold">Trạng Thái</label>
                             <select path="trangThai" class="form-control" id="trangThai">
@@ -177,6 +173,11 @@
                                 <option value="Hoàn tất">Hoàn tất</option>
                             </select>
                         </div>
+                        <div class="col-md-3">
+                            <label class="font-weight-bold">Danh Sách Trọng Tài</label>
+                            <button id="button_xem_ds_trongTai">Xem Danh Sách</button>
+                        </div>
+
 
                         <!-- <div class="col-md-3">
                             <label class="font-weight-bold">Mã Vòng Đấu</label>
@@ -254,7 +255,7 @@
             </div>
         </main>
 
-        <div id="modalKetQua" class="modal">
+        <div id="modalSuaThongTai" class="modal">
             <div class="modal-content">
 
                 <h5>Danh Sách Trọng Tài</h5>
@@ -370,7 +371,9 @@
                     <button id="closePopup" class="btn btn-danger " style="margin-top: 0;">Đóng</button>
                 </div>
                 <div class="col-md-12 mt-3">
-                    <div id="thong_bao" style="text-align: center; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; padding: 10px; border-radius: 5px; font-weight: bold;"></div>
+                    <div id="thong_bao"
+                        style="text-align: center; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; padding: 10px; border-radius: 5px; font-weight: bold;">
+                    </div>
 
                 </div>
 
@@ -429,16 +432,23 @@
             </form>
 
             <div class="card-body">
-                <table class="table table-bordered table-hover">
+                <table>
                     <thead class="thead-dark">
                         <tr>
-                            <th>Bảng</th>
-                            <th>STT</th>
-                            <th>Đội 1</th>
-                            <th>Đội 2</th>
-                            <th>Ngày</th>
-                            <th>Giờ</th>
-                            <th>Sân</th>
+
+
+                            <th style="text-align: center;">Bảng</th>
+                            <th style="text-align: center;">STT</th>
+                            <th style="text-align: center;">Đội 1</th>
+                            <th style="text-align: center;">Đội 2</th>
+                            <th style="text-align: center;">Ngày</th>
+                            <th style="text-align: center;">Giờ</th>
+
+                            <th style="text-align: center;">Sân</th>
+                             <th style="text-align: center;">Vòng Đấu</th>
+
+
+
                         </tr>
                     </thead>
                     <tbody id="bodyBangTaoTran">

@@ -221,7 +221,7 @@ Object.entries(tables).forEach(([table, keys]) => {
 
         db.query(sql, params, (err) => {
             if (err) return res.status(500).send(`Lỗi khi xóa từ ${table}: ${err.message}`);
-            res.send(`Xóa từ ${table} thành công`);
+            // res.send(`Xóa từ ${table} thành công`);
         });
     });
 
@@ -248,7 +248,7 @@ Object.entries(tables).forEach(([table, keys]) => {
             if (result.affectedRows === 0) {
                 return res.status(404).send(`Không tìm thấy bản ghi để cập nhật.`);
             }
-            res.send(`Cập nhật ${table} thành công!`);
+            // res.send(`Cập nhật ${table} thành công!`);
         });
     });
 
@@ -269,7 +269,7 @@ Object.entries(tables).forEach(([table, keys]) => {
 
         db.query(sql, values, (err) => {
             if (err) return res.status(500).send(`Lỗi khi thêm vào ${table}: ${err.message}`);
-            res.status(201).send(`Thêm vào ${table} thành công`);
+            // res.status(201).send(`Thêm vào ${table} thành công`);
         });
     });
 

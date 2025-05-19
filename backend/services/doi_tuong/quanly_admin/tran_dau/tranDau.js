@@ -127,17 +127,22 @@ async function viewTbody(data) {
         const ketQua = await layKetQua(item.ma_tran_dau);
         console.log(ketQua);
         const row = document.createElement("tr");
+        const dataGiaiDau = await hamChung.layThongTinTheo_ID("giai_dau", item.ma_giai_dau);
+        const dataDoiBong1 = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_1);
+        const dataDoiBong2 = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_2);
+        const dataVongDau = await hamChung.layThongTinTheo_ID("vong_dau", item.ma_vong_dau);
+        const data1SVD = await hamChung.layThongTinTheo_ID("san_van_dong", item.ma_san);
         row.innerHTML = `
             <td style="text-align: center;">${item.ma_tran_dau}</td>
-            <td style="text-align: center;">${item.ma_giai_dau}</td>
-            <td style="text-align: center;">${item.ma_doi_1}</td>
-            <td style="text-align: center;">${item.ma_doi_2}</td>
+            <td style="text-align: center;">${dataGiaiDau.ten_giai_dau}</td>
+            <td style="text-align: center;">${dataDoiBong1.ten_doi_bong}</td>
+            <td style="text-align: center;">${dataDoiBong2.ten_doi_bong}</td>
             <td style="text-align: center;">${item.ngay_dien_ra}</td>
             <td style="text-align: center;">${item.gio_dien_ra}</td>
-            <td style="text-align: center;">${item.ma_san}</td>
+            <td style="text-align: center;">${data1SVD.ten_san}</td>
             <td style="text-align: center;"><button class="xemTrongTai-btn btn btn-warning btn-sm">Xem ds</button></td>
             <td style="text-align: center;">${item.trang_thai}</td>
-            <td style="text-align: center;">${item.ma_vong_dau}</td>
+            <td style="text-align: center;">${dataVongDau.ten_vong}</td>
             <td style="text-align: center;">${ketQua}</td>
             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa thông tin</button></td>
             <td style="text-align: center;"><button class="edit-kq-btn btn btn-warning btn-sm">Sửa kết quả </button></td>
@@ -250,7 +255,7 @@ function button_xemDs_trongTai_table() {
             const dataTrongTai = await hamChung.layDanhSach("trong_tai_tran_dau");
             const dsTrongTaiCuaTranDau = dataTrongTai.filter(item => item.ma_tran_dau === tranDauId);
             console.log(dsTrongTaiCuaTranDau);
-            const modal = document.getElementById("modalKetQua");
+            const modal = document.getElementById("modalSuaThongTai");
             modal.style.display = "block";
             const tt_chinh = document.getElementById("tt_chinh");
             const tt_phu = document.getElementById("tt_phu");
@@ -258,33 +263,113 @@ function button_xemDs_trongTai_table() {
             const tt_var = document.getElementById("tt_var");
             const btnLuuKetQua = document.getElementById("bt_luu_tt");
             const btnHuyThayDoi = document.getElementById("bt_huy_luu_tt");
-            loadDanhSachTrongTai("tt_chinh");
-            loadDanhSachTrongTai("tt_phu");
-            loadDanhSachTrongTai("tt_ban");
-            loadDanhSachTrongTai("tt_var");
+            await loadDanhSachTrongTai("tt_chinh");
+            await loadDanhSachTrongTai("tt_phu");
+            await loadDanhSachTrongTai("tt_ban");
+            await loadDanhSachTrongTai("tt_var");
+
+            const danhSachTrongTai = await layDanhSachTrongTai_theoTranDau(tranDauId);
             console.log(tranDauId);
+            console.log(danhSachTrongTai);
+            // Gán trọng tài đã có vào các select
+            danhSachTrongTai.forEach((tt) => {
+                let loaiTrongTai = tt.ma_loai_trong_tai;
+                console.log(loaiTrongTai);
+                if (loaiTrongTai === "LT01") {
+                    tt_chinh.value = tt.ma_trong_tai;
+                } else if (loaiTrongTai === "LT02") {
+                    tt_phu.value = tt.ma_trong_tai;
+                } else if (loaiTrongTai === "LT03") {
+                    tt_ban.value = tt.ma_trong_tai;
+                } else if (loaiTrongTai === "LT04") {
+                    tt_var.value = tt.ma_trong_tai;
+                }
+            });
+
             btnHuyThayDoi.addEventListener("click", () => {
                 console.log("tienbloc");
                 modal.style.display = "none"; // Đóng modal khi nhấn nút hủy
             });
-            btnLuuKetQua.addEventListener("click", () => {
+            btnLuuKetQua.addEventListener("click", async (event) => {
                 console.log("Lưu trọng tài");
-
+                // layDanhSachTrongTai_theoTranDau(tranDauId);
+                console.log(await layDanhSachTrongTai_theoTranDau(tranDauId));
+                await them_danhSachTrongTaiMoi_theoTran(tranDauId);
+                event.preventDefault();
+                location.reload();
             });
 
         });
     });
 }
-function button_sua_ket_qua() {
-    document.querySelectorAll(".edit-kq-btn").forEach((btn) => {
 
+
+async function layDanhSachTrongTai_theoTranDau(maTranDau) {
+    const dataTrongTaiTranDau = await hamChung.layDanhSach("trong_tai_tran_dau");
+    const dataTrongTai_1TranDau = dataTrongTaiTranDau.filter(data => data.ma_tran_dau === maTranDau);
+    // const data_bangDau_giaiDau = data_bangDau.filter(item => item.ma_giai_dau === document.getElementById("maGiaiDau_chon").value);
+    return dataTrongTai_1TranDau;
+}
+async function them_danhSachTrongTaiMoi_theoTran(maTranDau) {
+    const danhSachTrongTai = await layDanhSachTrongTai_theoTranDau(maTranDau);
+    const danhSachTT = [
+        { loai: "LT01", select: document.getElementById("tt_chinh") },
+        { loai: "LT02", select: document.getElementById("tt_phu") },
+        { loai: "LT03", select: document.getElementById("tt_ban") },
+        { loai: "LT04", select: document.getElementById("tt_var") }
+    ];
+    // 🔍 Kiểm tra các giá trị được chọn không trùng nhau
+    const chonKhacRong = danhSachTT
+        .map(tt => tt.select.value)
+        .filter(val => val !== '');
+
+    const coTrung = chonKhacRong.some((val, index) => chonKhacRong.indexOf(val) !== index);
+
+    if (coTrung) {
+        alert("Các trọng tài đã chọn không được trùng nhau!");
+        return; // Dừng lại, không thực hiện tiếp
+    }
+
+    for (let i = 0; i < danhSachTrongTai.length; i++) {
+        let formDelete = {
+            ma_tran_dau: maTranDau,
+            ma_trong_tai: danhSachTrongTai[i].ma_trong_tai
+        }
+        console.log(formDelete);
+        await hamChung.xoa(formDelete, "trong_tai_tran_dau");
+    }
+
+
+    // Duyệt qua danh sách trọng tài để xử lý
+    for (let i = 0; i < danhSachTT.length; i++) {
+
+        const formInsert = {
+            ma_tran_dau: maTranDau,
+            ma_trong_tai: danhSachTT[i].select.value,
+            ma_loai_trong_tai: danhSachTT[i].loai
+        };
+        if (formInsert.ma_trong_tai != '') {
+            console.log(formInsert);
+            await hamChung.them(formInsert, "trong_tai_tran_dau");
+        }
+    }
+
+
+
+
+}
+function button_sua_ket_qua() {
+
+    document.querySelectorAll(".edit-kq-btn").forEach((btn) => {
+      
         btn.addEventListener("click", async () => {
+              console.log("suqa kq");
             const tranDauId = btn.closest("tr").children[0].textContent;
             const btnLuuKetQua = document.getElementById("bt_luuKQ");
             const btnHuyThayDoi = document.getElementById("bt_huyThayDoi");
             const item = await hamChung.layThongTinTheo_ID("tran_dau", tranDauId);
 
-            const modal = document.getElementById("modalKetQua");
+            const modal = document.getElementById("modalSuaKetQua");
 
             const soBanDoi1 = document.getElementById("soBanDoi1");
             const soBanDoi2 = document.getElementById("soBanDoi2");
@@ -299,16 +384,7 @@ function button_sua_ket_qua() {
 
             let ghiChuText = "";
 
-            // const layDanhSach_kqTranDau = await hamChung.layDanhSach("ket_qua_tran_dau");
-            // const tonTai = layDanhSach_kqTranDau.some(kq => kq.ma_tran_dau === tranDauId);
-            // if (tonTai) {
-            //     console.log("Trận đấu đã có kết quả, tiến hành sửa");
-            //    ghiChuText = (await hamChung.layThongTinTheo_ID("ket_qua_tran_dau", tranDauId)).ghi_chu;
-            // } 
 
-            // console.log(tranDauId);
-            // const kq_tranDau = await hamChung.layThongTinTheo_ID("ket_qua_tran_dau", tranDauId);
-            // console.log(kq_tranDau);
 
             // Reset kết quả
             soBanDoi1.value = 0;
@@ -385,12 +461,12 @@ function button_xoa(data) {
 
 async function loadDanhSachGiaiDau() {
     const selectElement = document.getElementById("maGiaiDau");
-    selectElement.innerHTML = '<option value="">-- Chọn Mã Giải Đấu --</option>'; // Reset danh sách
+    selectElement.innerHTML = '<option value="">-- Chọn Giải Đấu --</option>'; // Reset danh sách
     const data = await hamChung.layDanhSach("giai_dau");
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_giai_dau;
-        option.textContent = `${item.ma_giai_dau} - ${item.ten_giai_dau}`;
+        option.textContent = `${item.ten_giai_dau}`;
         selectElement.appendChild(option);
     });
 }
@@ -401,7 +477,7 @@ async function loadDanhSachDoiBong_maDoi1() {
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_doi_bong;
-        option.textContent = `${item.ma_doi_bong} - ${item.ten_doi_bong}`;
+        option.textContent = `${item.ten_doi_bong}`;
         selectElement.appendChild(option);
     });
 }
@@ -412,7 +488,7 @@ async function loadDanhSachDoiBong_maDoi2() {
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_doi_bong;
-        option.textContent = `${item.ma_doi_bong} - ${item.ten_doi_bong}`;
+        option.textContent = `${item.ten_doi_bong}`;
         selectElement.appendChild(option);
     });
 }
@@ -440,7 +516,7 @@ async function loadDanhSachSanVanDong() {
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_san;
-        option.textContent = `${item.ma_san} - ${item.ten_san}`;
+        option.textContent = `${item.ten_san}`;
         selectElement.appendChild(option);
     });
 }
@@ -448,12 +524,12 @@ async function loadDanhSachTrongTai(id) {
     const selectElement = document.getElementById(id);
     console.log(id);
     selectElement.innerHTML = '<option value="">-- Chọn--</option>'; // Reset danh sách
-    const data = await hamChung.layDanhSach("loai_trong_tai");
+    const data = await hamChung.layDanhSach("trong_tai");
     // console.log(data);
     data.forEach(item => {
         const option = document.createElement("option");
-        option.value = item.ma_loai_trong_tai;
-        option.textContent = `${item.ma_loai_trong_tai} - ${item.ten_loai_trong_tai}`;
+        option.value = item.ma_trong_tai;
+        option.textContent = `${item.ho_ten}`;
         selectElement.appendChild(option);
     });
 }
@@ -605,29 +681,54 @@ async function taoTranDau(hinhThucTaoTran) {
 
         // Lặp qua mảng 'bangs' để in thông tin từng bảng
         console.log(bangDau_tranDau.bangs);
-        bangDau_tranDau.bangs.forEach((bang, index) => {
-            // Kiểm tra nếu 'bang' và 'bang.bang' có dữ liệu hợp lệ
+        // bangDau_tranDau.bangs.forEach((bang, index) => {
+        //     // Kiểm tra nếu 'bang' và 'bang.bang' có dữ liệu hợp lệ
+        //     if (bang && bang.bang && bang.bang.ten_bang_dau) {
+        //         // Thêm thông tin bảng vào danh sách
+        //         danhSachBang += `<li><strong>Bảng ${index + 1} (${bang.bang.ten_bang_dau}):</strong><ul>`;
+
+        //         // Kiểm tra xem 'bang.doi' có phải là mảng không và chứa các đội bóng
+        //         if (Array.isArray(bang.doi) && bang.doi.length > 0) {
+        //             bang.doi.forEach(async (doi, doiIndex) => {
+        //                 const data1doi = await hamChung.layThongTinTheo_ID("doi_bong", doi);
+        //                 console.log(data1doi.ten_doi_bong);
+        //                 // Hiển thị thông tin đội bóng. Giả sử 'doi' là mã đội, bạn có thể thay đổi nếu có thêm thông tin đội.
+        //                 danhSachBang += `<li>Đội ${doiIndex + 1}: ${doi}</li>`;
+        //             });
+        //         } else {
+        //             // Nếu không có đội bóng, hiển thị thông báo
+        //             danhSachBang += `<li>Không có đội bóng trong bảng</li>`;
+        //         }
+
+        //         danhSachBang += "</ul></li>"; // Kết thúc danh sách đội bóng trong bảng
+        //     } else {
+        //         // Nếu dữ liệu bảng không hợp lệ, hiển thị cảnh báo
+        //         console.warn("Dữ liệu bảng không hợp lệ:", bang);
+        //     }
+        // });
+        for (let index = 0; index < bangDau_tranDau.bangs.length; index++) {
+            const bang = bangDau_tranDau.bangs[index];
+
             if (bang && bang.bang && bang.bang.ten_bang_dau) {
-                // Thêm thông tin bảng vào danh sách
                 danhSachBang += `<li><strong>Bảng ${index + 1} (${bang.bang.ten_bang_dau}):</strong><ul>`;
 
-                // Kiểm tra xem 'bang.doi' có phải là mảng không và chứa các đội bóng
                 if (Array.isArray(bang.doi) && bang.doi.length > 0) {
-                    bang.doi.forEach((doi, doiIndex) => {
-                        // Hiển thị thông tin đội bóng. Giả sử 'doi' là mã đội, bạn có thể thay đổi nếu có thêm thông tin đội.
-                        danhSachBang += `<li>Đội ${doiIndex + 1}: ${doi}</li>`;
-                    });
+                    for (let doiIndex = 0; doiIndex < bang.doi.length; doiIndex++) {
+                        const doi = bang.doi[doiIndex];
+                        const data1doi = await hamChung.layThongTinTheo_ID("doi_bong", doi);
+                        console.log(data1doi.ten_doi_bong);
+
+                        danhSachBang += `<li>Đội ${doiIndex + 1}: ${data1doi.ten_doi_bong}</li>`;
+                    }
                 } else {
-                    // Nếu không có đội bóng, hiển thị thông báo
                     danhSachBang += `<li>Không có đội bóng trong bảng</li>`;
                 }
 
-                danhSachBang += "</ul></li>"; // Kết thúc danh sách đội bóng trong bảng
+                danhSachBang += "</ul></li>";
             } else {
-                // Nếu dữ liệu bảng không hợp lệ, hiển thị cảnh báo
                 console.warn("Dữ liệu bảng không hợp lệ:", bang);
             }
-        });
+        }
 
         danhSachBang += "</ul>"; // Kết thúc danh sách bảng
 
@@ -893,17 +994,25 @@ async function view_danhSachTranDau_duocTao(danhSanhTranDau_theoBang) {
     const dataSanVanDong = await hamChung.layDanhSach("san_van_dong");
     // chỉ lấy mã sân
     const danhSachSan = dataSanVanDong.map(item => item.ma_san);
-
-
+    const dataVongDau = await hamChung.layDanhSach("vong_dau");
+    const hinhThucTaoTran = document.getElementById("chon_hinhThuc_tao_tran");
+    console.log(hinhThucTaoTran.value);
+    // "chia-bang"
 
     danhSanhTranDau_theoBang.forEach((bangData, indexBang) => {
         const bang = bangData.bang; // Thông tin về bảng
         const lichThiDau = bangData.lich_thi_dau; // Danh sách các trận đấu của bảng
 
         // Tạo một dòng cho thông tin bảng (mỗi bảng có thể có một dòng riêng)
+
+
+
+
         lichThiDau.forEach((tran, indexTran) => {
             const row = document.createElement("tr");
 
+            // const datadoi1 = await hamChung.layThongTinTheo_ID("doi_bong", tran.doi1);
+            // const datadoi2 = await hamChung.layThongTinTheo_ID("doi_bong", tran.doi2);
             row.innerHTML = `
                 <td>${bangData.bang.ten_bang_dau || '---'} </td> <!-- Số thứ tự bảng -->
                 <td>${tran.tran}</td> <!-- Số trận đấu -->
@@ -920,8 +1029,72 @@ async function view_danhSachTranDau_duocTao(danhSanhTranDau_theoBang) {
                         `).join('')}
                     </select>
                 </td>
+                
+               <td>
+                    <select data-field="vong" data-index="${indexBang}-${indexTran}">
+                      
+                        ${dataVongDau.map(vong => `
+                        <option value="${vong.ma_vong_dau}">
+                            ${vong.ten_vong}
+                        </option>
+                        `).join('')}
+                    </select>
+                </td>
+
+
 
             `;
+            if (hinhThucTaoTran.value === "chia-bang") {
+                const selectVongHtml = `
+                <select data-field="vong" data-index="${indexBang}-${indexTran}" disabled>
+                    ${dataVongDau.map(vong => `
+                        <option value="${vong.ma_vong_dau}" ${vong.ma_vong_dau === "V1" ? 'selected' : ''
+                    }>
+                            ${vong.ten_vong}
+                        </option>
+                    `).join('')}
+                </select>
+            `;
+
+                // Thay thế select vòng đấu trong row
+                const tdVong = row.querySelector('td:last-child');
+                tdVong.innerHTML = selectVongHtml;
+            }
+
+            else {
+                const chonVongDauDaDa = document.getElementById("maVongDau_chon");
+                //  console.log(chonVongDauDaDa.value);
+                let chonVong = "";
+                if (chonVongDauDaDa.value === "All") {
+                    chonVong = "V4";
+                }
+                else if (chonVongDauDaDa.value === "V1") {
+                    chonVong = "V2";
+                }
+                else if (chonVongDauDaDa.value === "V2") {
+                    chonVong = "V3";
+                }
+                else if (chonVongDauDaDa.value === "V3") {
+                    chonVong = "V4";
+                }
+                console.log(chonVong);
+
+                const selectVongHtml = `
+                <select data-field="vong" data-index="${indexBang}-${indexTran}">
+                    ${dataVongDau.map(vong => `
+                        <option value="${vong.ma_vong_dau}" ${vong.ma_vong_dau === chonVong ? 'selected' : ''
+                    }>
+                            ${vong.ten_vong}
+                        </option>
+                    `).join('')}
+                </select>
+            `;
+
+                // Thay thế select vòng đấu trong row
+                const tdVong = row.querySelector('td:last-child');
+                tdVong.innerHTML = selectVongHtml;
+            }
+
 
             // Lắng nghe sự kiện khi người dùng thay đổi giá trị
             row.querySelectorAll('input').forEach(input => {
@@ -1045,7 +1218,7 @@ async function loadDanhSachGiaiDau_chon() {
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_giai_dau;
-        option.textContent = `${item.ma_giai_dau} - ${item.ten_giai_dau}`;
+        option.textContent = `${item.ten_giai_dau}`;
         selectElement.appendChild(option);
     });
 }
@@ -1089,7 +1262,7 @@ async function loadDanhSach_hinhThuc_xepTranDau() {
     Object.entries(data_tao).forEach(([ten, duong_dan]) => {
         const option = document.createElement("option");
         option.value = ten;
-        option.textContent = `${duong_dan.ten} - ${duong_dan.url}`;
+        option.textContent = `${duong_dan.ten}`;
         // console.log(da)
         selectElement.appendChild(option);
     });
@@ -1174,7 +1347,8 @@ async function themDanhSachTranDau_vaoDaTa() {
         const gio_dien_ra = gio_dien_ra_raw ? gio_dien_ra_raw + ":00" : null;
 
         const ma_san = cells[6]?.querySelector("select")?.value || null;
-        const ma_vong_dau = "V1"; // Cứng mã vòng đấu
+        const selectVong = cells[7]?.querySelector('select[data-field="vong"]');
+        const ma_vong_dau = selectVong?.value || null;
         let formData = {
             ma_tran_dau: ma_tran_dau,
             ma_giai_dau: ma_giai_dau,
@@ -1195,15 +1369,7 @@ async function themDanhSachTranDau_vaoDaTa() {
             hamChung.them(formData, "tran_dau");
         }
 
-        // console.log("✅ Dữ liệu trận đấu lấy từ DOM:", danhSachTranDauDaChon);
 
-        // //    Nếu bạn muốn thêm từng trận vào database:
-        // for (const tran of danhSachTranDauDaChon) {
-        //     await hamChung.them(tran, "tran_dau");
-        // }
-
-        // Hoặc nếu API chấp nhận danh sách:
-        // await hamChung.themNhieu(danhSachTranDauDaChon, "tran_dau");
         index++;
     }
     if (index >= 1) {

@@ -28,18 +28,24 @@ async function viewTbody() {
     for (const item of data) {
 
         const row = document.createElement("tr");
+        const lay1TranDau = await hamChung.layThongTinTheo_ID("tran_dau", item.ma_tran_dau);
+
+        const lay1TrongTai = await hamChung.layThongTinTheo_ID("trong_tai", item.ma_trong_tai);
+
+        const lay1LoaiTrongTai = await hamChung.layThongTinTheo_ID("loai_trong_tai", item.ma_loai_trong_tai);
+
         row.innerHTML = `
             <td style="text-align: center;">${item.ma_tran_dau}</td>
-            <td style="text-align: center;">${item.ma_trong_tai}</td>
-            <td style="text-align: center;">${item.ma_loai_trong_tai}</td>
+            <td style="text-align: center;">${lay1TrongTai.ho_ten}</td>
+            <td style="text-align: center;">${lay1LoaiTrongTai.ten_loai_trong_tai}</td>
             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
-        return row;
+        tableBody.appendChild(row);
     }
 
     // Thêm tất cả hàng vào bảng cùng lúc
-    rows.forEach(row => tableBody.appendChild(row));
+    // rows.forEach(row => tableBody.appendChild(row));
 
     // Gán lại sự kiện cho các nút sau khi bảng đã cập nhật
     button_sua(data);
@@ -143,7 +149,7 @@ async function loadDanhSachTrongTai() {
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_trong_tai;
-        option.textContent = `${item.ma_trong_tai} - ${item.ho_ten}`;
+        option.textContent = `${item.ho_ten}`;
         selectElement.appendChild(option);
     });
 }
@@ -154,7 +160,7 @@ async function loadDanhSachLoaiTrongTai() {
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_loai_trong_tai;
-        option.textContent = `${item.ma_loai_trong_tai} - ${item.ten_loai_trong_tai}`;
+        option.textContent = `${item.ten_loai_trong_tai}`;
         selectElement.appendChild(option);
     });
 }
