@@ -18,27 +18,59 @@ const urlParams = new URLSearchParams(window.location.search);
 let ngay_xem_param = urlParams.get('ngay_xem');
 let ma_giai_dau_param = urlParams.get('ma_giai_dau'); // 123
 
+function isResponsive() {
+    return window.innerWidth <= 768;
+}
+
+// window.addEventListener('resize', () => {
+//     if (isResponsive()) {
+//         console.log("Chuyển sang chế độ responsive");
+
+//     } else {
+//         console.log("Chuyển sang chế độ desktop");
+//     }
+// });
 
 document.addEventListener("DOMContentLoaded", async function () {
 
-    
+
     if (ngay_xem_param === null && ma_giai_dau_param === null) {
         const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    
+
         const url = `/frontend/view/nguoihammo/home.html?ngay_xem=${today}&ma_giai_dau=${loai_GiaiDau_all}`;
         window.location.href = url;
     }
-    
+
     if (ngay_xem_param) {
         const today = new Date();
         const selected = new Date(ngay_xem_param);
-    
+
         // Tính số ngày giữa hôm nay và ngày được chọn
         const diffTime = selected - today;
         const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-    
+
         // Tính offset sao cho ngày được chọn nằm giữa
         offset = diffDays - Math.floor(range / 2);
+        let isCurrentlyResponsive = isResponsive();
+
+        window.addEventListener('resize', () => {
+            const nowResponsive = isResponsive();
+
+            if (nowResponsive && !isCurrentlyResponsive) {
+                console.log("Chuyển sang chế độ responsive");
+                offset = offset + 4;
+                renderDays(); // Cập nhật hiển thị
+            }
+
+            if (!nowResponsive && isCurrentlyResponsive) {
+                console.log("Chuyển sang chế độ desktop");
+                // offset = offset - 4;
+                renderDays(); // Cập nhật hiển thị
+            }
+
+            isCurrentlyResponsive = nowResponsive;
+        });
+
     }
     // Khởi tạo lịch ban đầu
     renderDays();
@@ -52,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
     await view_danhSach_tranDau_vs_giaiDau(ngay_xem_param, ma_giai_dau_param);
 
-   
+
     // Xử lý nút next/prev để chuyển ngày
     prevBtn.addEventListener('click', () => {
         offset -= 1;
@@ -64,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         renderDays();
     });
 
-    
+
 
     // Sự kiện cho các mục Bảng xếp hạng và Kết quả thi đấu
     document.getElementById("ranking").addEventListener("click", function () {
@@ -75,6 +107,17 @@ document.addEventListener("DOMContentLoaded", async function () {
         console.log("Bạn đã chọn Kết quả thi đấu");
     });
 
+    // tô màu ngày click vào 
+    const params = new URLSearchParams(window.location.search);
+    const ngayXem = params.get('ngay_xem');
+
+    if (ngayXem) {
+        const dateInput = document.getElementById('ngayDienRa');
+        dateInput.value = ngayXem;
+
+        // Optional: Tô màu ô lịch đã chọn (tuỳ style, mặc định browser có highlight rồi)
+        dateInput.classList.add('selected-date');
+    }
 
 
 
@@ -433,7 +476,7 @@ async function view_tranDau_nhieuGiai(containerId) {
         if (!data || data.length === 0) continue;
 
         // Hiển thị tiêu đề giải đấu
-        const dataGiaiDau =await hamChung.layThongTinTheo_ID("giai_dau",ma_giai_dau_param);
+        const dataGiaiDau = await hamChung.layThongTinTheo_ID("giai_dau", ma_giai_dau_param);
         const sectionHTML = `
             <div class="bg-gray-200 text-center py-2 mb-4 text-sm text-gray-700 font-semibold">
                 Lịch thi đấu - Giải: <span class="font-bold">${dataGiaiDau.ten_giai_dau}</span>
@@ -462,12 +505,12 @@ async function view_tranDau_nhieuGiai(containerId) {
                 <div class="flex items-center justify-between border-b border-gray-200 py-3">
                     <div class="font-bold text-sm w-24">${string_gioDienRa}</div>
                     <div class="flex items-center space-x-2 flex-1 justify-center text-sm">
-                        <div>${match.ma_doi_1}</div>
+                       
                         <div>${tenDoi1}</div>
                         <img src="${hinh_anh_1}" class="w-6 h-6" />
                         <div class="border border-green-600 rounded-full text-green-600 font-semibold px-3 py-0.5">${scoreString}</div>
                         <img src="${hinh_anh_2}" class="w-6 h-6" />
-                        <div>${match.ma_doi_2}</div>
+                  
                         <div>${tenDoi2}</div>
                     </div>
                 </div>
