@@ -89,10 +89,11 @@ async function viewTbody(data) {
         row.innerHTML = `
             <td style="text-align: start;">${item.ma_tran_dau}</td>
             <td style="text-align: start;">${item.ten_giai_dau}</td>
+            <td style="text-align: start;">${item.ten_vong}</td>
             <td style="text-align: start;">${item.ten_doi_quan_ly}</td>
             <td style="text-align: start;">${item.ten_doi_doi_thu}</td>
             <td style="text-align: start;">${new Date(item.ngay_dien_ra).toLocaleDateString('vi-VN')} - ${item.gio_dien_ra}</td>
-            <td style="text-align: start;">${item.san_van_dong}</td>
+            <td style="text-align: start;">${item.ten_san}</td>
             <td style="text-align: start;">${ketQua}</td>   
             <td style="text-align: start;">${item.ghi_chu}</td>
                  `;

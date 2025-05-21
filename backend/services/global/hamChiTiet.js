@@ -10,6 +10,9 @@ const hamChiTiet = {
     async laycauThuTheoDoiBong(doiBongID) {
         return await laycauThuTheoDoiBong(doiBongID);
     },
+    async layDsTranDau(maQL, ma_doi1, ma_doi2, ma_giai_dau, ma_vong_dau, ma_san, date_from, date_to) {
+        return await layDsTranDau(maQL, ma_doi1, ma_doi2, ma_giai_dau, ma_vong_dau, ma_san, date_from, date_to);
+    },
     //===================================Dang nhap================
     async dangNhap(data) {
         return await dangNhap(data);
@@ -76,6 +79,29 @@ async function layDoiBongTheoQL(maQL) {
     }
 }
 
+
+async function layDsTranDau(maQL, ma_doi1, ma_doi2, ma_giai_dau, ma_vong_dau, ma_san, date_from, date_to) {
+    const queryParams = new URLSearchParams();
+
+    if (maQL) queryParams.append("maQL", maQL);
+    if (ma_doi1) queryParams.append("ma_doi_1", ma_doi1);
+    if (ma_doi2) queryParams.append("ma_doi_2", ma_doi2);
+    if (ma_giai_dau) queryParams.append("ma_giai_dau", ma_giai_dau);
+    if (ma_vong_dau) queryParams.append("ma_vong_dau", ma_vong_dau);
+    if (ma_san) queryParams.append("san_van_dong", ma_san);
+    if (date_from) queryParams.append("tu_ngay", date_from);
+    if (date_to) queryParams.append("den_ngay", date_to);
+    
+    const url = GlobalStore.getLinkCongAPI() + 'trandau/quanly?' + queryParams;
+    console.log("URL: " + url);
+    try {
+        const response = await fetch(url);
+        return await response.json();
+    } catch (error) {
+        console.error('Lỗi khi lấy danh sách đội bóng theo quản lý:', error);
+        return [];
+    }
+}
 
 //===============================================Dang nhap
 

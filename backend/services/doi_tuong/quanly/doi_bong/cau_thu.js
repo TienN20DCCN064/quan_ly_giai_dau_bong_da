@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
     
-    
+     
 
 
     
@@ -32,9 +32,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 // Hiển thị danh sách cầu thủ
 async function viewTbody() {
 
-    const filterSelect = document.getElementById("filterDoiBong");
+        const maDoiBong = localStorage.getItem("ma_doi_bong");//document.getElementById("filterDoiBong");
     // Lấy mã đội bóng user đã chọn
-    const maDoiBong = filterSelect.value;
     console.log(maDoiBong);
     let data;
     
@@ -147,7 +146,7 @@ async function handleLuuThayDoi(event) {
             ho_ten: hoTen.value,
             ngay_sinh: ngaySinh.value,
             so_ao: soAo.value,
-            ma_gioi_tinh: maGioiTinh.value,
+            gioi_tinh: maGioiTinh.value,
             ma_vi_tri: maViTri.value,
             ma_doi_bong: maDoiBong.value,
             hinh_anh: id_Hinh_anh_thay
@@ -161,8 +160,16 @@ async function handleLuuThayDoi(event) {
     if (inputFile.value != "") {
         await hamChung.uploadImage(inputFile.files[0]);
     }
-    
-
+    maCauThu.value = "";
+    hoTen.value = "";
+    ngaySinh.value  = "";
+    soAo.value = "";
+    maGioiTinh.value = "";
+    maViTri.value = "";
+    maDoiBong.value = "";
+    hinhAnhFile.value = null;
+    hinhAnh.value = "";
+    document.getElementById("previewImage").src = "https://cdn4.vectorstock.com/i/1000x1000/58/48/blank-photo-icon-vector-3265848.jpg"
     //viewTbody();
 }
 
@@ -181,7 +188,7 @@ function button_sua(data) {
             hoTen.value = item.ho_ten;
             ngaySinh.value = item.ngay_sinh?.split("T")[0];//item.ngay_sinh;
             soAo.value = item.so_ao;
-            maGioiTinh.value = item.ma_gioi_tinh;
+            maGioiTinh.value = item.gioi_tinh;
             maViTri.value = item.ma_vi_tri;
             maDoiBong.value = item.ma_doi_bong;
             console.log(item);
