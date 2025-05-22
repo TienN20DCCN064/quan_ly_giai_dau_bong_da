@@ -104,9 +104,14 @@ async function layKetQua(ma_tran_dau) {
     const data = await hamChung.layThongTinTheo_ID("ket_qua_tran_dau", ma_tran_dau);
     console.log(ma_tran_dau);
     const data_doiThang = await hamChung.layThongTinTheo_ID("doi_bong", data.ma_doi_thang);
+    console.log(data_doiThang);
+    let tenDoiThang = ""
+    if (data.ma_doi_thang != null) {
+        tenDoiThang = data_doiThang.ten_doi_bong;
+    }
     if (data != null) {
 
-        stringKetQua = data_doiThang.ten_doi_bong + " " + data.so_ban_doi_1 + ":" + data.so_ban_doi_2;
+        stringKetQua = tenDoiThang + " " + data.so_ban_doi_1 + ":" + data.so_ban_doi_2;
     }
     console.log(stringKetQua);
     return stringKetQua;
@@ -361,9 +366,9 @@ async function them_danhSachTrongTaiMoi_theoTran(maTranDau) {
 function button_sua_ket_qua() {
 
     document.querySelectorAll(".edit-kq-btn").forEach((btn) => {
-      
+
         btn.addEventListener("click", async () => {
-              console.log("suqa kq");
+            console.log("suqa kq");
             const tranDauId = btn.closest("tr").children[0].textContent;
             const btnLuuKetQua = document.getElementById("bt_luuKQ");
             const btnHuyThayDoi = document.getElementById("bt_huyThayDoi");
@@ -681,31 +686,7 @@ async function taoTranDau(hinhThucTaoTran) {
 
         // Lặp qua mảng 'bangs' để in thông tin từng bảng
         console.log(bangDau_tranDau.bangs);
-        // bangDau_tranDau.bangs.forEach((bang, index) => {
-        //     // Kiểm tra nếu 'bang' và 'bang.bang' có dữ liệu hợp lệ
-        //     if (bang && bang.bang && bang.bang.ten_bang_dau) {
-        //         // Thêm thông tin bảng vào danh sách
-        //         danhSachBang += `<li><strong>Bảng ${index + 1} (${bang.bang.ten_bang_dau}):</strong><ul>`;
 
-        //         // Kiểm tra xem 'bang.doi' có phải là mảng không và chứa các đội bóng
-        //         if (Array.isArray(bang.doi) && bang.doi.length > 0) {
-        //             bang.doi.forEach(async (doi, doiIndex) => {
-        //                 const data1doi = await hamChung.layThongTinTheo_ID("doi_bong", doi);
-        //                 console.log(data1doi.ten_doi_bong);
-        //                 // Hiển thị thông tin đội bóng. Giả sử 'doi' là mã đội, bạn có thể thay đổi nếu có thêm thông tin đội.
-        //                 danhSachBang += `<li>Đội ${doiIndex + 1}: ${doi}</li>`;
-        //             });
-        //         } else {
-        //             // Nếu không có đội bóng, hiển thị thông báo
-        //             danhSachBang += `<li>Không có đội bóng trong bảng</li>`;
-        //         }
-
-        //         danhSachBang += "</ul></li>"; // Kết thúc danh sách đội bóng trong bảng
-        //     } else {
-        //         // Nếu dữ liệu bảng không hợp lệ, hiển thị cảnh báo
-        //         console.warn("Dữ liệu bảng không hợp lệ:", bang);
-        //     }
-        // });
         for (let index = 0; index < bangDau_tranDau.bangs.length; index++) {
             const bang = bangDau_tranDau.bangs[index];
 
@@ -999,25 +980,31 @@ async function view_danhSachTranDau_duocTao(danhSanhTranDau_theoBang) {
     console.log(hinhThucTaoTran.value);
     // "chia-bang"
 
-    danhSanhTranDau_theoBang.forEach((bangData, indexBang) => {
+
+    for (let i = 0; i < danhSanhTranDau_theoBang.length; i++) {
+        const bangData = danhSanhTranDau_theoBang[i];
+        const indexBang = i;
+
         const bang = bangData.bang; // Thông tin về bảng
         const lichThiDau = bangData.lich_thi_dau; // Danh sách các trận đấu của bảng
 
         // Tạo một dòng cho thông tin bảng (mỗi bảng có thể có một dòng riêng)
 
 
+        for (let i = 0; i < lichThiDau.length; i++) {
+            const tran = lichThiDau[i];
+            const indexTran = i;
 
 
-        lichThiDau.forEach((tran, indexTran) => {
             const row = document.createElement("tr");
 
-            // const datadoi1 = await hamChung.layThongTinTheo_ID("doi_bong", tran.doi1);
-            // const datadoi2 = await hamChung.layThongTinTheo_ID("doi_bong", tran.doi2);
+            const datadoi1 = await hamChung.layThongTinTheo_ID("doi_bong", tran.doi1);
+            const datadoi2 = await hamChung.layThongTinTheo_ID("doi_bong", tran.doi2);
             row.innerHTML = `
                 <td>${bangData.bang.ten_bang_dau || '---'} </td> <!-- Số thứ tự bảng -->
                 <td>${tran.tran}</td> <!-- Số trận đấu -->
-                <td>${tran.doi1}</td>
-                <td>${tran.doi2}</td>
+                <td data-value="${tran.doi1}">${datadoi1.ten_doi_bong}</td> <!-- Hiện tên, lưu mã -->
+                <td data-value="${tran.doi2}">${datadoi2.ten_doi_bong}</td>
                 <td><input type="date" value="${tran.ngay || ''}" data-field="ngay" data-index="${indexBang}-${indexTran}"></td>
                 <td><input type="time" value="${tran.gio || ''}" data-field="gio" data-index="${indexBang}-${indexTran}"></td>
                 <td>
@@ -1108,9 +1095,17 @@ async function view_danhSachTranDau_duocTao(danhSanhTranDau_theoBang) {
             });
 
             tbody.appendChild(row);
-        });
-    });
+
+        }
+
+
+
+
+    }
+
+
 }
+
 
 
 // Hàm xử lý khi 1 trong 2 thay đổi
@@ -1339,8 +1334,10 @@ async function themDanhSachTranDau_vaoDaTa() {
         const cells = row.querySelectorAll("td");
 
         const ma_tran_dau = await hamChung.taoID_theoBang("tran_dau");
-        const ma_doi_1 = cells[2]?.innerText.trim();
-        const ma_doi_2 = cells[3]?.innerText.trim();
+    
+        const ma_doi_1 = cells[2]?.dataset.value?.trim();
+        const ma_doi_2 = cells[3]?.dataset.value?.trim();
+
         const ngay_dien_ra = cells[4]?.querySelector("input")?.value || null;
 
         const gio_dien_ra_raw = cells[5]?.querySelector("input")?.value || null;

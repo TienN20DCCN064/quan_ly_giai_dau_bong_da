@@ -22,14 +22,14 @@ function isResponsive() {
     return window.innerWidth <= 768;
 }
 
-// window.addEventListener('resize', () => {
-//     if (isResponsive()) {
-//         console.log("Chuyển sang chế độ responsive");
+window.addEventListener('resize', () => {
+    if (isResponsive()) {
+        console.log("Chuyển sang chế độ responsive");
 
-//     } else {
-//         console.log("Chuyển sang chế độ desktop");
-//     }
-// });
+    } else {
+        console.log("Chuyển sang chế độ desktop");
+    }
+});
 
 document.addEventListener("DOMContentLoaded", async function () {
 
@@ -100,10 +100,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Sự kiện cho các mục Bảng xếp hạng và Kết quả thi đấu
     document.getElementById("ranking").addEventListener("click", function () {
+        const url = `/frontend/view/nguoihammo/bangXepHang.html`;
+        window.location.href = url;
         console.log("Bạn đã chọn Bảng xếp hạng");
     });
 
     document.getElementById("result").addEventListener("click", function () {
+         const url = `/frontend/view/nguoihammo/home.html`;
+        window.location.href = url;
         console.log("Bạn đã chọn Kết quả thi đấu");
     });
 
@@ -343,8 +347,9 @@ async function view_tranDau_motGiai(containerId) {
     `;
     container.insertAdjacentHTML("beforeend", sectionHTML);
 
-    // Hiển thị các trận đấu trong giải
-    data.forEach(async match => {
+    for (let i = 0; i < data.length; i++) {
+        const match = data[i];
+
         const tenDoi1 = await get_tenDoiBong(match.ma_doi_1);
         const tenDoi2 = await get_tenDoiBong(match.ma_doi_2);
 
@@ -379,7 +384,8 @@ async function view_tranDau_motGiai(containerId) {
             </div>
         `;
         container.insertAdjacentHTML("beforeend", matchHTML);
-    });
+
+      }
 }
 
 async function view_tranDau_motGiai(containerId) {
@@ -485,33 +491,34 @@ async function view_tranDau_nhieuGiai(containerId) {
         container.insertAdjacentHTML("beforeend", sectionHTML);
 
         for (const match of data) {
-            const tenDoi1 = await get_tenDoiBong(match.ma_doi_1);
-            const tenDoi2 = await get_tenDoiBong(match.ma_doi_2);
+
 
             const gio = match.gio_dien_ra.slice(0, 5); // Lấy "HH:MM"
             const [nam, thang, ngay] = match.ngay_dien_ra.split("-");
             const string_gioDienRa = `${gio} ${parseInt(ngay)}-${parseInt(thang)}`;
 
             const scoreString = await stringKq_tranDau(match.ma_tran_dau, match.ma_doi_1, match.ma_doi_2);
-            let id_hinh_anh_1 = await hamChung.layThongTinTheo_ID("doi_bong", match.ma_doi_1);
-            let id_hinh_anh_2 = await hamChung.layThongTinTheo_ID("doi_bong", match.ma_doi_2);
-            // let hinh_anh_1 = await hamChung.getImage(match.logo1);
-            // let hinh_anh_2 = await hamChung.getImage(match.logo2);
-            console.log(id_hinh_anh_1);
-            console.log(id_hinh_anh_2);
-            let hinh_anh_1 = await hamChung.getImage(id_hinh_anh_1.logo);
-            let hinh_anh_2 = await hamChung.getImage(id_hinh_anh_2.logo);
+            // let id_hinh_anh_1 = await hamChung.layThongTinTheo_ID("doi_bong", match.ma_doi_1);
+            // let id_hinh_anh_2 = await hamChung.layThongTinTheo_ID("doi_bong", match.ma_doi_2);
+            let doi_1 = await hamChung.layThongTinTheo_2_ID("doi_bong_giai_dau", match.ma_doi_1, dataGiaiDau.ma_giai_dau);
+            let doi_2 = await hamChung.layThongTinTheo_2_ID("doi_bong_giai_dau", match.ma_doi_2, dataGiaiDau.ma_giai_dau);
+
+            console.log(doi_1);
+            console.log(doi_2);
+
+            let hinh_anh_1 = await hamChung.getImage(doi_1.logo);
+            let hinh_anh_2 = await hamChung.getImage(doi_2.logo);
             const matchHTML = `
                 <div class="flex items-center justify-between border-b border-gray-200 py-3">
                     <div class="font-bold text-sm w-24">${string_gioDienRa}</div>
                     <div class="flex items-center space-x-2 flex-1 justify-center text-sm">
                        
-                        <div>${tenDoi1}</div>
+                        <div>${doi_1.ten_doi_bong}</div>
                         <img src="${hinh_anh_1}" class="w-6 h-6" />
                         <div class="border border-green-600 rounded-full text-green-600 font-semibold px-3 py-0.5">${scoreString}</div>
                         <img src="${hinh_anh_2}" class="w-6 h-6" />
                   
-                        <div>${tenDoi2}</div>
+                        <div>${doi_2.ten_doi_bong}</div>
                     </div>
                 </div>
             `;
@@ -521,28 +528,35 @@ async function view_tranDau_nhieuGiai(containerId) {
 }
 
 async function stringKq_tranDau(maTranDau, maDoi1, maDoi2) {
-    const data = await hamChung.layThongTinTheo_ID("ket_qua_tran_dau", maTranDau);
-    let stingKq_tranDau = "---";
-    if (data === null) {
-        return stingKq_tranDau;
-    }
-    const dataDoiThang = await hamChung.layThongTinTheo_ID("doi_bong", data.ma_doi_thang)
-    let soban1 = data.so_ban_doi_1;
-    let soban2 = data.so_ban_doi_2;
-    let sobanLonNhat = Math.max(soban1, soban2);
-    let sobanBeNhat = Math.min(soban1, soban2);
+    const dataKQTranDau = await hamChung.layDanhSach("ket_qua_tran_dau");
+    const checkDaCoKQChua = dataKQTranDau.find(item => item.ma_tran_dau === maTranDau);
+    let stingKq_tranDau = "----";
+    if (checkDaCoKQChua) {
+        const data = await hamChung.layThongTinTheo_ID("ket_qua_tran_dau", maTranDau);
+        console.log(data.ma_doi_thang);
+        // if (data === null) {
+        //     return stingKq_tranDau;
+        // }
+        const dataDoiThang = await hamChung.layThongTinTheo_ID("doi_bong", data.ma_doi_thang)
+        let soban1 = data.so_ban_doi_1;
+        let soban2 = data.so_ban_doi_2;
+        let sobanLonNhat = Math.max(soban1, soban2);
+        let sobanBeNhat = Math.min(soban1, soban2);
 
-    // số bàn lớn nhất
-    // in  ra cái đáu đàu tiên
-    console.log(data.ma_doi_thang + " " + maDoi1);
-    if (data.ma_doi_thang === maDoi1) {
-        stingKq_tranDau = "" + sobanLonNhat + " - " + sobanBeNhat + " - " + dataDoiThang.ten_doi_bong;
+        // số bàn lớn nhất
+        // in  ra cái đáu đàu tiên
+
+        if (data.ma_doi_thang === maDoi1) {
+            stingKq_tranDau = "" + sobanLonNhat + " - " + sobanBeNhat + " - " + dataDoiThang.ten_doi_bong;
+        }
+        else {
+            stingKq_tranDau = "" + sobanBeNhat + " - " + sobanLonNhat + " - " + dataDoiThang.ten_doi_bong;
+        }
+        // // in ra cái thứ 2
+        // return stingKq_tranDau;
     }
-    else {
-        stingKq_tranDau = "" + sobanBeNhat + " - " + sobanLonNhat + " - " + dataDoiThang.ten_doi_bong;
-    }
-    // in ra cái thứ 2
-    return stingKq_tranDau;
+    return stingKq_tranDau
+
 }
 async function get_tenDoiBong(maDoiBong) {
     const data = await hamChung.layThongTinTheo_ID("doi_bong", maDoiBong);

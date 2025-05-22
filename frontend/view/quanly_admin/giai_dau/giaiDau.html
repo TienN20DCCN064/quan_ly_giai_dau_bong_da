@@ -84,6 +84,13 @@
                             <label class="font-weight-bold">Ngày Kết Thúc</label>
                             <input type="date" class="form-control" id="ngayKetThuc" required />
                         </div>
+                        <div class="col-md-3">
+                            <label class="font-weight-bold">Hình Ảnh</label>
+                            <!-- Input hiển thị tên file hoặc URL ảnh -->
+                            <input type="text" class="form-control" id="hinhAnh" readonly />
+                            <!-- Input cho phép người dùng chọn file ảnh -->
+                            <input type="file" class="form-control" id="hinhAnhFile" accept="image/*" />
+                        </div>
 
                         <div class="col-md-12 mt-3">
                             <label class="font-weight-bold">Mô Tả</label>
@@ -112,6 +119,8 @@
                                     <th style="text-align: center;">Ngày Bắt Đầu</th>
                                     <th style="text-align: center;">Ngày Kết Thúc</th>
                                     <th style="text-align: center;">Giới Tính</th>
+
+                                    <th style="text-align: center;">Hình Ảnh</th>
                                     <th style="text-align: center;">Mô Tả</th>
                                     <th style="text-align: center;">Sửa</th>
                                     <th style="text-align: center;">Xóa</th>

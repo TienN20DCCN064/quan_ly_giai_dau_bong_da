@@ -1,7 +1,7 @@
 const congAPI = 4002;
 const congAPI_image = 5000;
 const congAPI_taoTranDau = 5001;
-const IPv4_Address =  "192.168.2.69";
+const IPv4_Address =  "192.168.110.195";
 // const linkCongAPI = "http://localhost:" + congAPI + "/api/";
 // ex : http://192.168.1.136:4002/api
 // ex : http://localhost:4002/api

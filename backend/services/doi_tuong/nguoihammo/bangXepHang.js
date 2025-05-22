@@ -1,10 +1,4 @@
-const btnLuuThayDoi = document.getElementById("button_luu");
-const btnTaiLaiTrang = document.getElementById("button_taiLaiTrang");
-const maGiaiDau = document.getElementById("maGiaiDau");
-const maBangDau = document.getElementById("maBangDau");
-const maDoiBong = document.getElementById("maDoiBong");
-const madiem = document.getElementById("diem");
-const ghiChu = document.getElementById("ghiChu");
+
 const chon_GiaiDau = document.getElementById("maGiaiDau_chon");
 const chon_bangDau = document.getElementById("maBangDau_chon");
 
@@ -14,23 +8,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
     viewTbody();
-    await loadDanhSachGiaiDau();
     await loadDanhSachGiaiDau_chon();
-    // await loadDanhSachBangDau_1GiaiDau();
-
-
-    maGiaiDau.addEventListener("change", async function () {
-        await loadDanhSachBangDau(document.getElementById("maGiaiDau").value);
-        await loadDanhSachDoiBong_theoBangDau();
-    })
-    maBangDau.addEventListener("change", async function () {
-        // nếu đang ở chế đố khóa
-        if (document.getElementById("maDoiBong").disabled != true) {
-            await loadDanhSachDoiBong_theoBangDau(document.getElementById("maGiaiDau").value, document.getElementById("maBangDau").value);
-        }
-
-
-    })
 
     chon_GiaiDau.addEventListener("change", async function () {
         console.log(chon_GiaiDau.value);
@@ -40,10 +18,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     chon_bangDau.addEventListener("change", async function () {
         viewTbody(chon_GiaiDau.value, chon_bangDau.value);
     });
-
-    btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
-    btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
-
 
 
 });
@@ -120,85 +94,13 @@ async function viewTbody(ma_giai_dau, ma_bang_dau) {
                
                 <td style="text-align: center;">${item.diem_vong_loai}</td>
 
-                <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
+             
               
             `;
         tableBody.appendChild(row);
     }
 
 
-    button_sua(data);
-    button_xoa(data);
-    // button_sua_tt(data_chuaXep);
-    // button_xoa_tt(data_chuaXep);
-}
-
-
-// Xử lý tải lại trang
-function handleTaiLaiTrang(event) {
-    event.preventDefault();
-    location.reload();
-}
-
-function button_sua(dataChung) {
-    document.querySelectorAll(".edit-btn").forEach((btn, index) => {
-        btn.addEventListener("click", async () => {
-            document.getElementById("maGiaiDau").disabled = true;
-
-            document.getElementById("maDoiBong").disabled = true;
-
-            console.log(dataChung)
-            const item = dataChung[index];
-            if (item.ma_bang_dau != null) {
-                document.getElementById("maBangDau").disabled = true;
-            }
-            console.log(item);
-            const tttt = await hamChung.layThongTinTheo_ID("giai_dau", item.ma_giai_dau);
-            await loadDanhSachGiaiDau();
-            await loadDanhSachBangDau(tttt.ma_giai_dau);
-
-            document.getElementById("maGiaiDau").value = tttt.ma_giai_dau;
-
-            document.getElementById("maBangDau").value = item.ma_bang_dau;
-
-
-            await loadDanhSachDoiBong_theoBangDau(document.getElementById("maGiaiDau").value, document.getElementById("maBangDau").value);
-            console.log(item);
-            console.log(item.ma_doi_bong);
-
-
-            document.getElementById("maDoiBong").value = item.ma_doi_bong;
-
-
-            document.getElementById("diem").value = item.diem_vong_loai;
-            document.getElementById("ghiChu").value = item.ghi_chu;
-            // Scroll lên đầu trang
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        });
-    });
-
-}
-
-function button_xoa(data) {
-    document.querySelectorAll(".delete-btn").forEach((btn, index) => {
-        btn.addEventListener("click", async (event) => {
-            let formData = {
-                ma_doi_bong: data[index].ma_doi_bong,
-                ma_bang_dau: data[index].ma_bang_dau
-            }
-            if (confirm(`Bạn muốn xóa kết quả trong bảng xếp hạng?`)) {
-
-                // const row = event.target.closest("tr");
-                // if (row) row.remove();
-                await hamChung.xoa(formData, "bang_xep_hang_vong_loai");
-            }
-
-
-        });
-    });
 }
 
 function sapXep_danhDanh_bangXepHang_theoDiem(data) {
@@ -377,40 +279,6 @@ async function tinhSoTran_hinhThucKetQua_theo_doiBongGiaiDau(maDoiBong, maGiaiDa
     }
     return form;
     // const datatran_dau_theoDoiBongGiaiDau = datatran_dau.filter(item => item.ma_giai_dau === maGiaiDau && item.ma_tran_dau === maDoiBong);
-}
-
-
-// Thêm/Sửa trận đấu
-async function handleLuuThayDoi(event) {
-    event.preventDefault();
-
-    const form = document.getElementById("inputForm");
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
-
-    let formData = {
-        ma_giai_dau: maGiaiDau.value,
-        ma_doi_bong: maDoiBong.value,
-        ma_bang_dau: maBangDau.value,
-        diem_vong_loai: madiem.value,
-        ghi_chu: ghiChu.value
-
-    };
-    await hamChung.sua(formData, "doi_bong_giai_dau");
-
-    alert("Sửa thành công");
-    console.log(formData);
-
-    viewTbody(chon_GiaiDau.value, chon_bangDau.value);
-}
-
-
-// Xử lý tải lại trang
-function handleTaiLaiTrang(event) {
-    event.preventDefault();
-    location.reload();
 }
 
 

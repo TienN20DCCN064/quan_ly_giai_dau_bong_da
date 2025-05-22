@@ -108,7 +108,7 @@ async function taoID_theoBang(table) {
         "tran_dau": ["ma_tran_dau"],          // Khóa chính là mã trận đấu
         "ket_qua_tran_dau": ["ma_tran_dau"],  // Sử dụng ma_tran_dau làm khóa chính thay vì tạo ma_ket_qua riêng
         "bang_dau": ["ma_bang_dau"],          // Thêm bảng bảng đấu
-        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
+        //"bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
         "dang_ky_tham_gia_giai": ["ma_giai_dau", "ma_doi_bong"],         // Thêm bảng vòng đấu
         "loai_trong_tai": ["ma_loai_trong_tai"],
         "trong_tai_tran_dau": ["ma_tran_dau", "ma_trong_tai"],
@@ -124,12 +124,12 @@ async function taoID_theoBang(table) {
         // Chuyển "don_dat_ban" -> "ddb_"
         const prefix = table.split("_").map(word => word.charAt(0)).join("") + "_";
 
-     //   console.log(prefix);
+        //   console.log(prefix);
         if (!Array.isArray(danhSach) || danhSach.length === 0) {
             console.log(prefix);
             return `${prefix}0001`; // Nếu bảng rỗng, tạo ID đầu tiên
         }
-     //s   console.log(prefix);
+        //s   console.log(prefix);
 
         // Tìm ID lớn nhất trong danh sách theo các khóa chính đã xác định
         const lastID = danhSach
@@ -173,7 +173,7 @@ function them(data, table_name) {
         "tran_dau": ["ma_tran_dau"],          // Khóa chính là mã trận đấu
         "ket_qua_tran_dau": ["ma_tran_dau"],  // Sử dụng ma_tran_dau làm khóa chính thay vì tạo ma_ket_qua riêng
         "bang_dau": ["ma_bang_dau"],          // Thêm bảng bảng đấu
-        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
+        //  "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
         "dang_ky_tham_gia_giai": ["ma_giai_dau", "ma_doi_bong"],         // Thêm bảng vòng đấu
         "loai_trong_tai": ["ma_loai_trong_tai"],
         "trong_tai_tran_dau": ["ma_tran_dau", "ma_trong_tai"],
@@ -231,7 +231,7 @@ function sua(data, table_name) {
         "tran_dau": ["ma_tran_dau"],          // Khóa chính là mã trận đấu
         "ket_qua_tran_dau": ["ma_tran_dau"],  // Sử dụng ma_tran_dau làm khóa chính thay vì tạo ma_ket_qua riêng
         "bang_dau": ["ma_bang_dau"],          // Thêm bảng bảng đấu
-        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
+        //"bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
         "dang_ky_tham_gia_giai": ["ma_giai_dau", "ma_doi_bong"],         // Thêm bảng vòng đấu
         "loai_trong_tai": ["ma_loai_trong_tai"],
         "trong_tai_tran_dau": ["ma_tran_dau", "ma_trong_tai"],
@@ -304,7 +304,7 @@ async function xoa(keys, table_name) {
         "tran_dau": ["ma_tran_dau"],          // Khóa chính là mã trận đấu
         "ket_qua_tran_dau": ["ma_tran_dau"],  // Sử dụng ma_tran_dau làm khóa chính thay vì tạo ma_ket_qua riêng
         "bang_dau": ["ma_bang_dau"],          // Thêm bảng bảng đấu
-        "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
+        // "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
         "dang_ky_tham_gia_giai": ["ma_giai_dau", "ma_doi_bong"],         // Thêm bảng vòng đấu
         "loai_trong_tai": ["ma_loai_trong_tai"],
         "trong_tai_tran_dau": ["ma_tran_dau", "ma_trong_tai"],

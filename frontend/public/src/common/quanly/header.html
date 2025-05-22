@@ -37,7 +37,7 @@
                                 href="http://127.0.0.1:5500/public/src/views/quanly/profile.html">Hồ sơ
                                 của bạn</a></li>
                         <li><a class="dropdown-item"
-                                href="http://127.0.0.1:5500/public/src/views/taikhoan/doimatkhau.html">Đổi
+                                href="/public/src/views/taikhoan/doimatkhau.html">Đổi
                                 Mật Khẩu</a></li>
                         <li>
                             <hr class="dropdown-divider" />
@@ -46,8 +46,20 @@
                                 Xuất</a></li>
                     </ul>
                 </li>
+
+
             </ul>
+            <!-- UL Gửi Gmail (TÁCH RIÊNG) -->
+            <ul class="navbar-nav me-auto ms-3">
+                <li class="nav-item">
+                    <a class="nav-link" href="/frontend/view/trang_chung/gui_gmail.html" onclick="sendEmail()">
+                        <i class="fas fa-envelope"></i> Gửi Gmail
+                    </a>
+                </li>
+            </ul>
+
         </nav>
+
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">

@@ -9,6 +9,25 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Quản lý nhân viên</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link href="/frontend/public/src/styles/resources/quanly/css/styles.css" rel="stylesheet" />
+
+    <link href="/frontend/public/src/styles/resources/table/table.css" rel="stylesheet" />
+    <link href="/frontend/public/src/styles/resources/table/time.css" rel="stylesheet" />
+    <link rel="icon" href="/frontend/public/src/styles/resources/img/logowebsite.png" type="image/png" />
+
+
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&amp;display=swap" rel="stylesheet" />
+
     <style>
         label {
             display: block;
@@ -19,15 +38,14 @@
         label {
             margin: 0.4rem 0;
         }
+
+        /* body {
+            font-family: "Roboto", sans-serif;
+        } */
     </style>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-    <link href="/frontend/public/src/styles/resources/quanly/css/styles.css" rel="stylesheet" />
 
-    <link href="/frontend/public/src/styles/resources/table/table.css" rel="stylesheet" />
-    <link href="/frontend/public/src/styles/resources/table/time.css" rel="stylesheet" />
-    <link rel="icon" href="/frontend/public/src/styles/resources/img/logowebsite.png" type="image/png" />
 
-    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body class="sb-nav-fixed">
@@ -35,7 +53,7 @@
     <div id="chen"></div>
     <script>
         // Sử dụng Fetch API để tải nội dung file HTML và chèn vào vị trí div
-        fetch('/frontend/public/src/common/quanly/header.html')
+        fetch('/frontend/public/src/common/nguoihammo/header.html')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('chen').innerHTML = data;
@@ -44,71 +62,42 @@
     </script>
     <style>
         #layoutSidenav_content {
-            margin-left: 200px;
+            margin-left: 225px;
+            /* Đảm bảo có không gian cho menu bên trái */
             margin-top: 100px;
+            /* Giữ khoảng cách với phần trên cùng của trang */
+            position: relative;
+            /* Đảm bảo phần tử này giữ vị trí ổn định */
+            min-height: 100vh;
+
+            /* Đảm bảo chiều cao luôn đủ để chứa nội dung */
+            #calendar {
+                display: none;
+            }
         }
     </style>
     <div id="layoutSidenav_content">
         <main>
+
             <div class="container-fluid px-4">
-                <div class="card-header">
-                    <label class="font-weight-bold" style="font-size: 20px; color: #800000">QUẢN LÝ ĐỘI BÓNG TRONG
-                        BẢNG</label>
+                <div
+                    class="bg-[#1b4d00] text-white px-4 py-3 flex items-center space-x-6 text-sm sm:text-base font-semibold">
+                    <div id="ranking" class="flex items-center space-x-2">
+                        <button class="fas fa-calendar-alt"></button>
+                        <span>Bảng xếp hạng</span>
+                    </div>
+                    <div id="result" class="flex items-center space-x-2">
+                        <button class="fas fa-calendar-alt"></button>
+                        <span>Kết quả thi đấu</span>
+                    </div>
+
                 </div>
-                <div class="card-header">
-                    <form class="row mb-3" id="inputForm">
-                        <div class="col-md-3">
-                            <label class="font-weight-bold">Giải Đấu</label>
-                            <select class="form-control" id="maGiaiDau" required>
-                                <option value="">-- Chọn Giải Đấu --</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="font-weight-bold">Bảng Đấu</label>
-                            <select class="form-control" id="maBangDau" required>
-                                <option value="">-- Chọn Bảng Đấu --</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="font-weight-bold">Đội Bóng</label>
-                            <select class="form-control" id="maDoiBong" required>
-                                <option value="">-- Chọn Đội Bóng --</option>
-                            </select>
-                        </div>
-                        <!-- <div class="col-md-3">
-                            <label class="font-weight-bold">Mã Đội Bóng</label>
-                            <input path="maDoiBong" type="text" class="form-control" id="maDoiBong" required />
-                        </div>
-                        <div class="col-md-3">
-                            <label class="font-weight-bold">Mã Bảng Đấu</label>
-                            <input path="maBangDau" type="text" class="form-control" id="maBangDau" required />
-                        </div> -->
-                        <div class="col-md-3">
-                            <label class="font-weight-bold">Điểm</label>
-                            <input path="diem" type="number" class="form-control" id="diem" value="0" required />
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="font-weight-bold">Ghi Chú</label>
-                            <input path="ghiChu" type="text" class="form-control" id="ghiChu" />
-                        </div>
-                        <div class='child float-left-child'>
-                            <button id="button_luu" class="btn btn-success">Lưu</button>
-                            <button id="button_taiLaiTrang" class="btn btn-outline-dark" type="button">Tải Lại
-                                Trang</button>
-
-                        </div>
-
-                    </form>
-                </div>
-               <div class="card mb-4">
+                <div class="card mb-4">
 
                     <div class="card-header">
                         <i class="fas fa-table me-1"></i> DANH SÁCH ĐỘI BÓNG TRONG BẢNG
                     </div>
-                    <div  style="margin-left: 100px;">
+                    <div style="margin-left: 100px;">
                         <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
                             <div class="col-md-3">
                                 <label class="font-weight-bold">Mã Giải Đấu</label>
@@ -147,7 +136,7 @@
                                     <th style="text-align: center;">Bàn Thắng</th>
                                     <th style="text-align: center;">Bàn Thua</th>
                                     <th style="text-align: center;">Điểm</th>
-                                    <th style="text-align: center;">Sửa Kết Quả</th>
+                                
                                 </tr>
                             </thead>
                             <tfoot>
@@ -162,8 +151,7 @@
                                     <th style="text-align: center;">Bàn Thắng</th>
                                     <th style="text-align: center;">Bàn Thua</th>
                                     <th style="text-align: center;">Điểm</th>
-                                    <th style="text-align: center;">Sửa Kết Quả</th>
-                                  
+                   
                                 </tr>
                             </tfoot>
                             <tbody id="dataTable">
@@ -172,36 +160,118 @@
                         </table>
                     </div>
                 </div>
-            </div>
-        </main>
 
 
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid px-4">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Your Website 2024</div>
-                    <div>
-                        <a href="#">Privacy Policy</a> &middot; <a href="#">Terms
-                            &amp; Conditions</a>
-                    </div>
-                </div>
+
+
+
+
+
+
+
+
             </div>
-        </footer>
+
     </div>
-    <script>
-        function confirmDelete() {
-            if (window.confirm("Nhân viên hiện đang được cấp 1 tài khoản, xóa nhân viên sẽ dẫn đến xóa tài khoản. Bạn có muốn xóa?")) {
-                // perform the delete action
+    </main>
+
+
+
+
+
+
+    </div>
+    <style>
+        /* Responsive cho màn hình nhỏ (điện thoại) */
+        @media (max-width: 768px) {
+            html {
+                font-size: 80%;
+            }
+
+            .responsive-wrapper {
+                flex-direction: column-reverse;
+                /* schedule lên trước, lichThiDau xuống sau */
+                gap: 1rem;
+                /* thay thế cho space-x-6 */
+            }
+
+            #layoutSidenav_content {
+                margin-left: 0 !important;
+                margin-top: 80px;
+            }
+
+            .flex.items-center.border-b.border-gray-300.py-3.space-x-2.overflow-x-auto.no-scrollbar {
+                flex-wrap: nowrap !important;
+                align-items: center;
+            }
+
+            .container-fluid.px-4 {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .flex.mt-6.space-x-6 {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            #lichThiDauHomNay_list {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #ccc;
+                padding-left: 0;
+                padding-top: 1rem;
+                max-height: none;
+            }
+
+            .bg-\[\#1b4d00\].text-white {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                gap: 1.5rem;
+                align-items: center;
+            }
+
+            .overflow-x-auto {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            #day-list {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                white-space: nowrap;
+                gap: 0;
+                padding-bottom: 0.5rem;
+                max-width: 100%;
+            }
+
+            #day-list>div {
+                min-width: 35px;
+                font-size: 7%;
+                padding: 2px 4px;
+                text-align: center;
+            }
+
+            #day-list>div div:first-child {
+                font-size: 9px;
+            }
+
+            #day-list>div div:last-child {
+                font-size: 11px;
+                font-weight: bold;
             }
         }
-    </script>
-    <script src="/backend/services/doi_tuong/quanly_admin/giai_dau/bangXepHangVongLoai.js"></script>
+    </style>
+
+
+    <script src="/backend/services/doi_tuong/nguoihammo/bangXepHang.js"></script>
     <script type="module" src="/backend/services/global/global.js"></script>
     <script type="module" src="/backend/services/global/hamChung.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
-    <!-- <script src=" /public/src/styles/resources/quanly/js/scripts.js"></script> -->
+
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
 
     <script src="/frontend/public/src/styles/resources/quanly/js/datatables-simple-demo.js"></script>

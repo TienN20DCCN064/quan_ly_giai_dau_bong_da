@@ -7,6 +7,8 @@ const tenToChuc = document.getElementById("tenToChuc");
 const ngayBatDau = document.getElementById("ngayBatDau");
 const ngayKetThuc = document.getElementById("ngayKetThuc");
 const maGioiTinh = document.getElementById("maGioiTinh");
+const hinhAnh = document.getElementById("hinhAnh");
+const inputFile = document.getElementById("hinhAnhFile");
 const moTa = document.getElementById("moTa");
 
 
@@ -30,7 +32,14 @@ async function viewTbody() {
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
-    data.forEach(item => {
+    for (const item of data) {
+        let hinh_anh;
+        if (item.hinh_anh === null) {
+            hinh_anh = "/frontend/public/images/cat-2.png";
+        } else {
+            hinh_anh = await hamChung.getImage(item.hinh_anh);
+        }
+
         const row = document.createElement("tr");
         row.innerHTML = `
             <td style="text-align: center;">${item.ma_giai_dau}</td>
@@ -39,12 +48,15 @@ async function viewTbody() {
             <td style="text-align: center;">${item.ngay_bat_dau}</td>
             <td style="text-align: center;">${item.ngay_ket_thuc}</td>
             <td style="text-align: center;">${item.gioi_tinh}</td>
+             <td style="text-align: center;"><img src="${hinh_anh}" alt="Hình ảnh" width="50"></td>
             <td style="text-align: center;">${item.mo_ta || ""}</td>
             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
         tableBody.appendChild(row);
-    });
+
+    }
+
 
     button_sua(data);
     button_xoa(data);
@@ -63,6 +75,14 @@ async function handleLuuThayDoi(event) {
     }
 
     let formData = {};
+    let id_Hinh_anh_thay = "";
+    // nếu có hình ảnh mới thì lấy tên hình ảnh đó ra 
+    if (inputFile.value === "")
+        id_Hinh_anh_thay = hinhAnh.value;
+    else {
+        id_Hinh_anh_thay = inputFile.files[0].name; // Lấy tệp đầu tiên (nếu có)
+    }
+    id_Hinh_anh_thay = hamChung.doiKhoangTrangThanhGachDuoi(id_Hinh_anh_thay);
     if (maGiaiDau.value === "") {
         formData = {
             ma_giai_dau: await hamChung.taoID_theoBang("giai_dau"),
@@ -71,7 +91,8 @@ async function handleLuuThayDoi(event) {
             ngay_bat_dau: ngayBatDau.value,
             ngay_ket_thuc: ngayKetThuc.value,
             gioi_tinh: maGioiTinh.value,
-            mo_ta: moTa.value
+            hinh_anh: id_Hinh_anh_thay,
+            mo_ta: moTa.value,
         };
         console.log("dang them " + await hamChung.taoID_theoBang("giai_dau"));
     } else {
@@ -82,6 +103,7 @@ async function handleLuuThayDoi(event) {
             ngay_bat_dau: ngayBatDau.value,
             ngay_ket_thuc: ngayKetThuc.value,
             gioi_tinh: maGioiTinh.value,
+            hinh_anh: id_Hinh_anh_thay,
             mo_ta: moTa.value
         };
         console.log("dang xóa");
@@ -97,6 +119,9 @@ async function handleLuuThayDoi(event) {
         await hamChung.sua(formData, "giai_dau");
         alert("Sửa thành công!");
         viewTbody(); // Refresh danh sách sau khi sửa
+    }
+    if (inputFile.value != "") {
+        await hamChung.uploadImage(inputFile.files[0]);
     }
 
     console.log("Thông tin từ ô nhập:", formData);
@@ -120,6 +145,7 @@ function button_sua(data) {
             ngayBatDau.value = item.ngay_bat_dau;
             ngayKetThuc.value = item.ngay_ket_thuc;
             maGioiTinh.value = item.gioi_tinh;
+            hinhAnh.value = item.hinh_anh;
             moTa.value = item.mo_ta || "";
 
 

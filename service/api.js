@@ -72,7 +72,7 @@ const tables = {
     "tran_dau": ["ma_tran_dau"],          // Khóa chính là mã trận đấu
     "ket_qua_tran_dau": ["ma_tran_dau"],  // Sử dụng ma_tran_dau làm khóa chính thay vì tạo ma_ket_qua riêng
     "bang_dau": ["ma_bang_dau"],          // Thêm bảng bảng đấu
-    "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
+    // "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
     "dang_ky_tham_gia_giai": ["ma_giai_dau", "ma_doi_bong"],         // Thêm bảng vòng đấu
     "loai_trong_tai": ["ma_loai_trong_tai"],
     "trong_tai_tran_dau": ["ma_tran_dau", "ma_trong_tai"],
