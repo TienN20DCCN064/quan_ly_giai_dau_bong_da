@@ -24,9 +24,14 @@ const GlobalStore = {
     getCongAPI() {
         return congAPI;
     },
+    setDoiBong(token){
+        localStorage.setItem("ma_doi_bong", token);
+    },
+    getDoiBong(token){
+        return localStorage.getItem("ma_doi_bong");
+    },
     setToken(token){
         localStorage.setItem("access_token", token);
-
     },
     getToken(token){
         return token = localStorage.getItem("access_token");

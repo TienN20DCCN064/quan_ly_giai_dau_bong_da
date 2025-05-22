@@ -3,10 +3,9 @@ const btnTaiLaiTrang = document.getElementById("button_taiLaiTrang");
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("Đã vào trang quản lý đội bóng");
-    console.log(DoiTuyen.getDoiTuyen_dangChon());
-    console.log(GlobalStore.getUsername());
+    loadDanhSachDoiBong();
     viewTbody();
+    
     // Gán sự kiện cho nút
 
 
@@ -14,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Hiển thị danh sách giải đấu
 async function viewTbody() {
-    const giaiDauThamGia = await tim_giaiDau_doiBong_da_thamGia(DoiTuyen.getDoiTuyen_dangChon());
+    const giaiDauThamGia = await tim_giaiDau_doiBong_da_thamGia(document.getElementById("maDoiBong").value);
     console.log(giaiDauThamGia);
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
@@ -136,4 +135,24 @@ async function tim_giaiDau_doiBong_da_thamGia(ma_doi_bong) {
     );
 
     return ketQua;
+}
+
+
+async function loadDanhSachDoiBong() {
+    const selectElement = document.getElementById("maDoiBong");
+    selectElement.innerHTML = '<option value="">-- Chọn Đội Bóng --</option>'; // Reset danh sách
+    const data = await hamChiTiet.layDoiBongTheoQL(GlobalStore.getUsername());
+    data.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.ma_doi_bong;
+        option.textContent = `${item.ma_doi_bong} - ${item.ten_doi_bong}`;
+        selectElement.appendChild(option);
+    });
+
+    selectElement.value = GlobalStore.getDoiBong();
+
+    selectElement.addEventListener("change", async function () {
+        const data = await tim_giaiDau_doiBong_da_thamGia(selectElement.value);
+        viewTbody(data);
+    })
 }

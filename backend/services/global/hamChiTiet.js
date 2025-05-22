@@ -56,6 +56,25 @@ async function laycauThuTheoQuanLy(maQL) {
     }
 }
 
+// lay danh sách yêu cầu đăng ký qua quản lý
+async function layDonDangKyTheoQuanLy(maQL) {
+
+    if (!maQL) {
+        alert('Thiếu ID quản lý');
+        return;
+    }
+    
+    const url = GlobalStore.getLinkCongAPI() + 'dondangky/quanly?ma_ql_doi_bong=' + maQL;
+    //console.log(url)
+    try {
+        const response = await fetch(url);
+        return await response.json();
+    } catch (error) {
+        console.error('Lỗi khi lấy danh sách đơn đăng ký theo quản lý:', error);
+        return [];
+    }
+}
+
 
 
 // lấy danh sách đội bóng theo ID quản lý
