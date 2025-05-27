@@ -111,12 +111,17 @@ async function viewTbody(data) {
         const lay1TranDau = await hamChung.layThongTinTheo_ID("tran_dau", item.ma_tran_dau);
         const lay1giaiDau = await hamChung.layThongTinTheo_ID("giai_dau", lay1TranDau.ma_giai_dau)
         //  console.log(lay1giaiDau);
-        const lay1doiBong = await hamChung.layThongTinTheo_2_ID("doi_bong_giai_dau", item.ma_doi_thang, lay1TranDau.ma_giai_dau);
-        console.log(lay1doiBong);
+        let ten_doi_bong = "---";
+        if (item.ma_doi_thang) {
+            const lay1doiBong = await hamChung.layThongTinTheo_2_ID("doi_bong_giai_dau", item.ma_doi_thang, lay1TranDau.ma_giai_dau);
+            ten_doi_bong = lay1doiBong.ten_doi_bong;
+        }
+
+        //console.log(lay1doiBong);
         row.innerHTML = `
             <td style="text-align: center;">${lay1giaiDau.ten_giai_dau ?? "----"}</td>
             <td style="text-align: center;">${item.ma_tran_dau ?? "----"}</td>
-            <td style="text-align: center;">${lay1doiBong.ten_doi_bong ?? "----"}</td>
+            <td style="text-align: center;">${ten_doi_bong}</td>
             <td style="text-align: center;">${item.so_ban_doi_1 ?? "----"}</td>
             <td style="text-align: center;">${item.so_ban_doi_2 ?? "----"}</td>
             <td style="text-align: center;">${item.ghi_chu ?? "----"}</td>
@@ -163,7 +168,14 @@ async function handleLuuThayDoi(event) {
         so_ban_doi_2: soBanDoi2.value,
         ghi_chu: ghiChu.value,
     };
-
+    if(maDoiThang.value === "") {
+        formData.ma_doi_thang = null; // Nếu không chọn đội thắng thì để là null
+        if(soBanDoi1.value != soBanDoi2.value) {
+            alert("Nếu không chọn đội thắng thì số bàn của hai đội phải bằng nhau!");
+            return;
+        }
+    }
+  
 
     const dsKq_tranDau = await hamChung.layDanhSach("ket_qua_tran_dau");
     const check_tranDau_co_kq_chua = dsKq_tranDau.some(item => item.ma_tran_dau === maTranDau.value);

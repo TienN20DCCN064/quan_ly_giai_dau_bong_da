@@ -94,11 +94,7 @@
                 </div>
                 <div class="card-header">
                     <form class="row mb-3" id="inputForm">
-                        <div class="col-md-3">
-                            <label class="font-weight-bold">Mã Trận Đấu</label>
-                            <input path="maTranDau" type="text" class="form-control" id="maTranDau" required readonly />
 
-                        </div>
 
                         <!-- <div class="col-md-3">
                             <label class="font-weight-bold">Mã Giải Đấu</label>
@@ -115,6 +111,11 @@
                             <select class="form-control" id="maVongDau" required>
                                 <option value="">-- Chọn Vòng Đấu --</option>
                             </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="font-weight-bold">Mã Trận Đấu</label>
+                            <input path="maTranDau" type="text" class="form-control" id="maTranDau" required readonly />
+
                         </div>
                         <div class="col-md-3">
                             <label class="font-weight-bold">Đội 1</label>
@@ -233,8 +234,10 @@
                         <table id="table">
                             <thead>
                                 <tr>
-                                    <th style="text-align: center;">Mã Trận Đấu</th>
                                     <th style="text-align: center;">Giải Đấu</th>
+                                    <th style="text-align: center;">Vòng Đấu</th>
+                                    <th style="text-align: center;">Mã Trận Đấu</th>
+
                                     <th style="text-align: center;">Đội 1</th>
                                     <th style="text-align: center;">Đội 2</th>
                                     <th style="text-align: center;">Ngày Diễn Ra</th>
@@ -242,7 +245,7 @@
                                     <th style="text-align: center;">Sân Vận Động</th>
                                     <th style="text-align: center;">Mã Trọng Tài</th>
                                     <th style="text-align: center;">Trạng Thái</th>
-                                    <th style="text-align: center;">Mã Vòng Đấu</th>
+
                                     <th style="text-align: center;">Kết quả</th>
                                     <th style="text-align: center;">Sửa thông tin</th>
                                     <th style="text-align: center;">Sửa kêt quả</th>
@@ -251,17 +254,19 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th style="text-align: center;">Mã Trận Đấu</th>
                                     <th style="text-align: center;">Giải Đấu</th>
-                                    <th style="text-align: center;">Mã Đội 1</th>
-                                    <th style="text-align: center;">Mã Đội 2</th>
+                                    <th style="text-align: center;">Vòng Đấu</th>
+                                    <th style="text-align: center;">Mã Trận Đấu</th>
+
+                                    <th style="text-align: center;">Đội 1</th>
+                                    <th style="text-align: center;">Đội 2</th>
                                     <th style="text-align: center;">Ngày Diễn Ra</th>
                                     <th style="text-align: center;">Giờ Diễn Ra</th>
                                     <th style="text-align: center;">Sân Vận Động</th>
                                     <th style="text-align: center;">Mã Trọng Tài</th>
-                                    <th style="text-align: center;">Kết quả</th>
                                     <th style="text-align: center;">Trạng Thái</th>
-                                    <th style="text-align: center;">Mã Vòng Đấu</th>
+
+                                    <th style="text-align: center;">Kết quả</th>
                                     <th style="text-align: center;">Sửa thông tin</th>
                                     <th style="text-align: center;">Sửa kêt quả</th>
                                     <th style="text-align: center;">Xóa</th>

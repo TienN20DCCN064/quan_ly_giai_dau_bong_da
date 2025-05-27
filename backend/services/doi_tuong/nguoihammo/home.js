@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     document.getElementById("result").addEventListener("click", function () {
-         const url = `/frontend/view/nguoihammo/home.html`;
+        const url = `/frontend/view/nguoihammo/home.html`;
         window.location.href = url;
         console.log("Bạn đã chọn Kết quả thi đấu");
     });
@@ -287,28 +287,51 @@ async function view_giaiDau_theoNgay(ngay) {
     const maGiaiDauDuyNhat_theoNgay = await danhSach_giaiDau_TheoNgay(ngay);
     console.log(maGiaiDauDuyNhat_theoNgay);
 
-    maGiaiDauDuyNhat_theoNgay.forEach(async maGiaiDau => {
+
+
+    for (let i = 0; i < maGiaiDauDuyNhat_theoNgay.length; i++) {
+        const maGiaiDau = maGiaiDauDuyNhat_theoNgay[i];
+        console.log(maGiaiDau);
         const giaiDau = await hamChung.layThongTinTheo_ID("giai_dau", maGiaiDau);
+        // Xử lý hình ảnh
+        let hinh_anh;
+        if (giaiDau.hinh_anh === null) {
+            hinh_anh = "/frontend/public/images/cat-2.png";
+        } else {
+            hinh_anh = await hamChung.getImage(giaiDau.hinh_anh);
+        }
 
-        // Tạo phần tử span cho mỗi giải đấu
+        // Tạo phần tử div bao quanh ảnh + tên giải đấu
+        const div = document.createElement("div");
+        div.classList.add("cursor-pointer", "p-2", "flex", "items-center", "gap-2", "hover:bg-gray-200", "rounded");
+
+        const img = document.createElement("img");
+        img.src = hinh_anh;
+        img.alt = "Hình giải đấu";
+        img.classList.add("w-8", "h-8", "rounded-full", "object-cover");
+
         const span = document.createElement("span");
-        span.textContent = giaiDau.ten_giai_dau; // In ra tên giải đấu
-        span.classList.add("cursor-pointer", "p-2", "block", "text-gray-800", "hover:bg-gray-200", "rounded");
+        span.textContent = giaiDau.ten_giai_dau;
+        span.classList.add("text-gray-800");
 
-        // Thêm phần tử span vào danh sách
-        matchListElement.appendChild(span);
+        // Thêm ảnh và tên giải đấu vào div
+        div.appendChild(img);
+        div.appendChild(span);
 
-        // Thêm sự kiện click cho mỗi lựa chọn
-        span.addEventListener("click", () => {
+        // Thêm div vào danh sách
+        matchListElement.appendChild(div);
 
+        // Sự kiện click để chuyển trang
+        div.addEventListener("click", () => {
             console.log(`Đã chọn giải đấu: ${giaiDau.ten_giai_dau}`);
-            // const url = `/frontend/view/nguoihammo/home.html?ma_giai_dau=${giaiDau.ma_giai_dau}`;
             const url = `/frontend/view/nguoihammo/home.html?ngay_xem=${ngay}&ma_giai_dau=${giaiDau.ma_giai_dau}`;
-
             console.log(url);
-            window.location.href = url; // Chuyển trang
+            window.location.href = url;
         });
-    });
+
+
+
+    }
 
     // Thêm sự kiện click vào phần tử span của tiêu đề
     const lichThiDauHomNayTitle = document.querySelector("#lichThiDauHomNay_list .text-green-600");
@@ -385,7 +408,7 @@ async function view_tranDau_motGiai(containerId) {
         `;
         container.insertAdjacentHTML("beforeend", matchHTML);
 
-      }
+    }
 }
 
 async function view_tranDau_motGiai(containerId) {
@@ -399,6 +422,7 @@ async function view_tranDau_motGiai(containerId) {
     const data = dataDDanhSach_tranDau_thuoc_giaiDau_TheoNgay;
     let maGiaiDau = "";
     let tenGiaiDau = "";
+    let hinh_anh = "";
     console.log(ngay_xem_param + " " + ma_giai_dau_param);
 
     console.log(data);
@@ -407,6 +431,17 @@ async function view_tranDau_motGiai(containerId) {
         console.log(dataGiaiDau);
         maGiaiDau = dataGiaiDau.ma_giai_dau;
         tenGiaiDau = dataGiaiDau.ten_giai_dau;
+        if (dataGiaiDau.hinh_anh === null) {
+            hinh_anh = "/frontend/public/images/cat-2.png";
+        } else {
+            hinh_anh = await hamChung.getImage(dataGiaiDau.hinh_anh);
+        }
+        // const sectionHTML = `
+        //     <div class="bg-gray-200 text-center py-2 mb-4 text-sm text-gray-700 font-semibold">
+        //         Lịch thi đấu - Giải: <span class="font-bold">${dataGiaiDau.ten_giai_dau}</span>
+        //     </div>
+        // `;
+
     }
 
     // Hiển thị thông tin giải đấu
@@ -483,9 +518,27 @@ async function view_tranDau_nhieuGiai(containerId) {
 
         // Hiển thị tiêu đề giải đấu
         const dataGiaiDau = await hamChung.layThongTinTheo_ID("giai_dau", ma_giai_dau_param);
+        let hinh_anh;
+
+        // C:\Users\vanti\Desktop\quan_ly_tran_dau\frontend\public\images\cat-2.png
+
+        if (dataGiaiDau.hinh_anh === null) {
+            hinh_anh = "/frontend/public/images/cat-2.png";
+        } else {
+            hinh_anh = await hamChung.getImage(dataGiaiDau.hinh_anh);
+        }
+        // const sectionHTML = `
+        //     <div class="bg-gray-200 text-center py-2 mb-4 text-sm text-gray-700 font-semibold">
+        //         Lịch thi đấu - Giải: <span class="font-bold">${dataGiaiDau.ten_giai_dau}</span>
+        //     </div>
+        // `;
+
         const sectionHTML = `
-            <div class="bg-gray-200 text-center py-2 mb-4 text-sm text-gray-700 font-semibold">
-                Lịch thi đấu - Giải: <span class="font-bold">${dataGiaiDau.ten_giai_dau}</span>
+            <div class="flex items-center bg-gray-200 text-center py-2 mb-4 text-sm text-gray-700 font-semibold">
+                <img src="${hinh_anh}" alt="Hình giải đấu" class="w-10 h-10 object-cover rounded-full ml-4 mr-2" />
+                <span class="flex-1">
+                    Lịch thi đấu - Giải: <span class="font-bold">${dataGiaiDau.ten_giai_dau}</span>
+                </span>
             </div>
         `;
         container.insertAdjacentHTML("beforeend", sectionHTML);
@@ -529,15 +582,22 @@ async function view_tranDau_nhieuGiai(containerId) {
 
 async function stringKq_tranDau(maTranDau, maDoi1, maDoi2) {
     const dataKQTranDau = await hamChung.layDanhSach("ket_qua_tran_dau");
+
     const checkDaCoKQChua = dataKQTranDau.find(item => item.ma_tran_dau === maTranDau);
     let stingKq_tranDau = "----";
     if (checkDaCoKQChua) {
+        const data1kqTranDau = dataKQTranDau.find(item => item.ma_tran_dau === maTranDau);
+        if (data1kqTranDau.ma_doi_thang === null) {
+            stingKq_tranDau = "" + data1kqTranDau.so_ban_doi_1 + " - " + data1kqTranDau.so_ban_doi_2;
+            return stingKq_tranDau;
+        }
         const data = await hamChung.layThongTinTheo_ID("ket_qua_tran_dau", maTranDau);
+        const data1tranDau = await hamChung.layThongTinTheo_ID("tran_dau", maTranDau);
         console.log(data.ma_doi_thang);
         // if (data === null) {
         //     return stingKq_tranDau;
         // }
-        const dataDoiThang = await hamChung.layThongTinTheo_ID("doi_bong", data.ma_doi_thang)
+        const dataDoiThang_giaiDau = await hamChung.layThongTinTheo_2_ID("doi_bong_giai_dau", data.ma_doi_thang, data1tranDau.ma_giai_dau);
         let soban1 = data.so_ban_doi_1;
         let soban2 = data.so_ban_doi_2;
         let sobanLonNhat = Math.max(soban1, soban2);
@@ -547,10 +607,10 @@ async function stringKq_tranDau(maTranDau, maDoi1, maDoi2) {
         // in  ra cái đáu đàu tiên
 
         if (data.ma_doi_thang === maDoi1) {
-            stingKq_tranDau = "" + sobanLonNhat + " - " + sobanBeNhat + " - " + dataDoiThang.ten_doi_bong;
+            stingKq_tranDau = "" + sobanLonNhat + " - " + sobanBeNhat + " - " + dataDoiThang_giaiDau.ten_doi_bong;
         }
         else {
-            stingKq_tranDau = "" + sobanBeNhat + " - " + sobanLonNhat + " - " + dataDoiThang.ten_doi_bong;
+            stingKq_tranDau = "" + sobanBeNhat + " - " + sobanLonNhat + " - " + dataDoiThang_giaiDau.ten_doi_bong;
         }
         // // in ra cái thứ 2
         // return stingKq_tranDau;
