@@ -7,7 +7,7 @@ const ngaySinh = document.getElementById("ngaySinh");
 const soAo = document.getElementById("soAo");
 const maGioiTinh = document.getElementById("maGioiTinh");
 const maViTri = document.getElementById("maViTri");
-const maDoiBong = document.getElementById("maDoiBong");
+// const maDoiBong = document.getElementById("maDoiBong");
 const hinhAnh = document.getElementById("hinhAnh");
 const inputFile = document.getElementById("hinhAnhFile");
 const form = document.getElementById("inputForm");
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.log(DoiTuyen.getDoiTuyen_dangChon());
     console.log(GlobalStore.getUsername());
     loadDanhSachViTri();
-    loadDanhSachDoiBong();
+    
     await viewTbody();
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
@@ -55,13 +55,13 @@ async function viewTbody() {
         const data1VT = await hamChung.layThongTinTheo_ID("vi_tri_cau_thu", item.ma_vi_tri);
 
         row.innerHTML = `
-            <td style="text-align: center;">${item.ma_cau_thu}</td>
+           
             <td style="text-align: center;">${item.ho_ten}</td>
             <td style="text-align: center;">${item.ngay_sinh}</td>
             <td style="text-align: center;">${item.so_ao}</td>
             <td style="text-align: center;">${item.gioi_tinh}</td>
             <td style="text-align: center;">${data1VT.ten_vi_tri}</td>
-            <td style="text-align: center;">${dataDoiBong1.ten_doi_bong}</td>
+            
             <td style="text-align: center;"><img src="${hinh_anh}" alt="Hình ảnh" width="50"></td>
             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
@@ -97,6 +97,7 @@ async function handleLuuThayDoi(event) {
     id_Hinh_anh_thay = hamChung.doiKhoangTrangThanhGachDuoi(id_Hinh_anh_thay);
 
     console.log(id_Hinh_anh_thay);
+    const maDoiBongDangChon = DoiTuyen.getDoiTuyen_dangChon();
     if (maCauThu.value === "") {
         formData = {
             ma_cau_thu: await hamChung.taoID_theoBang("cau_thu"),
@@ -105,7 +106,7 @@ async function handleLuuThayDoi(event) {
             so_ao: soAo.value,
             gioi_tinh: maGioiTinh.value,
             ma_vi_tri: maViTri.value,
-            ma_doi_bong: maDoiBong.value,
+            ma_doi_bong: maDoiBongDangChon,
             hinh_anh: id_Hinh_anh_thay
         };
         await hamChung.them(formData, "cau_thu");
@@ -120,7 +121,7 @@ async function handleLuuThayDoi(event) {
             so_ao: soAo.value,
             gioi_tinh: maGioiTinh.value,
             ma_vi_tri: maViTri.value,
-            ma_doi_bong: maDoiBong.value,
+            ma_doi_bong: maDoiBongDangChon,
             hinh_anh: id_Hinh_anh_thay
         };
         await hamChung.sua(formData, "cau_thu");
@@ -133,7 +134,7 @@ async function handleLuuThayDoi(event) {
         await hamChung.uploadImage(inputFile.files[0]);
     }
 
-    //viewTbody();
+    await viewTbody();
 }
 
 // Xử lý tải lại trang
@@ -153,7 +154,7 @@ function button_sua(data) {
             soAo.value = item.so_ao;
             maGioiTinh.value = item.gioi_tinh;
             maViTri.value = item.ma_vi_tri;
-            maDoiBong.value = item.ma_doi_bong;
+            // maDoiBong.value = item.ma_doi_bong;
             console.log(item);
             hinhAnh.value = item.hinh_anh;
         });
@@ -185,35 +186,3 @@ async function loadDanhSachViTri() {
     });
 }
 
-async function loadDanhSachDoiBong() {
-    const selectElement = document.getElementById("maDoiBong");
-    selectElement.innerHTML = '<option value="">-- Chọn Đội Bóng --</option>'; // Reset danh sách
-
-    const doiTuyenDangChon = await DoiTuyen.getDoiTuyen_dangChon();
-
-    selectElement.innerHTML = '<option value=""></option>'; // Reset
-
-    // Giả sử doiTuyenDangChon = 'VN'
-    const option = document.createElement('option');
-    option.value = doiTuyenDangChon;
-    option.textContent = doiTuyenDangChon;
-    selectElement.appendChild(option);
-
-    // Đặt giá trị mặc định
-    selectElement.value = doiTuyenDangChon;
-
-
-    // const option = document.createElement("option");
-    // option.value = doiTuyenDangChon.ma_doi_bong;
-    // option.textContent = `${doiTuyenDangChon.ma_doi_bong} - ${doiTuyenDangChon.ten_doi_bong}`;
-    // option.selected = true; // Chọn mặc định
-    // selectElement.appendChild(option);
-
-    // const data = await hamChung.layDanhSach("doi_bong");
-    // data.forEach(item => {
-    //     const option = document.createElement("option");
-    //     option.value = item.ma_doi_bong;
-    //     option.textContent = `${item.ma_doi_bong} - ${item.ten_doi_bong}`;
-    //     selectElement.appendChild(option);
-    // });
-}

@@ -62,6 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log(formData);
             });
             alert('Đã lưu cầu thủ tham gia!');
+            document.getElementById('modalDanhSachCauThu').style.display = 'none';
+            viewTbody(); // Cập nhật lại danh sách giải đấu sau khi lưu cầu thủ
         } else {
             alert('Vui lòng chọn ít nhất một cầu thủ!');
         }
@@ -84,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
         await hamChung.them(formData, "dang_ky_tham_gia_giai");
         alert("Đăng Ký thành công!");
         document.getElementById("modalDangKy").style.display = "none";
-
+        viewTbody(); // Cập nhật lại danh sách giải đấu sau khi đăng ký
 
     });
 
@@ -174,7 +176,6 @@ async function viewTbody() {
 
 
         row.innerHTML = `
-            <td style="text-align: center;">${item.ma_giai_dau}</td>
             <td style="text-align: center;">${item.ten_giai_dau}</td>
             <td style="text-align: center;">${item.ten_to_chuc}</td>
             <td style="text-align: center;">${item.ngay_bat_dau}</td>
@@ -218,7 +219,7 @@ function button_dangKy(data) {
             if (buttonType === "Đăng ký") {
                 // Hiển thị thông tin vào modal
                 document.getElementById("thongTinGiaiDau").innerHTML = `
-                <p><strong>Mã Giải Đấu:</strong> ${item.ma_giai_dau}</p>
+               
                 <p><strong>Tên Giải Đấu:</strong> ${item.ten_giai_dau}</p>
                 <p><strong>Tên Tổ Chức:</strong> ${item.ten_to_chuc}</p>
                 <p><strong>Ngày Bắt Đầu:</strong> ${item.ngay_bat_dau}</p>
@@ -282,9 +283,9 @@ async function openPlayerList() {
     // Chèn danh sách cầu thủ vào bảng
     const playerListBody = document.getElementById('playerListBody');
     playerListBody.innerHTML = ''; // Xóa các dữ liệu cũ (nếu có)
+    for (let i = 0; i < data_cauThu_cua_DoiBong.length; i++) {
+        const player = data_cauThu_cua_DoiBong[i];
 
-    data_cauThu_cua_DoiBong.forEach(async player => {
-        const row = document.createElement('tr');
         let hinh_anh;
         // C:\Users\vanti\Desktop\quan_ly_tran_dau\frontend\public\images\cat-2.png
 
@@ -293,11 +294,12 @@ async function openPlayerList() {
         } else {
             hinh_anh = await hamChung.getImage(player.hinh_anh);
         }
+        const data1viTri = await hamChung.layThongTinTheo_ID("vi_tri_cau_thu", player.ma_vi_tri);
+        const row = document.createElement('tr');
         row.innerHTML = `
-            <td style="text-align: center;">${player.ma_cau_thu}</td>
             <td style="text-align: center;">${player.ho_ten}</td>
             <td style="text-align: center;">${player.so_ao}</td>
-            <td style="text-align: center;">${player.ma_vi_tri}</td>
+            <td style="text-align: center;">${data1viTri.ten_vi_tri}</td>
             <td style="text-align: center;">${player.gioi_tinh}</td>
             <td style="text-align: center;"><img src="${hinh_anh}" alt="Logo" width="50"></td>
             <td style="text-align: center;">
@@ -306,7 +308,7 @@ async function openPlayerList() {
         `;
 
         playerListBody.appendChild(row);
-    });
+    }
 
 }
 

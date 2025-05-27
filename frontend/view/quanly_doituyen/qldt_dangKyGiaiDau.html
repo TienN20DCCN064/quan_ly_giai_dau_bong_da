@@ -103,7 +103,7 @@
                         <table id="table">
                             <thead>
                                 <tr>
-                                    <th style="text-align: center;">Mã Giải Đấu</th>
+                                    <!-- <th style="text-align: center;">Mã Giải Đấu</th> -->
                                     <th style="text-align: center;">Tên Giải Đấu</th>
                                     <th style="text-align: center;">Tên Tổ Chức</th>
                                     <th style="text-align: center;">Ngày Bắt Đầu</th>
@@ -134,19 +134,19 @@
 
                         <!-- Modal hiển thị danh sách cầu thủ -->
                         <div id="modalDanhSachCauThu" class="modal" style="display: none;">
-                            <div class="modal-content">
-                                <span class="close" id="closeModal">&times;</span>
+                            <div class="modal-content"
+                                style="margin-top: 100px; max-height: calc(100vh - 150px); overflow-y: auto;">
+                                
                                 <h5>Danh Sách Cầu Thủ</h5>
                                 <table id="playerTable">
                                     <thead>
                                         <tr>
-                                            <th>ID Cầu Thủ</th>
-                                            <th>Tên Cầu Thủ</th>
-                                            <th>Số Áo</th>
-                                            <th>Vị Tri</th>
-                                            <th>Giới Tính</th>
-                                            <th>Hình Ảnh</th>
-                                            <th>Chọn</th>
+                                            <th style="text-align: center;">Tên Cầu Thủ</th>
+                                            <th style="text-align: center;">Số Áo</th>
+                                            <th style="text-align: center;">Vị Tri</th>
+                                            <th style="text-align: center;">Giới Tính</th>
+                                            <th style="text-align: center;">Hình Ảnh</th>
+                                            <th style="text-align: center;">Chọn</th>
                                         </tr>
                                     </thead>
                                     <tbody id="playerListBody">
