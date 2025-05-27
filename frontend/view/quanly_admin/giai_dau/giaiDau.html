@@ -69,27 +69,32 @@
                             <label class="font-weight-bold">Tên Tổ Chức</label>
                             <input type="text" class="form-control" id="tenToChuc" required />
                         </div>
-                        <div class="col-md-2">
-                            <label class="font-weight-bold">Giới Tính</label>
-                            <select class="form-control" id="maGioiTinh">
-                                <option value="nam">Nam</option>
-                                <option value="nữ">Nữ</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
+
+                        <div class="col-md-3">
                             <label class="font-weight-bold">Ngày Bắt Đầu</label>
                             <input type="date" class="form-control" id="ngayBatDau" required />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="font-weight-bold">Ngày Kết Thúc</label>
                             <input type="date" class="form-control" id="ngayKetThuc" required />
                         </div>
                         <div class="col-md-3">
+                            <label class="font-weight-bold">Ngày Hết Đăng Ký</label>
+                            <input type="date" class="form-control" id="ngayHetDangKy" required />
+                        </div>
+                        <div class="col-md-4">
                             <label class="font-weight-bold">Hình Ảnh</label>
                             <!-- Input hiển thị tên file hoặc URL ảnh -->
                             <input type="text" class="form-control" id="hinhAnh" readonly />
                             <!-- Input cho phép người dùng chọn file ảnh -->
                             <input type="file" class="form-control" id="hinhAnhFile" accept="image/*" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="font-weight-bold">Giới Tính</label>
+                            <select class="form-control" id="maGioiTinh">
+                                <option value="nam">Nam</option>
+                                <option value="nữ">Nữ</option>
+                            </select>
                         </div>
 
                         <div class="col-md-12 mt-3">
@@ -108,6 +113,20 @@
                         <i class="fas fa-table me-1"></i> DANH SÁCH GIẢI ĐẤU
                         <button id="button_locDanhSach" class="btn btn-primary float-end">Lọc Danh Sách
                             ra</button>
+
+                    </div>
+                    <div style="margin-left: 100px;">
+                        <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Ngày Bắt Đầu</label>
+                                <input type="date" class="form-control" id="ngayBatDau_chon_viewbody" required />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Ngày Kêt Thúc</label>
+                                <input type="date" class="form-control" id="ngayKetThuc_chon_viewbody" required />
+                            </div>
+
+                        </form:form>
                     </div>
                     <div class="card-body">
                         <table id="table">
@@ -118,6 +137,7 @@
                                     <th style="text-align: center;">Tên Tổ Chức</th>
                                     <th style="text-align: center;">Ngày Bắt Đầu</th>
                                     <th style="text-align: center;">Ngày Kết Thúc</th>
+                                    <th style="text-align: center;">Ngày Hết Đăng Ký</th>
                                     <th style="text-align: center;">Giới Tính</th>
 
                                     <th style="text-align: center;">Hình Ảnh</th>

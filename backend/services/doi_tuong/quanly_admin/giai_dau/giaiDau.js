@@ -6,6 +6,7 @@ const tenGiaiDau = document.getElementById("tenGiaiDau");
 const tenToChuc = document.getElementById("tenToChuc");
 const ngayBatDau = document.getElementById("ngayBatDau");
 const ngayKetThuc = document.getElementById("ngayKetThuc");
+const ngayHetDangKy = document.getElementById("ngayHetDangKy");
 const maGioiTinh = document.getElementById("maGioiTinh");
 const hinhAnh = document.getElementById("hinhAnh");
 const inputFile = document.getElementById("hinhAnhFile");
@@ -17,17 +18,45 @@ const btnLocDanhSach = document.getElementById("button_locDanhSach");
 const popupOverlay = document.getElementById("popupOverlay");
 const closePopup = document.getElementById("closePopup");
 
+
+const ngayBatDau_chon_viewbody = document.getElementById("ngayBatDau_chon_viewbody");
+const ngayKetThuc_chon_viewbody = document.getElementById("ngayKetThuc_chon_viewbody");
+
 document.addEventListener("DOMContentLoaded", function () {
     viewTbody();
     // Gán sự kiện cho nút
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
     btnLocDanhSach.addEventListener("click", handle_view_locDanhSach);
+    ngayBatDau_chon_viewbody.addEventListener("change", async function () {
+        console.log(ngayBatDau_chon_viewbody.value);
+        // maVongDau_chon_viewbody.value = "All";
+        let data = await hamChung.layDanhSach("giai_dau");
+
+        viewTbody(data);
+    });
+    ngayKetThuc_chon_viewbody.addEventListener("change", async function () {
+        console.log(ngayKetThuc_chon_viewbody.value);
+        // maVongDau_chon_viewbody.value = "All";
+        let data = await hamChung.layDanhSach("giai_dau");
+
+        viewTbody(data);
+    });
 });
 
 // Hiển thị danh sách giải đấu
-async function viewTbody() {
-    const data = await hamChung.layDanhSach("giai_dau"); // Lấy danh sách giải đấu
+async function viewTbody(data) {
+    if (data === undefined) {
+        data = await hamChung.layDanhSach("giai_dau");
+    }
+    console.log(ngayBatDau_chon_viewbody.value);
+    console.log(ngayKetThuc_chon_viewbody.value);
+    if (ngayBatDau_chon_viewbody.value !== "") {
+        data = data.filter(item => item.ngay_bat_dau >= ngayBatDau_chon_viewbody.value);
+    }
+    if(ngayKetThuc_chon_viewbody.value !== "") {
+        data = data.filter(item => item.ngay_ket_thuc <= ngayKetThuc_chon_viewbody.value);
+    }
     console.log(data);
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
@@ -47,6 +76,7 @@ async function viewTbody() {
             <td style="text-align: center;">${item.ten_to_chuc}</td>
             <td style="text-align: center;">${item.ngay_bat_dau}</td>
             <td style="text-align: center;">${item.ngay_ket_thuc}</td>
+            <td style="text-align: center;">${item.ngay_ket_thuc_dang_ky_giai}</td>
             <td style="text-align: center;">${item.gioi_tinh}</td>
              <td style="text-align: center;"><img src="${hinh_anh}" alt="Hình ảnh" width="50"></td>
             <td style="text-align: center;">${item.mo_ta || ""}</td>
@@ -90,6 +120,7 @@ async function handleLuuThayDoi(event) {
             ten_to_chuc: tenToChuc.value,
             ngay_bat_dau: ngayBatDau.value,
             ngay_ket_thuc: ngayKetThuc.value,
+            ngay_ket_thuc_dang_ky_giai: ngayHetDangKy.value,
             gioi_tinh: maGioiTinh.value,
             hinh_anh: id_Hinh_anh_thay,
             mo_ta: moTa.value,
@@ -102,11 +133,12 @@ async function handleLuuThayDoi(event) {
             ten_to_chuc: tenToChuc.value,
             ngay_bat_dau: ngayBatDau.value,
             ngay_ket_thuc: ngayKetThuc.value,
+            ngay_ket_thuc_dang_ky_giai: ngayHetDangKy.value,
             gioi_tinh: maGioiTinh.value,
             hinh_anh: id_Hinh_anh_thay,
             mo_ta: moTa.value
         };
-        console.log("dang xóa");
+        console.log("dang sửa");
     }
     if (maGiaiDau.value === "") {
         await hamChung.them(formData, "giai_dau");
@@ -144,6 +176,7 @@ function button_sua(data) {
             tenToChuc.value = item.ten_to_chuc;
             ngayBatDau.value = item.ngay_bat_dau;
             ngayKetThuc.value = item.ngay_ket_thuc;
+            ngayHetDangKy.value = item.ngay_ket_thuc_dang_ky_giai;
             maGioiTinh.value = item.gioi_tinh;
             hinhAnh.value = item.hinh_anh;
             moTa.value = item.mo_ta || "";

@@ -56,7 +56,7 @@
                         ĐẤU</label>
                 </div>
                 <div class="card-header">
-                   
+
                     <!-- <div class="col-md-3">
                         <label class="font-weight-bold">Mã Vòng Đấu</label>
                         <select class="form-control" id="maVongDau" required>
@@ -76,7 +76,7 @@
                         </div> -->
                         <div class="col-md-3">
                             <label class="font-weight-bold">Chọn Giải Đâu</label>
-                            <select class="form-control" id="maGiaiDau" required >
+                            <select class="form-control" id="maGiaiDau" required>
                                 <option value="">-- Chọn Giải Đấu --</option>
                             </select>
                         </div>
@@ -100,12 +100,14 @@
 
                         <div class="col-md-3">
                             <label class="font-weight-bold">Số Bàn Đội 1</label>
-                            <input path="soBanDoi1" type="number" class="form-control" min="0" id="soBanDoi1" required />
+                            <input path="soBanDoi1" type="number" class="form-control" min="0" id="soBanDoi1" value="0"
+                                required />
                         </div>
 
                         <div class="col-md-3">
                             <label class="font-weight-bold">Số Bàn Đội 2</label>
-                            <input path="soBanDoi2" type="number" class="form-control" min="0" id="soBanDoi2" required />
+                            <input path="soBanDoi2" type="number" class="form-control" min="0" id="soBanDoi2" value="0"
+                                required />
                         </div>
 
 
@@ -120,8 +122,7 @@
                                 <button id="button_luu" class="btn btn-success">Lưu</button>
                                 <button id="button_taiLaiTrang" class="btn btn-outline-dark" type="button">Tải Lại
                                     Trang</button>
-                                <p class="text-success">${message1}</p>
-                                <p class="text-danger">${message0}</p>
+
                             </div>
                         </div>
                     </form>
@@ -130,16 +131,35 @@
                 <div class="card mb-4">
                     <div class="card-header">
                         <i class="fas fa-table me-1"></i> DANH SÁCH KẾT QUẢ TRẬN ĐẤU
-                        <button id="button_co_kq" class="btn btn-primary float-end">Trận đấu có kết quá</button>
-                        <button id="button_chua_kq" class="btn btn-danger float-end me-2">Trận đấu chưa kết quá</button>
+
+                    </div>
+                    <div style="margin-left: 100px;">
+                        <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Giải Đấu</label>
+                                <select class="form-control" id="maGiaiDau_chon_viewbody" required>
+                                    <option value="All">-- Chọn giải đấu--</option>
+                                </select>
+                            </div>
+                            <!-- <div class="col-md-3">
+                                <label class="font-weight-bold">Chọn Kết Quả</label>
+                                <select class="form-control" id="checkKetQua_chon_viewbody" required>
+                                    <option value="co_kq">Có kết quả</option>
+                                    <option value="chua_kq">Chưa kết quả</option>
+                                </select>
+                            </div> -->
+
+                        </form:form>
                     </div>
                     <div class="card-body">
                         <table id="table">
                             <thead>
                                 <tr>
                                     <!-- <th style="text-align: center;">Mã Kết Quả</th> -->
-                                    <th style="text-align: center;">Mã Trận Đấu</th>
-                                    <th style="text-align: center;">Mã Đội Thắng</th>
+                                    <th style="text-align: center;">Giải Đấu</th>
+                                    <th style="text-align: center;">Trận Đấu</th>
+
+                                    <th style="text-align: center;">Đội Thắng</th>
                                     <th style="text-align: center;">Số Bàn Đội 1</th>
                                     <th style="text-align: center;">Số Bàn Đội 2</th>
 
@@ -151,7 +171,9 @@
                             <tfoot>
                                 <tr>
                                     <!-- <th style="text-align: center;">Mã Kết Quả</th> -->
+                                    <th style="text-align: center;">Giải Đấu</th>
                                     <th style="text-align: center;">Mã Trận Đấu</th>
+
                                     <th style="text-align: center;">Mã Đội Thắng</th>
                                     <th style="text-align: center;">Số Bàn Đội 1</th>
                                     <th style="text-align: center;">Số Bàn Đội 2</th>

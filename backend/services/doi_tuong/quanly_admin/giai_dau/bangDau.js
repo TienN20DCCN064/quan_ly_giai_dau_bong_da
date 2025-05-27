@@ -5,16 +5,34 @@ const maBangDau = document.getElementById("maBangDau");
 const tenBangDau = document.getElementById("tenBangDau");
 const maGiaiDau = document.getElementById("maGiaiDau");
 
+const maGiaiDau_chon_viewbody = document.getElementById("maGiaiDau_chon_viewbody");
+
 document.addEventListener("DOMContentLoaded", function () {
     loadDanhSachGiaiDau();
+
+
+    loadDanhSachGiaiDau_chon_viewBody();
     viewTbody();
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
+    maGiaiDau_chon_viewbody.addEventListener("change", async function () {
+        console.log(maGiaiDau_chon_viewbody.value);
+        // maVongDau_chon_viewbody.value = "All";
+        let data = await hamChung.layDanhSach("bang_dau");
+
+        viewTbody(data);
+    });
 });
 
 // Hiển thị danh sách bảng đấu
-async function viewTbody() {
-    const data = await hamChung.layDanhSach("bang_dau");
+async function viewTbody(data) {
+
+    if (data === undefined) {
+        data = await hamChung.layDanhSach("bang_dau");
+    }
+    if (maGiaiDau_chon_viewbody.value !== "All") {
+        data = data.filter(item => item.ma_giai_dau === maGiaiDau_chon_viewbody.value);
+    }
     console.log(data);
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
@@ -129,6 +147,18 @@ function button_xoa(data) {
 async function loadDanhSachGiaiDau() {
     const selectElement = document.getElementById("maGiaiDau");
     selectElement.innerHTML = '<option value="">-- Chọn Mã Giải Đấu --</option>'; // Reset danh sách
+    const data = await hamChung.layDanhSach("giai_dau");
+    data.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.ma_giai_dau;
+        option.textContent = `${item.ten_giai_dau}`;
+        selectElement.appendChild(option);
+    });
+}
+
+async function loadDanhSachGiaiDau_chon_viewBody() {
+    const selectElement = document.getElementById("maGiaiDau_chon_viewbody");
+    selectElement.innerHTML = '<option value="All">Tất Cả</option>'; // Reset danh sách
     const data = await hamChung.layDanhSach("giai_dau");
     data.forEach(item => {
         const option = document.createElement("option");

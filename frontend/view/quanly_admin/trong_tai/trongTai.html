@@ -114,6 +114,24 @@
                     <div class="card-header">
                         <i class="fas fa-table me-1"></i> DANH SÁCH TRỌNG TÀI
                     </div>
+                     <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
+                        <div class="col-md-3">
+                            <label class="font-weight-bold">Chọn Giới Tính</label>
+                            <select class="form-control" id="gioiTinh_chon_viewbody" required>
+                                <option value="All">-- Tất cả --</option>
+                                <option value="nam">Nam</option>
+                                <option value="nữ">Nữ</option>
+                            </select>
+                        </div>
+                        <!-- <div class="col-md-3">
+                                <label class="font-weight-bold">Chọn Kết Quả</label>
+                                <select class="form-control" id="checkKetQua_chon_viewbody" required>
+                                    <option value="co_kq">Có kết quả</option>
+                                    <option value="chua_kq">Chưa kết quả</option>
+                                </select>
+                            </div> -->
+
+                    </form:form>
                     <div class="card-body">
                         <table id="table">
                             <thead>

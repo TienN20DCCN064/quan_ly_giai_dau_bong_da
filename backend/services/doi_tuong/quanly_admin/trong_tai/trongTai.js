@@ -9,6 +9,7 @@ const maGioiTinh = document.getElementById("maGioiTinh");
 const hinhAnh = document.getElementById("hinhAnh");
 const inputFile = document.getElementById("hinhAnhFile");
 const form = document.getElementById("inputForm");
+const gioiTinh_chon_viewbody = document.getElementById("gioiTinh_chon_viewbody");
 
 document.addEventListener("DOMContentLoaded", async function () {
     await viewTbody();
@@ -16,12 +17,24 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
+    gioiTinh_chon_viewbody.addEventListener("change", async function () {
+        console.log(gioiTinh_chon_viewbody.value);
+        // maVongDau_chon_viewbody.value = "All";
+        let data = await hamChung.layDanhSach("trong_tai");
+
+        viewTbody(data);
+    });
 });
 
 // Hiển thị danh sách trọng tài
 // Hiển thị danh sách trọng tài
-async function viewTbody() {
-    const data = await hamChung.layDanhSach("trong_tai");
+async function viewTbody(data) {
+    if (data === undefined) {
+        data = await hamChung.layDanhSach("trong_tai");
+    }
+    if (gioiTinh_chon_viewbody.value !== "All") {
+        data = data.filter(item => item.gioi_tinh === gioiTinh_chon_viewbody.value);
+    }
     console.log(data);
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
@@ -108,11 +121,11 @@ async function handleLuuThayDoi(event) {
         alert("Sửa thành công!");
     }
     console.log(formData);
-     // phần này là phần cập nhật ảnh lên server
-     if (inputFile.value != "") {
+    // phần này là phần cập nhật ảnh lên server
+    if (inputFile.value != "") {
         await hamChung.uploadImage(inputFile.files[0]);
     }
-    // viewTbody();
+    viewTbody();
 }
 
 // Xử lý tải lại trang
@@ -136,7 +149,7 @@ function button_sua(data) {
             // hinhAnhText.value = item.hinh_anh;
             // // Xóa giá trị của input file (nếu có)
             // hinhAnh.value = "";
-            
+
             // Scroll lên đầu trang
             window.scrollTo({
                 top: 0,
@@ -157,4 +170,5 @@ function button_xoa(data) {
             }
         });
     });
+
 }

@@ -76,14 +76,25 @@
                             <button id="button_luu" class="btn btn-success">Lưu</button>
                             <button id="button_taiLaiTrang" class="btn btn-outline-dark" type="button">Tải Lại
                                 Trang</button>
-                            <p class="text-success">${message1}</p>
-                            <p class="text-danger">${message0}</p>
+                           
                         </div>
                         </form:form>
                 </div>
                 <div class="card mb-4">
                     <div class="card-header">
                         <i class="fas fa-table me-1"></i> DANH SÁCH BẢNG ĐẤU
+                    </div>
+                    <div style="margin-left: 100px;">
+                        <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Giải Đấu</label>
+                                <select class="form-control" id="maGiaiDau_chon_viewbody" required>
+                                    <option value="">-- Chọn Giải Đấu--</option>
+                                </select>
+                            </div>
+                            
+
+                        </form:form>
                     </div>
                     <div class="card-body">
                         <table id="table">

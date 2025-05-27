@@ -57,11 +57,17 @@
                 <!-- sửa kiểu div thành kiểu form thì sao  -->
                 <div class="card-header">
                     <form class="row mb-3" id="inputForm">
+
+                        <div class="col-md-3">
+                            <label class="font-weight-bold">Đội Bóng</label>
+                            <select class="form-control" id="maDoiBong" required>
+                                <option value="">-- Chọn Đội Bóng --</option>
+                            </select>
+                        </div>
                         <div class="col-md-3">
                             <label class="font-weight-bold">Mã Cầu Thủ</label>
                             <input type="text" class="form-control" id="maCauThu" required readonly />
                         </div>
-
                         <div class="col-md-3">
                             <label class="font-weight-bold">Họ Tên</label>
                             <input type="text" class="form-control" id="hoTen" required />
@@ -92,12 +98,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3">
-                            <label class="font-weight-bold">Đội Bóng</label>
-                            <select class="form-control" id="maDoiBong" required>
-                                <option value="">-- Chọn Đội Bóng --</option>
-                            </select>
-                        </div>
+
                         <div class="col-md-3">
                             <label class="font-weight-bold">Hình Ảnh</label>
                             <!-- Input hiển thị tên file hoặc URL ảnh -->
@@ -119,17 +120,29 @@
                     <div class="card-header">
                         <i class="fas fa-table me-1"></i> DANH SÁCH CẦU THỦ
                     </div>
+                    <div style="margin-left: 100px;">
+                        <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Đội Bóng</label>
+                                <select class="form-control" id="maDoiBong_chon_viewbody" required>
+                                    <option value="">-- Chọn Đội Bóng--</option>
+                                </select>
+                            </div>
+
+                        </form:form>
+                    </div>
                     <div class="card-body">
                         <table id="table">
                             <thead>
                                 <tr>
+                                    <th style="text-align: center;">Đội Bóng</th>
                                     <th style="text-align: center;">Mã Cầu Thủ</th>
                                     <th style="text-align: center;">Họ Tên</th>
                                     <th style="text-align: center;">Ngày Sinh</th>
                                     <th style="text-align: center;">Số Áo</th>
                                     <th style="text-align: center;">Giới Tính</th>
                                     <th style="text-align: center;">Vị Trí</th>
-                                    <th style="text-align: center;">Đội Bóng</th>
+
                                     <th style="text-align: center;">Hình Ảnh</th>
                                     <th style="text-align: center;">Sửa</th>
                                     <th style="text-align: center;">Xóa</th>

@@ -8,7 +8,6 @@ const ghiChu = document.getElementById("ghiChu");
 const chon_GiaiDau = document.getElementById("maGiaiDau_chon");
 const chon_bangDau = document.getElementById("maBangDau_chon");
 
-
 document.addEventListener("DOMContentLoaded", async function () {
 
 

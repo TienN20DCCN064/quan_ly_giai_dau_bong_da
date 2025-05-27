@@ -88,10 +88,28 @@
                     <div class="card-header">
                         <i class="fas fa-table me-1"></i> TRỌNG TÀI TRONG TRẬN ĐẤU
                     </div>
+                    <div style="margin-left: 100px;">
+                        <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Giải Đấu</label>
+                                <select class="form-control" id="maGiaiDau_chon_viewbody" required>
+                                    <option value="All">-- Chọn giải đấu--</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Trận Đấu</label>
+                                <select class="form-control" id="maTranDau_chon_viewbody" required>
+                                    <option value="All">-- Chọn trận đấu--</option>
+                                </select>
+                            </div>
+
+                        </form:form>
+                    </div>
                     <div class="card-body">
                         <table id="table">
                             <thead>
                                 <tr>
+                                    <th style="text-align: center;">Giải Đấu</th>
                                     <th style="text-align: center;">Trận Đấu</th>
                                     <th style="text-align: center;">Trọng Tài</th>
 
@@ -103,6 +121,7 @@
                             </thead>
                             <tfoot>
                                 <tr>
+                                    <th style="text-align: center;">Giải Đấu</th>
                                     <th style="text-align: center;">Trận Đấu</th>
                                     <th style="text-align: center;">Trọng Tài</th>
 

@@ -66,21 +66,21 @@
                                 <option value="">-- Chọn Giải Đấu --</option>
                             </select>
                         </div>
-
                         <div class="col-md-3">
-                            <label class="font-weight-bold">Mã Đội Bóng</label>
-                            <select class="form-control" id="maDoiBong" required>
-                                <option value="">-- Chọn Đội Bóng --</option>
-                            </select>
-                        </div>
-                          <div class="col-md-3">
                             <label class="font-weight-bold">Bảng Đấu</label>
                             <select class="form-control" id="maBangDau" required>
                                 <option value="">-- Chọn Bảng Đấu --</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="font-weight-bold">Tên Đội Bóng</label>
+                            <label class="font-weight-bold">Mã Đội Bóng</label>
+                            <select class="form-control" id="maDoiBong" required>
+                                <option value="">-- Chọn Đội Bóng --</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="font-weight-bold">Tên Trong Giải</label>
                             <input path="tenDoiBong" type="text" class="form-control" id="tenDoiBong" required />
                         </div>
                         <div class="col-md-3">
@@ -114,8 +114,7 @@
                             <button id="button_luu" class="btn btn-success">Lưu</button>
                             <button id="button_taiLaiTrang" class="btn btn-outline-dark" type="button">Tải Lại
                                 Trang</button>
-                            <p class="text-success">${message1}</p>
-                            <p class="text-danger">${message0}</p>
+
                         </div>
                         </form:form>
                 </div>
@@ -124,16 +123,34 @@
                         <i class="fas fa-table me-1"></i> DANH SÁCH CẦU THỦ
 
                     </div>
+                    <div style="margin-left: 100px;">
+                        <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Giải Đấu</label>
+                                <select class="form-control" id="maGiaiDau_chon_viewbody" required>
+                                    <option value="All">-- Chọn giải đấu--</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Bảng Đấu</label>
+                                <select class="form-control" id="maBangDau_chon_viewbody" required>
+                                    <option value="All">-- Chọn bảng đấu--</option>
+                                </select>
+                            </div>
+
+                        </form:form>
+                    </div>
 
                     <div class="card-body">
                         <table id="table">
                             <thead>
                                 <tr>
                                     <th style="text-align: center;">Giải Đấu</th>
-                                   <th style="text-align: center;">Tên Hiện Tại</th>
+                                    <th style="text-align: center;">Bảng Đấu</th>
+                                    <th style="text-align: center;">Tên Hiện Tại</th>
                                     <th style="text-align: center;">Tên Trong Giải</th>
                                     <th style="text-align: center;">Quốc Gia</th>
-                                    <th style="text-align: center;">Bảng Đấu</th>
+
                                     <th style="text-align: center;">Hạt Giống</th>
                                     <th style="text-align: center;">Logo</th>
 
@@ -144,6 +161,7 @@
                             <tfoot>
                                 <tr>
                                     <th style="text-align: center;">Giải Đấu</th>
+                                    <th style="text-align: center;">Bảng Đấu</th>
                                     <th style="text-align: center;">Tên Hiện Tại</th>
                                     <th style="text-align: center;">Tên Trong Giải</th>
                                     <th style="text-align: center;">Quốc Gia</th>

@@ -61,6 +61,18 @@
                             <input path="maCauThu" type="text" class="form-control" id="maCauThu" required readonly />
                         </div> -->
                         <div class="col-md-3">
+                            <label class="font-weight-bold">Giải Đấu</label>
+                            <select class="form-control" id="maGiaiDau" required>
+                                <option value="">-- Chọn giải đấu --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="font-weight-bold">Đội Bóng</label>
+                            <select class="form-control" id="maDoiBong" required>
+                                <option value="">-- Chọn đội bóng --</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
                             <label class="font-weight-bold">Chọn Cầu Thủ</label>
                             <select class="form-control" id="maCauThu" required>
                                 <option value="">-- Chọn cầu thủ --</option>
@@ -70,25 +82,15 @@
                             <label class="font-weight-bold">Mã Đội Bóng</label>
                             <input path="maDoiBong" type="text" class="form-control" id="maDoiBong" />
                         </div> -->
-                        <div class="col-md-3">
-                            <label class="font-weight-bold">Mã Đội Bóng</label>
-                            <select class="form-control" id="maDoiBong" required>
-                                <option value="">-- Chọn đội bóng --</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="font-weight-bold">Mã Giải Đấu</label>
-                            <select class="form-control" id="maGiaiDau" required>
-                                <option value="">-- Chọn giải đấu --</option>
-                            </select>
-                        </div>
+
+
 
 
 
 
 
                         <div class="col-md-3">
-                            <label class="font-weight-bold">Họ Tên</label>
+                            <label class="font-weight-bold">Tên Trong Giải</label>
                             <input type="text" class="form-control" id="hoTen" required />
                         </div>
 
@@ -122,24 +124,38 @@
                             <button id="button_luu" class="btn btn-success">Lưu</button>
                             <button id="button_taiLaiTrang" class="btn btn-outline-dark" type="button">Tải Lại
                                 Trang</button>
-                            <p class="text-success">${message1}</p>
-                            <p class="text-danger">${message0}</p>
                         </div>
                         </form:form>
                 </div>
                 <div class="card mb-4">
                     <div class="card-header">
-                        <i class="fas fa-table me-1"></i> DANH SÁCH CẦU THỦ
+                        <i class="fas fa-table me-1"></i> DANH SÁCH CẦU THỦ TRONG GIẢI
+                    </div>
+                     <div style="margin-left: 100px;">
+                        <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Giải Đấu</label>
+                                <select class="form-control" id="maGiaiDau_chon_viewbody" required>
+                                    <option value="All">-- Chọn giải đấu--</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Đội Bóng</label>
+                                <select class="form-control" id="maDoiBong_chon_viewbody" required>
+                                    <option value="All">-- Chọn đội bóng--</option>
+                                </select>
+                            </div>
+
+                        </form:form>
                     </div>
                     <div class="card-body">
                         <table id="table">
                             <thead>
                                 <tr>
+                                    <th style="text-align: center;">Giải Đấu</th>
+                                    <th style="text-align: center;">Đội Bóng</th>
                                     <th style="text-align: center;">Tên Hiện Tại</th>
                                     <th style="text-align: center;">Tên Trong Giải</th>
-                                    <th style="text-align: center;">Mã Đội Bóng</th>
-                                    <th style="text-align: center;">Mã Giải Đấu</th>
-
                                     <th style="text-align: center;">Hình Ảnh</th>
                                     <th style="text-align: center;">Số Áo</th>
                                     <th style="text-align: center;">Vị Trí</th>
@@ -149,11 +165,10 @@
                             </thead>
                             <tfoot>
                                 <tr>
+                                    <th style="text-align: center;">Giải Đấu</th>
+                                    <th style="text-align: center;">Đội Bóng</th>
                                     <th style="text-align: center;">Tên Hiện Tại</th>
                                     <th style="text-align: center;">Tên Trong Giải</th>
-                                    <th style="text-align: center;">Mã Đội Bóng</th>
-                                    <th style="text-align: center;">Mã Giải Đấu</th>
-
                                     <th style="text-align: center;">Hình Ảnh</th>
                                     <th style="text-align: center;">Số Áo</th>
                                     <th style="text-align: center;">Vị Trí</th>

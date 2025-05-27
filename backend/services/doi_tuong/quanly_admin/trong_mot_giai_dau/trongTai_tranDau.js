@@ -6,35 +6,81 @@ const maTrongTai = document.getElementById("maTrongTai");
 const maLoaiTrongTai = document.getElementById("maLoaiTrongTai");
 const form = document.getElementById("inputForm");
 
+const maGiaiDau_chon_viewbody = document.getElementById("maGiaiDau_chon_viewbody");
+const maTranDau_chon_viewbody = document.getElementById("maTranDau_chon_viewbody");
 
 document.addEventListener("DOMContentLoaded", function () {
     loadDanhTranDau();
     loadDanhSachTrongTai();
     loadDanhSachLoaiTrongTai();
+    loadDanhSachGiaiDau_chon_viewbody();
 
     viewTbody();
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
+
+
+    maGiaiDau_chon_viewbody.addEventListener("change", async function () {
+        console.log(maGiaiDau_chon_viewbody.value);
+        // maVongDau_chon_viewbody.value = "All";
+        let data = await hamChung.layDanhSach("trong_tai_tran_dau");
+        await loadDanhSachTranDauTheoGiaiDau_chon_viewbody(maGiaiDau_chon_viewbody.value);
+        viewTbody(data);
+    });
+
+    maTranDau_chon_viewbody.addEventListener("change", async function () {
+        console.log(maGiaiDau_chon_viewbody.value);
+        // maVongDau_chon_viewbody.value = "All";
+        let data = await hamChung.layDanhSach("trong_tai_tran_dau");
+
+        viewTbody(data);
+    });
 });
 // Hiển thị danh sách trọng tài
 // Hiển thị danh sách trọng tài
-async function viewTbody() {
-    const data = await hamChung.layDanhSach("trong_tai_tran_dau");
+async function check_tranDau_thuoc_giaDau_Khong(maTranDau, maGiaiDau) {
+    const data = await hamChung.layDanhSach("tran_dau");
+    const tranDau = data.find(item => item.ma_tran_dau === maTranDau);
+    if (tranDau && tranDau.ma_giai_dau === maGiaiDau) {
+        return true; // Trận đấu thuộc giải đấu
+    }
+    return false; // Trận đấu không thuộc giải đấu
+
+}
+async function viewTbody(data) {
+    if (data === undefined) {
+        data = await hamChung.layDanhSach("trong_tai_tran_dau");
+    }
+    console.log(data);
+    console.log(maGiaiDau_chon_viewbody.value);
+    console.log(maTranDau_chon_viewbody.value);
+    if (maGiaiDau_chon_viewbody.value !== "All") {
+        const filteredData = [];
+        for (const item of data) {
+            const isValid = await check_tranDau_thuoc_giaDau_Khong(item.ma_tran_dau, maGiaiDau_chon_viewbody.value);
+            if (isValid) filteredData.push(item);
+        }
+        data = filteredData;
+    }
+
+    if (maTranDau_chon_viewbody.value !== "All") {
+        data = data.filter(item => item.ma_tran_dau === maTranDau_chon_viewbody.value);
+    }
+
     console.log(data);
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
     // Dùng Promise.all để chờ tất cả hình ảnh tải xong
     for (const item of data) {
-
         const row = document.createElement("tr");
         const lay1TranDau = await hamChung.layThongTinTheo_ID("tran_dau", item.ma_tran_dau);
-
+        const lay1GiaiDau = await hamChung.layThongTinTheo_ID("giai_dau", lay1TranDau.ma_giai_dau);
         const lay1TrongTai = await hamChung.layThongTinTheo_ID("trong_tai", item.ma_trong_tai);
-
         const lay1LoaiTrongTai = await hamChung.layThongTinTheo_ID("loai_trong_tai", item.ma_loai_trong_tai);
 
         row.innerHTML = `
+            <td style="text-align: center;">${lay1GiaiDau.ten_giai_dau}</td>
             <td style="text-align: center;">${item.ma_tran_dau}</td>
             <td style="text-align: center;">${lay1TrongTai.ho_ten}</td>
             <td style="text-align: center;">${lay1LoaiTrongTai.ten_loai_trong_tai}</td>
@@ -165,3 +211,27 @@ async function loadDanhSachLoaiTrongTai() {
     });
 }
 
+async function loadDanhSachGiaiDau_chon_viewbody() {
+    const selectElement = document.getElementById("maGiaiDau_chon_viewbody");
+    selectElement.innerHTML = '<option value="All">Tất Cả</option>'; // Reset danh sách
+    const data = await hamChung.layDanhSach("giai_dau");
+    data.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.ma_giai_dau;
+        option.textContent = `${item.ten_giai_dau}`;
+        selectElement.appendChild(option);
+    });
+}
+
+async function loadDanhSachTranDauTheoGiaiDau_chon_viewbody(maGiaiDau) {
+    const selectElement = document.getElementById("maTranDau_chon_viewbody");
+    selectElement.innerHTML = '<option value="All">Tất Cả</option>'; // Reset danh sách
+    let data = await hamChung.layDanhSach("tran_dau");
+    data = data.filter(item => item.ma_giai_dau === maGiaiDau);
+    data.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.ma_tran_dau;
+        option.textContent = `${item.ma_tran_dau}`;
+        selectElement.appendChild(option);
+    });
+}

@@ -10,46 +10,36 @@ const inputFile = document.getElementById("logoFile");
 const form = document.getElementById("inputForm");
 const maQlDoiBong = document.getElementById("maQlDoiBong");
 
+
+const gioiTinh_chon_viewbody = document.getElementById("gioiTinh_chon_viewbody");
+
 document.addEventListener("DOMContentLoaded", async function () {
     loadDanhSachNguoiDung_quanLyDoiBong();
     await viewTbody();
     // console.log(loadDanhSachNguoiDung_quanLyDoiBong());
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
+    gioiTinh_chon_viewbody.addEventListener("change", async function () {
+        console.log(gioiTinh_chon_viewbody.value);
+        // maVongDau_chon_viewbody.value = "All";
+        let data = await hamChung.layDanhSach("doi_bong");
+
+        viewTbody(data);
+    });
 });
 
 // Hiển thị danh sách đội bóng
-async function viewTbody() {
-    const data = await hamChung.layDanhSach("doi_bong");
+async function viewTbody(data) {
+    if(data === undefined){
+        data = await hamChung.layDanhSach("doi_bong");
+    }
+    if(gioiTinh_chon_viewbody.value !== "All") {
+        data = data.filter(item => item.gioi_tinh === gioiTinh_chon_viewbody.value);
+    }
     console.log(data);
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
-    // Dùng Promise.all để chờ tất cả hình ảnh tải xong
-    // const rows = await Promise.all(data.map(async item => {
-    //     // const hinh_anh = await hamChung.getImage(item.hinh_anh);
-    //     // console.log(item.hinh_anh);
-    //     let hinh_anh;
-    //     const row = document.createElement("tr");
-    //     // C:\Users\vanti\Desktop\quan_ly_tran_dau\frontend\public\images\cat-2.png
 
-    //     if (item.logo === null) {
-    //         hinh_anh = "/frontend/public/images/cat-2.png";
-    //     } else {
-    //         hinh_anh = await hamChung.getImage(item.logo);
-
-    //     }
-    //     row.innerHTML = `
-    //         <td style="text-align: center;">${item.ma_doi_bong}</td>
-    //         <td style="text-align: center;">${item.ten_doi_bong}</td>
-    //         <td style="text-align: center;">${item.quoc_gia}</td>
-    //         <td style="text-align: center;">${item.gioi_tinh}</td>
-    //         <td style="text-align: center;"><img src="${hinh_anh}" alt="Logo" width="50"></td>
-    //         <td style="text-align: center;">${item.ma_ql_doi_bong}</td>
-    //         <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
-    //         <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
-    //     `;
-    //     return row;
-    // }));
 
 
     for (const item of data) {
@@ -63,8 +53,8 @@ async function viewTbody() {
             hinh_anh = await hamChung.getImage(item.logo);
 
         }
-        let qllDoiBong = item.ma_ql_doi_bong;
-        if (qllDoiBong != null) {
+        let qllDoiBong = "---";
+        if (item.ma_ql_doi_bong != null) {
             const data1NguoiDung = await hamChung.layThongTinTheo_ID("nguoi_dung", item.ma_ql_doi_bong);
 
             qllDoiBong = data1NguoiDung.ho_ten;

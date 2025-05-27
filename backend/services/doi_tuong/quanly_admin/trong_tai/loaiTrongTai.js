@@ -72,6 +72,7 @@ async function handleLuuThayDoi(event) {
         alert("Sửa thành công!");
     }
     console.log(formData);
+    viewTbody();
 }
 
 // Xử lý tải lại trang
@@ -102,7 +103,7 @@ function button_xoa(data) {
             if (confirm(`Bạn có chắc chắn muốn xóa loại trọng tài ${data[index].ten_loai_trong_tai}?`)) {
                 const formData = { ma_loai_trong_tai: data[index].ma_loai_trong_tai };
                 await hamChung.xoa(formData, "loai_trong_tai");
-                viewTbody();
+                await viewTbody();
             }
         });
     });
