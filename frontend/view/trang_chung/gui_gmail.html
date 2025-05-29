@@ -37,23 +37,22 @@
             <div id="menu-btn" class="fas fa-bars"></div>
          </div> -->
 
-       
+
 
       </section>
 
    </header>
 
    <section class="form-container" style="margin-top: 100px;">
-      <!-- FORM ĐĂNG NHẬP (GIỮ NGUYÊN) -->
-      <form id="form_dangNhap" action="" method="post">
-         <input id="tk" type="text" required maxlength="50" name="taikhoan" placeholder="Nhập chủ đề" class="box"
-            autocomplete="username">
-         <input id="mk" type="text" required maxlength="20" name="matkhau" placeholder="Nhập nội dung" class="box"
-            autocomplete="current-password">
-         <input id="loginBtn" type="submit" value="Gửi yêu cầu" class="btn" name="submit">
-       
+      <!-- FORM GỬI EMAIL -->
+      <form id="form_sendEmail" >
+         <input id="email" type="email" required maxlength="100" name="email_receiver"
+            placeholder="Nhập email người nhận" class="box" autocomplete="email">
+         <input id="subject" type="text" required maxlength="100" name="subject" placeholder="Nhập chủ đề" class="box">
+         <textarea id="message" required name="message" placeholder="Nhập nội dung email" class="box" rows="5"
+            style="resize: none;"></textarea>
+         <input id="sendBtn" type="submit" value="Gửi email" class="btn">
       </form>
-
    </section>
 
 

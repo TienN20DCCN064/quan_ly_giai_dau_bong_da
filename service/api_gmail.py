@@ -5,19 +5,19 @@ from email.mime.text import MIMEText
 
 app = Flask(__name__)
 CORS(app)
-port = 5003
+port = 5002
 
 # Cấu hình tài khoản Gmail
 EMAIL_SENDER = "vantien18122002@gmail.com"
 EMAIL_PASSWORD = "lgez ijzt asgs hpju"  # Mật khẩu ứng dụng mới từ Google
-
-@app.route('/send-email', methods=['POST'])
+@app.route('/api/send-email', methods=['POST'])
 def send_email():
     try:
         # Lấy thông tin từ request body
         data = request.get_json()
         email_receiver = data.get('email_receiver')
         message_text = data.get('message')
+        subject = data.get('subject', 'Thông báo từ hệ thống')  # Nếu không có thì dùng mặc định
 
         # Kiểm tra dữ liệu
         if not email_receiver or not message_text:
@@ -25,15 +25,15 @@ def send_email():
 
         # Tạo email với thông điệp
         msg = MIMEText(message_text, 'plain')
-        msg['Subject'] = "Thông báo từ hệ thống"
+        msg['Subject'] = subject
         msg['From'] = EMAIL_SENDER
         msg['To'] = email_receiver
 
         # Gửi email qua SMTP của Gmail
         with smtplib.SMTP('smtp.gmail.com', 587) as server:
-            server.starttls()  # Bật mã hóa TLS
-            server.login(EMAIL_SENDER, EMAIL_PASSWORD)  # Đăng nhập vào tài khoản Gmail
-            server.sendmail(EMAIL_SENDER, email_receiver, msg.as_string())  # Gửi email
+            server.starttls()
+            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+            server.sendmail(EMAIL_SENDER, email_receiver, msg.as_string())
 
         return jsonify({"status": "success", "message": "Đã gửi email thành công!"})
 

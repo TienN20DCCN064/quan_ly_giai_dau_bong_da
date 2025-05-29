@@ -1,7 +1,8 @@
 const congAPI = 4002;
 const congAPI_image = 5000;
 const congAPI_taoTranDau = 5001;
-const IPv4_Address =  "192.168.110.115";
+const congAPI_gmail = 5002; // Phần tạo trận đấu
+const IPv4_Address = "192.168.2.77";
 // const linkCongAPI = "http://localhost:" + congAPI + "/api/";
 // ex : http://192.168.1.136:4002/api
 // ex : http://localhost:4002/api
@@ -26,16 +27,19 @@ const GlobalStore = {
     },
 
     getLinkCongAPI() {
-        return "http://"+IPv4_Address +":"+ congAPI + "/api/";
+        return "http://" + IPv4_Address + ":" + congAPI + "/api/";
     },
-    getLinkCongApi_image(){
+    getLinkCongApi_image() {
         // http://
-        return "http://"+IPv4_Address +":"+ congAPI_image + "/api/image";
+        return "http://" + IPv4_Address + ":" + congAPI_image + "/api/image";
     },
-    getLinkCongApi_taoTranDau(){
-        return "http://"+IPv4_Address +":"+ congAPI_taoTranDau + "/api_taoTranDau";
+    getLinkCongApi_taoTranDau() {
+        return "http://" + IPv4_Address + ":" + congAPI_taoTranDau + "/api_taoTranDau";
     },
-// tôi muốn lấy api của phần tạo trận đấu ấy
+    getLinkCongApi_gmail() {
+        return "http://" + IPv4_Address + ":" + congAPI_gmail + "/api/";
+    },
+    // tôi muốn lấy api của phần tạo trận đấu ấy
 
 
 

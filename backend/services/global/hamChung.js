@@ -54,6 +54,9 @@ const hamChung = {
     },
 
 
+    async sendEmail(emailReceiver, subject, message) {
+        return await sendEmail(emailReceiver, subject, message);
+    }
 
 
 
@@ -506,11 +509,35 @@ async function getHinhThucTaoDoi() {
 }
 
 
-
 // lúc mà upload ảnh lên thì public_id không được có khoảng trắng, nó sẽ tự động thay thế bằng dấu gạch dưới
 // nên khi lấy về thì phải thay thế lại bằng khoảng trắng
 function doiKhoangTrangThanhGachDuoi(tenFile) {
     return tenFile.replace(/\s+/g, '_');
+}
+
+async function sendEmail(emailReceiver, subject, message) {
+    const url = GlobalStore.getLinkCongApi_gmail() + "send-email";
+    // const res = await fetch(url, {
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email_receiver: emailReceiver,
+            subject: subject,
+            message: message
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Phản hồi từ API:', data);
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Lỗi khi gọi API:', error);
+            alert('Gửi email thất bại!');
+        });
 }
 
 
