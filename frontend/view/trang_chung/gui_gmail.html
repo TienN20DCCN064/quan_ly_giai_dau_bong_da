@@ -5,7 +5,7 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>login</title>
+   <title>Gửi gmail</title>
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
@@ -28,6 +28,8 @@
             <a href=/frontend/view/nguoihammo/home.html>Người Hâm Mộ</a>
             <!-- <a href="/view/menu_main/orders.html">orders</a>
             <a href="/view/menu_main/contact.html">contact</a> -->
+            <a href="/frontend/view/nguoihammo/home.html" id="linkQL">Trang Quản Lý</a>
+
          </nav>
 
          <!-- <div class="icons">
@@ -45,9 +47,11 @@
 
    <section class="form-container" style="margin-top: 100px;">
       <!-- FORM GỬI EMAIL -->
-      <form id="form_sendEmail" >
-         <input id="email" type="email" required maxlength="100" name="email_receiver"
-            placeholder="Nhập email người nhận" class="box" autocomplete="email">
+      <form id="form_sendEmail">
+         <input id="email_gui" type="email" required maxlength="100" name="email_receiver"
+            placeholder="Nhập email người nhận" class="box" autocomplete="email" readonly>
+         <!-- <input id="email_nhan" type="email" required maxlength="100" name="email_receiver"
+            placeholder="Nhập email người nhận" class="box" autocomplete="email"> -->
          <input id="subject" type="text" required maxlength="100" name="subject" placeholder="Nhập chủ đề" class="box">
          <textarea id="message" required name="message" placeholder="Nhập nội dung email" class="box" rows="5"
             style="resize: none;"></textarea>
@@ -101,9 +105,37 @@
    </div>
 
 
-   <!-- <div class="loader">
-      <img src="/public/images/loader.gif" alt="">
-   </div> -->
+   <script>
+      document.getElementById("linkQL").addEventListener("click", async function (event) {
+         event.preventDefault(); // Ngăn chặn điều hướng đến href
+         console.log("Đã click vào link, nhưng không chuyển trang.");
+         const taiKhoan = GlobalStore.getUsername();
+         const doiTuyen_dangChon = DoiTuyen.getDoiTuyen_dangChon();
+         console.log(doiTuyen_dangChon);
+         console.log(taiKhoan);
+         if (taiKhoan != null && taiKhoan != undefined) {
+
+            // const url = "/frontend/view/login.html";
+            // window.location.url = url;
+            const dataTaiKhoan = await hamChung.layThongTinTheo_ID("tai_khoan", taiKhoan);
+            console.log(dataTaiKhoan);
+            if (dataTaiKhoan.ma_vai_tro === 1) {
+               const url = "/frontend/view/quanly_admin/doi_bong/cau_thu.html";
+               window.location.href = url;
+            }
+            if (dataTaiKhoan.ma_vai_tro === 2) {
+               const url = "/frontend/view/quanly_doituyen/qldt_trangchu.html";
+               window.location.href = url;
+            }
+         }
+         else {
+            const url = "/frontend/view/login.html";
+            console.log(url);
+            window.location.href = url;
+         }
+
+      });
+   </script>
 
    <script src="/backend/services/doi_tuong/trang_chung/gui_gmail.js"></script>
    <script type="module" src="/backend/services/global/global.js"></script>

@@ -24,7 +24,7 @@ def send_email():
             return jsonify({"status": "error", "message": "Thiếu thông tin email hoặc thông điệp!"}), 400
 
         # Tạo email với thông điệp
-        msg = MIMEText(message_text, 'plain')
+        msg = MIMEText(message_text, 'html')
         msg['Subject'] = subject
         msg['From'] = EMAIL_SENDER
         msg['To'] = email_receiver
