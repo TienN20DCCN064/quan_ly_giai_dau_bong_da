@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- <tt? -->
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>ĐỔi mk</title>
+
+   <!-- font awesome cdn link  -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+   <!-- custom css file link  -->
+   <link rel="stylesheet" href="/frontend/public/css/style.css">
+
+</head>
+
+<body>
+   <header class="header">
+
+      <section class="flex">
+
+         <a href="/frontend/view/nguoihammo/home.html" class="logo">Đá Bóng 😋</a>
+
+         <nav class="navbar">
+            <!-- <a href="/view/menu_main/home.html">home</a>
+            <a href="/view/menu_main/about.html">about</a> -->
+            <a href=/frontend/view/nguoihammo/home.html>Người Hâm Mộ</a>
+            <!-- <a href="/view/menu_main/orders.html">orders</a>
+            <a href="/view/menu_main/contact.html">contact</a> -->
+            <a href="/frontend/view/nguoihammo/home.html" id="linkQL">Trang Quản Lý</a>
+
+         </nav>
+
+         <!-- <div class="icons">
+            <a href="/view/menu_button/search.html"><i class="fas fa-search"></i></a>
+            <a href="/view/menu_button/cart.html"><i class="fas fa-shopping-cart"></i><span>(3)</span></a>
+            <div id="user-btn" class="fas fa-user"></div>
+            <div id="menu-btn" class="fas fa-bars"></div>
+         </div> -->
+
+
+
+      </section>
+
+   </header>
+<section class="form-container" style="margin-top: 100px;">
+  <!-- FORM ĐỔI MẬT KHẨU -->
+  <form id="form_changePassword">
+    <!-- Mật khẩu hiện tại -->
+    <input id="old_password" type="password" required maxlength="100" name="current_password"
+      placeholder="Nhập mật khẩu hiện tại" class="box" autocomplete="current-password">
+
+    <!-- Mật khẩu mới -->
+    <input id="new_password" type="text" required maxlength="100" name="new_password"
+      placeholder="Nhập mật khẩu mới" class="box" autocomplete="new-password">
+
+    <!-- Nhập lại mật khẩu mới -->
+    <input id="confirm_password" type="password" required maxlength="100" name="confirm_password"
+      placeholder="Xác nhận mật khẩu mới" class="box" autocomplete="new-password">
+
+    <!-- Nút submit -->
+    <input id="changePassBtn" type="submit" value="Đổi mật khẩu" class="btn">
+  </form>
+</section>
+
+
+
+
+
+   <footer class="footer">
+
+      <section class="box-container">
+
+         <div class="box">
+            <!-- <img src="/public/images/email-icon.png" alt=""> -->
+            <h3>our email</h3>
+            <a href="mailto:shaikhanas@gmail.com">danieloliveira.webmaster@gmail.com</a>
+            <a href="mailto:anasbhai@gmail.com">danieloliveira.webmaster@hotmail.com</a>
+         </div>
+
+         <div class="box">
+            <!-- <img src="/public/images/clock-icon.png" alt=""> -->
+            <h3>opening hours</h3>
+            <p>00:07am to 00:10pm </p>
+         </div>
+
+         <div class="box">
+            <!-- <img src="/public/images/map-icon.png" alt=""> -->
+            <h3>our address</h3>
+            <a href="https://www.google.com/maps">mumbai, india - 400104</a>
+         </div>
+
+         <div class="box">
+            <!-- <img src="/public/images/phone-icon.png" alt=""> -->
+            <h3>our number</h3>
+            <a href="tel:1234567890">+123-456-7890</a>
+            <a href="tel:1112223333">+111-222-3333</a>
+         </div>
+
+      </section>
+
+      <div class="credit">&copy; Đánh Bóng @ 202 by <span>Daniel Oliveira</span> | all rights reserved!</div>
+
+   </footer>
+   <!-- Menu chọn đội bóng -->
+   <div id="chonDoiBongContainer"
+      style="display: none; position: fixed; top: 30%; left: 50%; transform: translate(-50%, -30%); background: #fff; padding: 20px; border: 2px solid #333; box-shadow: 0 0 10px rgba(0,0,0,0.3); z-index: 1000;">
+      <h3>Chọn đội bóng bạn muốn quản lý</h3>
+      <ul id="danhSachDoiBong" style="list-style: none; padding: 0;"></ul>
+   </div>
+
+
+   <script>
+      document.getElementById("linkQL").addEventListener("click", async function (event) {
+         event.preventDefault(); // Ngăn chặn điều hướng đến href
+         console.log("Đã click vào link, nhưng không chuyển trang.");
+         const taiKhoan = GlobalStore.getUsername();
+         const doiTuyen_dangChon = DoiTuyen.getDoiTuyen_dangChon();
+         console.log(doiTuyen_dangChon);
+         console.log(taiKhoan);
+         if (taiKhoan != null && taiKhoan != undefined) {
+
+            // const url = "/frontend/view/login.html";
+            // window.location.url = url;
+            const dataTaiKhoan = await hamChung.layThongTinTheo_ID("tai_khoan", taiKhoan);
+            console.log(dataTaiKhoan);
+            if (dataTaiKhoan.ma_vai_tro === 1) {
+               const url = "/frontend/view/quanly_admin/doi_bong/cau_thu.html";
+               window.location.href = url;
+            }
+            if (dataTaiKhoan.ma_vai_tro === 2) {
+               const url = "/frontend/view/quanly_doituyen/qldt_trangchu.html";
+               window.location.href = url;
+            }
+         }
+         else {
+            const url = "/frontend/view/login.html";
+            console.log(url);
+            window.location.href = url;
+         }
+
+      });
+   </script>
+
+   <script src="/backend/services/doi_tuong/trang_chung/doi_mk.js"></script>
+   <script type="module" src="/backend/services/global/global.js"></script>
+   <script type="module" src="/backend/services/global/hamChung.js"></script>
+
+</body>
+
+</html>
