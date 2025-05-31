@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<c:set var="root" value="${pageContext.servletContext.contextPath}" />
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Quản lý nhân viên</title>
+    <style>
+        label {
+            display: block;
+            font: 1rem 'Fira Sans', sans-serif;
+        }
+
+        input,
+        label {
+            margin: 0.4rem 0;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+    <link href="/frontend/public/src/styles/resources/quanly/css/styles.css" rel="stylesheet" />
+
+    <link href="/frontend/public/src/styles/resources/table/table.css" rel="stylesheet" />
+    <link href="/frontend/public/src/styles/resources/table/time.css" rel="stylesheet" />
+    <link rel="icon" href="/frontend/public/src/styles/resources/img/logowebsite.png" type="image/png" />
+
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="sb-nav-fixed">
+
+    <div id="chen"></div>
+    <script>
+        // Sử dụng Fetch API để tải nội dung file HTML và chèn vào vị trí div
+        fetch('/frontend/public/src/common/quanly_doibong/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('chen').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading HTML:', error));
+    </script>
+    <style>
+        #layoutSidenav_content {
+            margin-left: 200px;
+            margin-top: 100px;
+        }
+    </style>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+    <div class="card-header">
+        <label class="font-weight-bold" style="font-size: 20px; color: #800000">LỊCH THI ĐẤU</label>
+    </div>
+
+    <!-- Bộ lọc -->
+    <div class="card my-3">
+        <div class="card-body row">
+        <div class="col-md-3">
+            <label class="font-weight-bold">Đội 1</label>
+            <select class="form-control" id="maDoi1" required>
+                <option value="">-- Chọn Đội 1 --</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="font-weight-bold">Đội 2</label>
+            <select class="form-control" id="maDoi2" required>
+                <option value="">-- Chọn Đội 2 --</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="font-weight-bold">Giải Đấu</label>
+            <select class="form-control" id="maGiaiDau" required>
+                <option value="">-- Chọn Giải Đấu --</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="font-weight-bold">Vòng Đấu</label>
+            <select class="form-control" id="maVongDau" required>
+                <option value="">-- Chọn Vòng Đấu --</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="font-weight-bold">Sân đấu</label>
+            <select class="form-control" id="maSanDau" required>
+                <option value="">-- Chọn Sân Đấu --</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label>Từ ngày</label>
+            <input type="date" class="form-control" id="startDate">
+        </div>
+        <div class="col-md-3">
+            <label>Đến ngày</label>
+            <input type="date" class="form-control" id="endDate">
+        </div>
+        <div class="col-md-12 mt-2">
+            <input type="checkbox" id="upcomingOnly"> <label for="upcomingOnly" style="display: inline;">Chỉ hiện trận được quản lý</label>
+        </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-table me-1"></i> DANH SÁCH LỊCH THI ĐẤU
+                        </div>
+                        <div class="d-none">
+                            <!-- Dropdown lọc đội bóng -->
+                            <select class="form-control comboboxDoiBong" id="filterDoiBong">
+                                <option value="">-- Chọn Đội Bóng --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table id="table">
+                            <thead>
+                                <tr>
+                                    <th>Mã trận</th>
+                                    <th>Giải đấu</th>
+                                    <th>Vòng đấu</th>
+                                    <th>Đội tuyển 1</th>
+                                    <th>Đội tuyển 2</th>
+                                    <th>Thời gian</th>
+                                    <th>Sân vận động</th>
+                                    <th>Tỷ số</th>
+                                    <!-- <th>Ghi chú</th> -->
+                                </tr>
+                            </thead>
+                            <tbody id="dataTable">
+                                <!-- Dữ liệu cầu thủ sẽ được chèn vào đây bằng JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+    
+    </div>
+
+        </main>
+
+
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2024</div>
+                    <div>
+                        <a href="#">Privacy Policy</a> &middot; <a href="#">Terms
+                            &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        function confirmDelete() {
+            if (window.confirm("Nhân viên hiện đang được cấp 1 tài khoản, xóa nhân viên sẽ dẫn đến xóa tài khoản. Bạn có muốn xóa?")) {
+                // perform the delete action
+            }
+        }
+    </script>
+    <script src="/backend/services/doi_tuong/quanly/tran_dau/danh_sach_tran_dau.js"></script>
+    <script type="module" src="/backend/services/global/global.js"></script>
+    <script src="/backend/services/global/hamChiTiet.js"></script>
+    <script type="module" src="/backend/services/global/hamChung.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <!-- <script src=" /public/src/styles/resources/quanly/js/scripts.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+
+    <script src="/frontend/public/src/styles/resources/quanly/js/datatables-simple-demo.js"></script>
+</body>
+
+</html>

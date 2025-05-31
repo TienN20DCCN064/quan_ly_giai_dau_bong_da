@@ -2,7 +2,7 @@ const congAPI = 4002;
 const congAPI_image = 5000;
 const congAPI_taoTranDau = 5001;
 const congAPI_gmail = 5002; // Phần tạo trận đấu
-const IPv4_Address = "192.168.1.171";
+const IPv4_Address = "192.168.110.181";
 // const linkCongAPI = "http://localhost:" + congAPI + "/api/";
 // ex : http://192.168.1.136:4002/api
 // ex : http://localhost:4002/api
@@ -40,7 +40,21 @@ const GlobalStore = {
         return "http://" + IPv4_Address + ":" + congAPI_gmail + "/api/";
     },
     // tôi muốn lấy api của phần tạo trận đấu ấy
+    setToken(token){
+        localStorage.setItem("access_token", token);
 
+    },
+    getToken(){
+        return localStorage.getItem("access_token");
+    },
+    setRole(role){
+        localStorage.setItem("role", role);
+
+    },
+    getRole(){
+        return localStorage.getItem("role");
+    }
+    
 
 
 };
