@@ -1,27 +1,20 @@
+const btnLuuThayDoi = document.getElementById("button_luu");
+const btnTaiLaiTrang = document.getElementById("button_taiLaiTrang");
+
+const taiKhoan = document.getElementById("taiKhoan");
+const matKhau = document.getElementById("matKhau");
+
+const trangThai = document.getElementById("trangThai");
+const maVaiTro = document.getElementById("maVaiTro");
+
 document.addEventListener("DOMContentLoaded", async function () {
 
 
+    loadDanhSachVaiTro();
 
-    // getImage(public_id) {
-    //     return getImage(public_id)
-    // },
-    // updateImage(public_id, newImagePath) {
-    //     return updateImage(public_id, newImagePath);
-    // },
-    // uploadImage(imagePath) {
-    //     return uploadImage(imagePath);
-    // },
-    // deleteImage(public_id) {
-    //     return deleteImage(public_id);
-    // },
-
-
-
-    // hamChung.getImage("84702b00-a35f-400c-b657-a377a9d70223");
-    // // console.log(hamChung.uploadImage("C:/Users/vanti/Downloads/0cca92b8-76e0-4ce0-b1db-db0b38ff12a1.jpg"));
-    // var data = hamChung.uploadImage("C:/Users/vanti/Downloads/0cca92b8-76e0-4ce0-b1db-db0b38ff12a1.jpg");
-    // console.log(await data);
     viewTbody();
+    btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
+    btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
 });
 
 async function viewTbody() {
@@ -30,7 +23,8 @@ async function viewTbody() {
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
-    data.forEach(item => {
+    for (let i = 0; i < data.length; i++) {
+        const item = data[i];
         const row = document.createElement("tr");
         row.innerHTML = `
             <td style="text-align: center;">${item.tai_khoan}</td>
@@ -41,7 +35,7 @@ async function viewTbody() {
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
         tableBody.appendChild(row);
-    });
+    }
 
     button_sua(data);
     button_xoa(data);
@@ -59,13 +53,67 @@ function button_sua(data) {
     });
 }
 
+// Xử lý nút "Xóa"
 function button_xoa(data) {
     document.querySelectorAll(".delete-btn").forEach((btn, index) => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", async () => {
             if (confirm(`Bạn có chắc chắn muốn xóa tài khoản ${data[index].tai_khoan}?`)) {
-                data.splice(index, 1);
-                viewTbody(); // Load lại danh sách sau khi xóa
+                const formData = { tai_khoan: data[index].tai_khoan };
+                await hamChung.xoa(formData, "tai_khoan");
+                await viewTbody();
             }
         });
+    });
+}
+// Xử lý tải lại trang
+function handleTaiLaiTrang(event) {
+    event.preventDefault();
+    location.reload();
+}
+
+// Thêm/Sửa vai trò
+async function handleLuuThayDoi(event) {
+    event.preventDefault();
+
+    const form = document.getElementById("inputForm");
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    let formData = {};
+    console.log(await hamChung.taoID_theoBang("tai_khoan"));
+    if (taiKhoan.value === "") {
+        formData = {
+            tai_khoan: await hamChung.taoID_theoBang("tai_khoan"),
+            mat_khau: matKhau.value,
+            trang_thai: trangThai.value,
+            ma_vai_tro: maVaiTro.value
+        };
+        await hamChung.them(formData, "tai_khoan");
+        alert("Thêm thành công!");
+    } else {
+        formData = {
+            tai_khoan: taiKhoan.value,
+            mat_khau: matKhau.value,
+            trang_thai: trangThai.value,
+            ma_vai_tro: maVaiTro.value
+        };
+        await hamChung.sua(formData, "tai_khoan");
+        alert("Sửa thành công!");
+    }
+    console.log(formData);
+    viewTbody();
+}
+
+async function loadDanhSachVaiTro() {
+    const selectElement = document.getElementById("maVaiTro");
+    selectElement.innerHTML = '<option value="">-- Chọn Vai Trò --</option>'; // Reset danh sách
+    const data = await hamChung.layDanhSach("vai_tro");
+    data.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.ma_vai_tro;
+        option.textContent = `${item.ten_vai_tro}`;
+        selectElement.appendChild(option);
     });
 }

@@ -22,9 +22,9 @@ async function viewTbody() {
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
-    // Dùng Promise.all để chờ tất cả hình ảnh tải xong
-    const rows = await Promise.all(data.map(async item => {
 
+    for (let i = 0; i < data.length; i++) {
+        const item = data[i];
         const row = document.createElement("tr");
         row.innerHTML = `
             <td style="text-align: center;">${item.ma_loai_trong_tai}</td>
@@ -32,11 +32,10 @@ async function viewTbody() {
             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
-        return row;
-    }));
 
-    // Thêm tất cả hàng vào bảng cùng lúc
-    rows.forEach(row => tableBody.appendChild(row));
+        tableBody.appendChild(row);
+    }
+
 
     // Gán lại sự kiện cho các nút sau khi bảng đã cập nhật
     button_sua(data);

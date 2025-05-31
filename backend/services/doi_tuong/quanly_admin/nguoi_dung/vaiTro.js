@@ -17,9 +17,10 @@ async function viewTbody() {
     console.log(data);
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
-
-    data.forEach(item => {
+    for (let i = 0; i < data.length; i++) {
+        const item = data[i];
         const row = document.createElement("tr");
+
         row.innerHTML = `
             <td style="text-align: center;">${item.ma_vai_tro}</td>
             <td style="text-align: center;">${item.ten_vai_tro}</td>
@@ -27,7 +28,8 @@ async function viewTbody() {
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
         tableBody.appendChild(row);
-    });
+    }
+
 
     button_sua(data);
     button_xoa(data);
@@ -44,13 +46,17 @@ async function handleLuuThayDoi(event) {
     }
 
     let formData = {};
+    const data = await hamChung.layDanhSach("vai_tro");
+    const maxMaVaiTro = Math.max(...data.map(item => item.ma_vai_tro));
+    const ma_vai_tro_new = maxMaVaiTro + 1;
+
     if (maVaiTro.value === "") {
         formData = {
-            ma_vai_tro: await hamChung.taoID_theoBang("vai_tro"),
+            ma_vai_tro: ma_vai_tro_new,
             ten_vai_tro: tenVaiTro.value
         };
-        // await hamChung.them(formData, "vai_tro");
-        // alert("Thêm thành công!");
+        await hamChung.them(formData, "vai_tro");
+        alert("Thêm thành công!");
     } else {
         formData = {
             ma_vai_tro: maVaiTro.value,
@@ -76,7 +82,7 @@ function button_sua(data) {
             const item = data[index];
             maVaiTro.value = item.ma_vai_tro;
             tenVaiTro.value = item.ten_vai_tro;
-            
+
             // Scroll lên đầu trang
             window.scrollTo({
                 top: 0,

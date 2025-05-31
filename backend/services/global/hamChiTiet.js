@@ -127,6 +127,7 @@ async function layDsTranDau(maQL, ma_doi1, ma_doi2, ma_giai_dau, ma_vong_dau, ma
 async function dangNhap(data) {
 
     const url = GlobalStore.getLinkCongAPI() + 'dangnhap';
+    console.log(url);
     try {
         const response = await fetch(url,{
             method: "POST",

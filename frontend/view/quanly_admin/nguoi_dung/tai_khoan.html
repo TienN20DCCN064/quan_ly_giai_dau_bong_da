@@ -55,10 +55,10 @@
                     <label class="font-weight-bold" style="font-size: 20px; color: #800000">QUẢN LÝ TÀI KHOẢN</label>
                 </div>
                 <div class="card-header">
-                    <form:form class="row mb-3" modelAttribute="accountEntity" action="" method="post">
+                     <form class="row mb-3" id="inputForm">
                         <div class="col-md-3">
                             <label class="font-weight-bold">Tài Khoản</label>
-                            <input path="taiKhoan" type="text" class="form-control" id="taiKhoan" required />
+                            <input path="taiKhoan" type="text" class="form-control" id="taiKhoan" required  readonly/>
                         </div>
         
                         <div class="col-md-3">
@@ -74,9 +74,16 @@
                             </select>
                         </div>
         
-                        <div class="col-md-3">
+                        <!-- <div class="col-md-3">
                             <label class="font-weight-bold">Mã Vai Trò</label>
                             <input path="maVaiTro" type="text" class="form-control" id="maVaiTro" required />
+                        </div> -->
+
+                         <div class="col-md-3">
+                            <label class="font-weight-bold">Mã Vai Trò</label>
+                            <select class="form-control" id="maVaiTro" required>
+                                <option value="">-- Chọn Vai Trò --</option>
+                            </select>
                         </div>
         
                         <div class='parent col-md-12 mt-3'>
@@ -86,7 +93,7 @@
                               
                             </div>
                         </div>
-                    </form:form>
+                    </form>
                 </div>
         
                 <div class="card mb-4">

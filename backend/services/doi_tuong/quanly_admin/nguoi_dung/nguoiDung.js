@@ -23,11 +23,12 @@ async function viewTbody() {
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
-    data.forEach(item => {
+    for (let i = 0; i<data.length; i++) {
         const row = document.createElement("tr");
-        row.innerHTML = `
+        const item = data[i];
+         row.innerHTML = `
             <td style="text-align: center;">${item.ma_nguoi_dung}</td>
-            <td>${item.tai_khoan}</td>
+            <td>${item.tai_khoan ?? "---"}</td>
             <td>${item.ho_ten}</td>
             <td>${item.gioi_tinh}</td>
             <td>${item.email}</td>
@@ -37,7 +38,7 @@ async function viewTbody() {
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
         tableBody.appendChild(row);
-    });
+    }
 
     button_sua(data);
     button_xoa(data);
@@ -111,7 +112,7 @@ function button_sua(data) {
             soDienThoai.value = item.so_dien_thoai;
             ngayTao.value = item.ngay_tao;
 
-            
+
             // Scroll lên đầu trang
             window.scrollTo({
                 top: 0,
