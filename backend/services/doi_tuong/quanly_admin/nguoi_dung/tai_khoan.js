@@ -26,11 +26,12 @@ async function viewTbody() {
     for (let i = 0; i < data.length; i++) {
         const item = data[i];
         const row = document.createElement("tr");
+        const data1vaiTro = await hamChung.layThongTinTheo_ID("vai_tro", item.ma_vai_tro);
         row.innerHTML = `
             <td style="text-align: center;">${item.tai_khoan}</td>
             <td style="text-align: center;">${item.mat_khau}</td>
             <td style="text-align: center;">${item.trang_thai}</td>
-            <td style="text-align: center;">${item.ma_vai_tro}</td>
+            <td style="text-align: center;">${data1vaiTro.ten_vai_tro}</td>
             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;

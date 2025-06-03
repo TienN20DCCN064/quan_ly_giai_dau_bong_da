@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('modalDanhSachCauThu').style.display = 'none';
     });
     // Xử lý khi nhấn nút gửi yêu cầu
-    document.getElementById('xacNhanDangKy').addEventListener('click', function () {
+    document.getElementById('xacNhanDangKy').addEventListener('click', async function () {
         // Lấy danh sách các cầu thủ đã chọn
         const selectedPlayers = [];
         document.querySelectorAll('.player-checkbox:checked').forEach(checkbox => {
@@ -39,8 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (selectedPlayers.length > 0) {
             console.log('Danh sách cầu thủ đã chọn:', selectedPlayers);
             // Bạn có thể thực hiện các hành động khác với danh sách cầu thủ đã chọn ở đây
-            selectedPlayers.forEach(async (ma_cauThu) => {
-                //  console.log(`${ma_cauThu}`); // hoặc player.ten nếu player là object
+            for (let i = 0; i < selectedPlayers.length; i++) {
+                let ma_cauThu = selectedPlayers[i];
                 const data_cauThu = await hamChung.layThongTinTheo_ID("cau_thu", ma_cauThu);
                 //    console.log("Giải đấu đang đăng ký: ", window.giaiDauDangChon);
                 const giaiDauDangChon = window.giaiDauDangChon;
@@ -60,7 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 hamChung.them(formData, "cau_thu_giai_dau");
                 console.log(formData);
-            });
+            }
+
             alert('Đã lưu cầu thủ tham gia!');
             document.getElementById('modalDanhSachCauThu').style.display = 'none';
             viewTbody(); // Cập nhật lại danh sách giải đấu sau khi lưu cầu thủ
