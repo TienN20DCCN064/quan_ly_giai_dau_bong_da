@@ -23,7 +23,9 @@ document.addEventListener("DOMContentLoaded", function() {
       if (res.token) {
         GlobalStore.setUsername(res.user.tai_khoan);
         GlobalStore.setToken(res.token)
-        console.log()
+        const id_quanly = await hamChiTiet.getThongtinUser(res.user.tai_khoan);
+        localStorage.setItem("id_quanLy", id_quanly[0].ma_nguoi_dung);
+        console.log(id_quanly[0].ma_nguoi_dung)
         if(res.user.vai_tro === "Quản lý đội bóng"){
           //window.location.href = "/frontend/view/quanly/doi_bong/cau_thu.html";
 
@@ -54,6 +56,8 @@ document.addEventListener("DOMContentLoaded", function() {
             item.onclick = () => {
               //??????
               DoiTuyen.setDoiTuyen_dangChon(doi.ma_doi_bong);
+              console.log(DoiTuyen.getDoiTuyen_dangChon());
+
               localStorage.setItem("ma_doi_bong", doi.ma_doi_bong);
               window.location.href = `/frontend/view/quanly/doi_bong/cau_thu.html`;
             };

@@ -69,7 +69,7 @@
 
                         <div class="col-md-3">
                             <label class="font-weight-bold">Ngày Sinh</label>
-                            <input type="date" class="form-control" id="ngaySinh" required />
+                            <input type="date" class="form-control" id="ngaySinh" required style="min-width: 100%;"/>
                         </div>
 
                         <div class="col-md-3">
@@ -128,7 +128,7 @@
                         <div>
                             <i class="fas fa-table me-1"></i> DANH SÁCH CẦU THỦ
                         </div>
-                        <div class="d-none">
+                        <div >
                             <!-- Dropdown lọc đội bóng -->
                             <select class="form-control comboboxDoiBong" id="filterDoiBong">
                                 <option value="">-- Chọn Đội Bóng --</option>
@@ -139,16 +139,15 @@
                         <table id="table">
                             <thead>
                                 <tr>
-                                    <th>Mã Cầu Thủ</th>
-                                    <th>Họ Tên</th>
-                                    <th>Ngày Sinh</th>
-                                    <th>Số Áo</th>
-                                    <th>Giới Tính</th>
-                                    <th>Vị Trí</th>
-                                    <th>Đội Bóng</th>
-                                    <th>Hình Ảnh</th>
-                                    <th>Sửa</th>
-                                    <th>Xóa</th>
+                                    <th style="text-align: start;">Họ Tên</th>
+                                    <th style="text-align: start;">Ngày Sinh</th>
+                                    <th style="text-align: start;">Số Áo</th>
+                                    
+                                    <th style="text-align: start;">Vị Trí</th>
+                                    <th style="text-align: start;">Đội Bóng</th>
+                                    <th style="text-align: start;">Hình Ảnh</th>
+                                    <th style="text-align: start;">Sửa</th>
+                                    <th style="text-align: start;">Xóa</th>
                                 </tr>
                             </thead>
                             <tbody id="dataTable">

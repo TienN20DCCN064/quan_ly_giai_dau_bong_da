@@ -276,6 +276,7 @@ Object.entries(tables).forEach(([table, keys]) => {
         });
     });
 
+
     // Hàm chuyển đổi "YYYY-MM-DD" → "YYYY-MM-DDT00:00:00.000Z"
 
     //=================================================================API của quản lý===============================
@@ -283,9 +284,12 @@ Object.entries(tables).forEach(([table, keys]) => {
     app.get('/api/cau_thu/doibong', (req, res) => {
 
         const { ma_doi_bong } = req.query;
-        console.log(req.query);
+
         // Nếu có ma_doi_bong, thực hiện SELECT kèm WHERE
-        const sql = 'SELECT * FROM cau_thu WHERE ma_doi_bong = ?';
+        const sql = `SELECT ct.*, db.ten_doi_bong 
+    FROM cau_thu ct 
+    JOIN doi_bong db ON ct.ma_doi_bong = db.ma_doi_bong 
+    WHERE ct.ma_doi_bong = ?`;
         db.query(sql, [ma_doi_bong], (err, results) => {
             if (err) {
                 return res.status(500).send('Lỗi khi lấy danh sách cầu thủ theo đội bóng.');
@@ -298,16 +302,18 @@ Object.entries(tables).forEach(([table, keys]) => {
     //get danh sách đôi bóng theo quản lý
     app.get('/api/doi_bong/quanly', (req, res) => {
         const { ma_ql_doi_bong } = req.query;
-        console.log("username quan ly: " + ma_ql_doi_bong);
+
         var var_IDNguoiDung = null;
 
         const sql1 = 'SELECT * FROM nguoi_dung WHERE tai_khoan = ?';
         db.query(sql1, [ma_ql_doi_bong], (err, results) => {
             if (err) return res.status(500).send('Lỗi khi lấy dữ liệu đội bóng.');
-            console.log(results)
+
             var_IDNguoiDung = results[0].ma_nguoi_dung
 
-            const sql = "SELECT * FROM doi_bong WHERE ma_ql_doi_bong = ?";
+            const sql = `SELECT *
+                FROM doi_bong db
+                WHERE ma_ql_doi_bong = ?`;
             db.query(sql, [var_IDNguoiDung], (err, results) => {
                 if (err) return res.status(500).send('Lỗi khi lấy dữ liệu đội bóng.');
                 res.json(results);
@@ -317,26 +323,47 @@ Object.entries(tables).forEach(([table, keys]) => {
 
 
     });
+    app.get('/api/get_user', (req, res) => {
+        const { user_name } = req.query;
+
+        const sql1 = 'SELECT * FROM nguoi_dung WHERE tai_khoan = ?';
+        db.query(sql1, [user_name], (err, results) => {
+            if (err) return res.status(500).send('Lỗi khi lấy dữ liệu đội bóng.');
+
+            var_IDNguoiDung = results[0].ma_nguoi_dung
+            res.json(results);
+        });
+
+
+
+    });
 
     //get danh sách cầu thủ theo quản lý
     app.get('/api/cauthu/quanly', (req, res) => {
         const { ma_ql_doi_bong } = req.query;
+        const sql1 = 'SELECT * FROM nguoi_dung WHERE tai_khoan = ?';
+        db.query(sql1, [ma_ql_doi_bong], (err, results) => {
+            if (err) return res.status(500).send('Lỗi khi lấy dữ liệu đội bóng.');
 
-        const sql = `
-      SELECT c.* 
-      FROM cau_thu c
-      JOIN doi_bong db ON c.ma_doi_bong = db.ma_doi_bong
-      WHERE db.ma_ql_doi_bong = ?
-    `;
-        db.query(sql, [ma_ql_doi_bong], (err, results) => {
-            if (err) return res.status(500).send('Lỗi khi lấy dữ liệu cầu thủ.');
-            res.json(results);
+            var_IDNguoiDung = results[0].ma_nguoi_dung
+            console.log(var_IDNguoiDung)
+
+            const sql = `
+                            SELECT c.*, db.ten_doi_bong
+                            FROM cau_thu c
+                            JOIN doi_bong db ON c.ma_doi_bong = db.ma_doi_bong
+                            WHERE db.ma_ql_doi_bong = ?
+                            `;
+            db.query(sql, [var_IDNguoiDung], (err, results) => {
+                if (err) return res.status(500).send('Lỗi khi lấy dữ liệu đội bóng.');
+                res.json(results);
+            });
         });
     });
 
     // danh sách trận đấu theo quản lý
     app.get('/api/trandau/quanly', (req, res) => {
-        const { maQL, ma_doi1, ma_doi2, ma_giai_dau, ma_vong_dau, ma_san, date_from, date_to } = req.query;
+        const { maQL, ma_doi1, ma_giai_dau, ma_vong_dau, ma_san, date_from, date_to } = req.query;
 
         // lấy ID quản lý từ username
         const sql = 'SELECT ma_nguoi_dung FROM `nguoi_dung` WHERE tai_khoan = ?';
@@ -346,14 +373,14 @@ Object.entries(tables).forEach(([table, keys]) => {
             }
 
             const id_quan_ly = results[0]?.ma_nguoi_dung;
-            console.log(id_quan_ly)
-
-            const sql1 = 'CALL sp_get_lich_thi_dau_theo_ql(?)';
 
 
-            db.query(sql1, [id_quan_ly], (err, results) => {
+            const sql1 = 'CALL sp_get_lich_thi_dau_theo_ql(?,?)';
+
+
+            db.query(sql1, [id_quan_ly, ma_doi1], (err, results) => {
                 if (err) return res.status(500).send('Lỗi khi lấy dữ liệu trận đấu');
-                console.log(results[0])
+
                 res.json(results[0]);
             });
         });
@@ -371,14 +398,13 @@ Object.entries(tables).forEach(([table, keys]) => {
             }
 
             const id_quan_ly = results[0]?.ma_nguoi_dung;
-            console.log(id_quan_ly)
 
             const sql1 = 'CALL sp_danh_sach_don_dang_ky_giai(?)';
 
 
             db.query(sql1, [id_quan_ly], (err, results) => {
                 if (err) return res.status(500).send('Lỗi khi lấy dữ liệu trận đấu');
-                console.log(results[0])
+
                 res.json(results[0]);
             });
         });
@@ -458,6 +484,7 @@ Object.entries(tables).forEach(([table, keys]) => {
 
 
 });
+
 
 
 

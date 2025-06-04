@@ -11,18 +11,18 @@ const inputFile = document.getElementById("logoFile");
 const form = document.getElementById("inputForm");
 const maQlDoiBong = GlobalStore.getUsername();
 const quill = new Quill('#editor', {
-            theme: 'snow',
-            placeholder: 'Nhập mô tả đội bóng...',
-            modules: {
-                toolbar: [
-                [{ 'header': [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                ['image', 'link'],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                ['clean']
-                ]
-            }
-            });
+    theme: 'snow',
+    placeholder: 'Nhập mô tả đội bóng...',
+    modules: {
+        toolbar: [
+            [{ 'header': [1, 2, false] }],
+            ['bold', 'italic', 'underline'],
+            ['image', 'link'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['clean']
+        ]
+    }
+});
 
 document.addEventListener("DOMContentLoaded", async function () {
     //loadDanhSachNguoiDung_quanLyDoiBong();
@@ -30,7 +30,25 @@ document.addEventListener("DOMContentLoaded", async function () {
     // console.log(loadDanhSachNguoiDung_quanLyDoiBong());
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     logo.addEventListener("click", () => inputFile.click());
+    inputFile.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+            // Gán tên file vào ô text 
+            document.getElementById("logo").value = file.name;
+
+            // Hiển thị ảnh xem trước
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("previewImage").src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 });
+
+
+
+
 
 // Hiển thị danh sách đội bóng
 async function viewTbody() {
@@ -39,9 +57,8 @@ async function viewTbody() {
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
     // Dùng Promise.all để chờ tất cả hình ảnh tải xong
-    const rows = await Promise.all(data.map(async item => {
-        // const hinh_anh = await hamChung.getImage(item.hinh_anh);
-        // console.log(item.hinh_anh);
+    for (let i = 0; i < data.length; i++) {
+        const item = data[i];
         let hinh_anh;
         const row = document.createElement("tr");
         // C:\Users\vanti\Desktop\quan_ly_tran_dau\frontend\public\images\cat-2.png
@@ -50,10 +67,10 @@ async function viewTbody() {
             hinh_anh = "/frontend/public/images/cat-2.png";
         } else {
             hinh_anh = await hamChung.getImage(item.logo);
-            
+
         }
         row.innerHTML = `
-            <td style="text-align: center;">${item.ma_doi_bong}</td>
+            
             <td style="text-align: center;">${item.ten_doi_bong}</td>
             <td style="text-align: center;">${item.quoc_gia}</td>
             <td style="text-align: center;">${item.gioi_tinh}</td>
@@ -70,11 +87,9 @@ async function viewTbody() {
                 </button>
             </td>
         `;
-        return row;
-    }));
+        tableBody.appendChild(row);
+    }
 
-    // Thêm tất cả hàng vào bảng cùng lúc
-    rows.forEach(row => tableBody.appendChild(row));
     button_switch(data);
     button_sua(data);
     button_xoa(data);
@@ -107,12 +122,12 @@ async function handleLuuThayDoi(event) {
 
     if (maDoiBong.value === "") {
         formData = {
+            ma_ql_doi_bong: localStorage.getItem("id_quanLy"),
             ma_doi_bong: await hamChung.taoID_theoBang("doi_bong"),
             ten_doi_bong: tenDoiBong.value,
             quoc_gia: quocGia.value,
             gioi_tinh: maGioiTinh.value,
             logo: id_Hinh_anh_thay,
-            ma_ql_doi_bong: maQlDoiBong.value,
             mo_ta: quill.root.innerHTML
         };
         await hamChung.them(formData, "doi_bong");
@@ -124,7 +139,7 @@ async function handleLuuThayDoi(event) {
             quoc_gia: quocGia.value,
             gioi_tinh: maGioiTinh.value,
             logo: id_Hinh_anh_thay,
-            ma_ql_doi_bong: maQlDoiBong.value,
+            ma_ql_doi_bong: localStorage.getItem("id_quanLy"),
             mo_ta: quill.root.innerHTML
         };
         await hamChung.sua(formData, "doi_bong");
@@ -140,7 +155,7 @@ async function handleLuuThayDoi(event) {
 
 // Xử lý nút "đổi đội bóng"
 function button_switch(data) {
-    document.querySelectorAll(".swich-btn").forEach((btn, index) =>{
+    document.querySelectorAll(".swich-btn").forEach((btn, index) => {
         btn.addEventListener("click", () => {
             const item = data[index];
             const doiBong = {
@@ -148,7 +163,7 @@ function button_switch(data) {
                 ten_doi_bong: item.ten_doi_bong,
                 logo: item.logo
             };
-            localStorage.setItem("doi_bong",  JSON.stringify(doiBong));
+            localStorage.setItem("doi_bong", JSON.stringify(doiBong));
         });
     })
 }
@@ -164,11 +179,13 @@ function button_sua(data) {
             quocGia.value = item.quoc_gia;
             maGioiTinh.value = item.gioi_tinh;
             hinhAnh.value = item.logo.replace("/logos/", "") ?? "";
-            
+            document.getElementById("previewImage").src = "https://res.cloudinary.com/dyilzwziv/image/upload/" + item.logo
+
+
             maQlDoiBong.value = item.ma_ql_doi_bong;
             quill.clipboard.dangerouslyPasteHTML(item.mo_ta ?? "");
             console.log(item.mo_ta)
-            console.log("Quill: "  + quill)
+            console.log("Quill: " + quill)
             // Scroll lên đầu trang
             window.scrollTo({
                 top: 0,

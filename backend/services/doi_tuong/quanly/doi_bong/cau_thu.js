@@ -15,45 +15,46 @@ const form = document.getElementById("inputForm");
 let user_name = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
+    console.log(GlobalStore.getUsername());
     user_name = GlobalStore.getUsername();
+    console.log(GlobalStore.getUsername());
     loadDanhSachViTri();
     await loadDanhSachDoiBong();
     await viewTbody();
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     //btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
-    
-     
 
 
-    
+
+
+
 
 });
 
 // Hiển thị danh sách cầu thủ
 async function viewTbody() {
 
-        const maDoiBong = localStorage.getItem("ma_doi_bong");//document.getElementById("filterDoiBong");
+    const maDoiBong = document.getElementById("filterDoiBong").value;
     // Lấy mã đội bóng user đã chọn
-    console.log(maDoiBong);
+    console.log("Madb" + maDoiBong);
     let data;
-    
-    if(maDoiBong){
-        console.log(maDoiBong);
+
+    if (maDoiBong) {
         data = await hamChiTiet.laycauThuTheoDoiBong(maDoiBong);
-    } else{
-        console.log("KO filter");
+    } else {
         data = await hamChiTiet.laycauThuTheoQuanLy(user_name);
     }
 
-    
+
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
     // Dùng Promise.all để chờ tất cả hình ảnh tải xong
-    const rows = await Promise.all(data.map(async item => {
 
+    for (let i = 0; i < data.length; i++) {
         // const row = document.createElement("tr");
         // const hinh_anh = await hamChiTiet.getImage(item.hinh_anh);
+        const item = data[i];
         // console.log(item.hinh_anh);
         let hinh_anh;
         const row = document.createElement("tr");
@@ -65,22 +66,21 @@ async function viewTbody() {
             hinh_anh = await hamChung.getImage(item.hinh_anh);
         }
         row.innerHTML = `
-            <td style="text-align: center;">${item.ma_cau_thu}</td>
-            <td style="text-align: center;">${item.ho_ten}</td>
-            <td style="text-align: center;">${item.ngay_sinh}</td>
-            <td style="text-align: center;">${item.so_ao}</td>
-            <td style="text-align: center;">${item.ma_gioi_tinh}</td>
-            <td style="text-align: center;">${item.ma_vi_tri}</td>
-            <td style="text-align: center;">${item.ma_doi_bong}</td>
-            <td style="text-align: center;"><img src="${hinh_anh}" alt="Hình ảnh" width="50"></td>
-            <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
-            <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
+            <td style="text-align: start;">${item.ho_ten}</td>
+            <td style="text-align: start;">${new Date(item.ngay_sinh).toLocaleDateString('vi-VN')}</td>
+            <td style="text-align: start;">${item.so_ao}</td>
+            
+            <td style="text-align: start;">${item.ma_vi_tri}</td>
+            <td style="text-align: start;">${item.ten_doi_bong}</td>
+            <td style="text-align: start;"><img src="${hinh_anh}" alt="Hình ảnh" width="50"></td>
+            <td style="text-align: start;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
+            <td style="text-align: start;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
         `;
-        return row;
-    }));
+        tableBody.appendChild(row);
+    }
 
-    // Thêm tất cả hàng vào bảng cùng lúc
-    rows.forEach(row => tableBody.appendChild(row));
+
+
 
     button_sua(data);
     button_xoa(data);
@@ -162,7 +162,7 @@ async function handleLuuThayDoi(event) {
     }
     maCauThu.value = "";
     hoTen.value = "";
-    ngaySinh.value  = "";
+    ngaySinh.value = "";
     soAo.value = "";
     maGioiTinh.value = "";
     maViTri.value = "";
@@ -170,7 +170,7 @@ async function handleLuuThayDoi(event) {
     hinhAnhFile.value = null;
     hinhAnh.value = "";
     document.getElementById("previewImage").src = "https://cdn4.vectorstock.com/i/1000x1000/58/48/blank-photo-icon-vector-3265848.jpg"
-    //viewTbody();
+    viewTbody();
 }
 
 // Xử lý tải lại trang
@@ -251,7 +251,7 @@ async function loadDanhSachDoiBong() {
         data.forEach(item => {
             const option = document.createElement("option");
             option.value = item.ma_doi_bong;
-            option.textContent = `${item.ma_doi_bong} - ${item.ten_doi_bong}`;
+            option.textContent = `${item.ten_doi_bong}`;
             selectElement.appendChild(option);
         });
     });
