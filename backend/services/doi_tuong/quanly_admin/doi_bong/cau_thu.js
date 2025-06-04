@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 // Hiển thị danh sách cầu thủ
 async function viewTbody(data) {
-    if(data === undefined) {
+    if (data === undefined) {
         data = await hamChung.layDanhSach("cau_thu");
     }
     if (maDoiBong_chon_viewbody.value !== "All") {
@@ -42,6 +42,8 @@ async function viewTbody(data) {
     tableBody.innerHTML = "";
 
 
+    // Giới hạn chỉ lấy 20 cầu thủ
+    data = data.slice(0, 20);
 
     for (let i = 0; i < data.length; i++) {
         //  for (const item of data) {
@@ -60,7 +62,7 @@ async function viewTbody(data) {
 
         row.innerHTML = `
             <td style="text-align: center;">${lay1doiBong.ten_doi_bong}</td>
-            <td style="text-align: center;">${item.ma_cau_thu}</td>
+          
             <td style="text-align: center;">${item.ho_ten}</td>
             <td style="text-align: center;">${item.ngay_sinh}</td>
             <td style="text-align: center;">${item.so_ao}</td>
@@ -158,6 +160,10 @@ function button_sua(data) {
             maDoiBong.value = item.ma_doi_bong;
             console.log(item);
             hinhAnh.value = item.hinh_anh;
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         });
     });
 }

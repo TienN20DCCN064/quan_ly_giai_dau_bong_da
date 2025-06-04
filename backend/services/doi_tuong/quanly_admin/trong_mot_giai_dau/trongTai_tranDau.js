@@ -115,6 +115,7 @@ async function handleLuuThayDoi(event) {
         ma_trong_tai: maTrongTai.value,
         ma_loai_trong_tai: maLoaiTrongTai.value,
     };
+    console.log(formData);
     // th đang chỉnh sửa
     if (maTranDau.disabled && maTrongTai.disabled) {
         await hamChung.sua(formData, "trong_tai_tran_dau");

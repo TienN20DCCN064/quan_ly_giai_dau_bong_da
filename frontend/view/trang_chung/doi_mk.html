@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- <tt? -->
+
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -44,25 +45,25 @@
       </section>
 
    </header>
-<section class="form-container" style="margin-top: 100px;">
-  <!-- FORM ĐỔI MẬT KHẨU -->
-  <form id="form_changePassword">
-    <!-- Mật khẩu hiện tại -->
-    <input id="old_password" type="password" required maxlength="100" name="current_password"
-      placeholder="Nhập mật khẩu hiện tại" class="box" autocomplete="current-password">
+   <section class="form-container" style="margin-top: 100px;">
+      <!-- FORM ĐỔI MẬT KHẨU -->
+      <form id="form_changePassword">
+         <!-- Mật khẩu hiện tại -->
+         <input id="old_password" type="password" required maxlength="100" name="current_password"
+            placeholder="Nhập mật khẩu hiện tại" class="box" autocomplete="current-password">
 
-    <!-- Mật khẩu mới -->
-    <input id="new_password" type="text" required maxlength="100" name="new_password"
-      placeholder="Nhập mật khẩu mới" class="box" autocomplete="new-password">
+         <!-- Mật khẩu mới -->
+         <input id="new_password" type="text" required maxlength="100" name="new_password"
+            placeholder="Nhập mật khẩu mới" class="box" autocomplete="new-password">
 
-    <!-- Nhập lại mật khẩu mới -->
-    <input id="confirm_password" type="password" required maxlength="100" name="confirm_password"
-      placeholder="Xác nhận mật khẩu mới" class="box" autocomplete="new-password">
+         <!-- Nhập lại mật khẩu mới -->
+         <input id="confirm_password" type="password" required maxlength="100" name="confirm_password"
+            placeholder="Xác nhận mật khẩu mới" class="box" autocomplete="new-password">
 
-    <!-- Nút submit -->
-    <input id="changePassBtn" type="submit" value="Đổi mật khẩu" class="btn">
-  </form>
-</section>
+         <!-- Nút submit -->
+         <input id="changePassBtn" type="submit" value="Đổi mật khẩu" class="btn">
+      </form>
+   </section>
 
 
 
@@ -130,7 +131,7 @@
                window.location.href = url;
             }
             if (dataTaiKhoan.ma_vai_tro === 2) {
-               const url = "/frontend/view/quanly_doituyen/qldt_trangchu.html";
+               const url = "/frontend/view/quanly/doi_bong/doiBong.html";
                window.location.href = url;
             }
          }

@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 async function viewTbody(data) {
     if (data === undefined) {
         data = await hamChung.layDanhSach("doi_bong_giai_dau");
+
     }
     console.log(data);
     console.log(maGiaiDau_chon_viewbody.value);
@@ -69,7 +70,8 @@ async function viewTbody(data) {
     if (maBangDau_chon_viewbody.value !== "All") {
         data = data.filter(item => item.ma_bang_dau === maBangDau_chon_viewbody.value);
     }
-
+    // Giới hạn chỉ lấy 20 cầu thủ
+    data = data.slice(0, 20);
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
@@ -145,6 +147,10 @@ async function handleLuuThayDoi(event) {
         logo: id_Hinh_anh_thay
     };
     // th đang chỉnh sửa
+    console.log(maBangDau.value);
+    if (maBangDau.value === "") {
+        delete formData.ma_bang_dau
+    }
     if (maDoiBong.disabled && maGiaiDau.disabled) {
         await hamChung.sua(formData, "doi_bong_giai_dau");
         alert("Sửa thành công!");
@@ -170,6 +176,7 @@ function handleTaiLaiTrang(event) {
 async function button_sua(data) {
     document.querySelectorAll(".edit-btn").forEach((btn, index) => {
         btn.addEventListener("click", async () => {
+            inputFile.value = "";
             const item = data[index];
 
             maGiaiDau.value = item.ma_giai_dau;

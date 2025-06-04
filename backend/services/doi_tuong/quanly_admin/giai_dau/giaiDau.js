@@ -11,6 +11,7 @@ const maGioiTinh = document.getElementById("maGioiTinh");
 const hinhAnh = document.getElementById("hinhAnh");
 const inputFile = document.getElementById("hinhAnhFile");
 const moTa = document.getElementById("moTa");
+const maGioiTinh_viewBody = document.getElementById("maGioiTinh_viewBody");
 
 
 // Lấy các phần tử
@@ -42,6 +43,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         viewTbody(data);
     });
+    maGioiTinh_viewBody.addEventListener("change", async function () {
+        console.log(maGioiTinh_viewBody.value);
+        // maVongDau_chon_viewbody.value = "All";
+        let data = await hamChung.layDanhSach("giai_dau");
+
+        viewTbody(data);
+    });
 });
 
 // Hiển thị danh sách giải đấu
@@ -54,8 +62,12 @@ async function viewTbody(data) {
     if (ngayBatDau_chon_viewbody.value !== "") {
         data = data.filter(item => item.ngay_bat_dau >= ngayBatDau_chon_viewbody.value);
     }
-    if(ngayKetThuc_chon_viewbody.value !== "") {
+    if (ngayKetThuc_chon_viewbody.value !== "") {
         data = data.filter(item => item.ngay_ket_thuc <= ngayKetThuc_chon_viewbody.value);
+    }
+    if (maGioiTinh_viewBody.value != "All") {
+        data = data.filter(item => item.gioi_tinh === maGioiTinh_viewBody.value);
+
     }
     console.log(data);
     const tableBody = document.getElementById("dataTable");
@@ -287,12 +299,17 @@ async function viewTbody_chon(maGiaiDau_chon, maDoiBong_chon) {
         }
         const lay1giaiDau = await hamChung.layThongTinTheo_ID("giai_dau", item.ma_giai_dau);
         const lay1DoiBong_hienTai = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_bong);
-        const lay1BangDau = await hamChung.layThongTinTheo_ID("bang_dau", item.ma_bang_dau);
+
+        let tenBangDau = "---";
+        if (item.ma_bang_dau != null) {
+            const lay1BangDau = await hamChung.layThongTinTheo_ID("bang_dau", item.ma_bang_dau);
+            tenBangDau = lay1BangDau.ten_bang_dau;
+        }
         row.innerHTML = `
             <td style="text-align: center;">${lay1giaiDau.ten_giai_dau}</td>
             <td style="text-align: center;">${lay1DoiBong_hienTai.ten_doi_bong}</td>
             <td style="text-align: center;">${item.ten_doi_bong}</td>
-            <td style="text-align: center;">${lay1BangDau.ten_bang_dau}</td>
+            <td style="text-align: center;">${tenBangDau}</td>
             <td style="text-align: center;">${item.quoc_gia}</td>
             <td style="text-align: center;"><img src="${hinh_anh}" alt="Logo" width="50"></td>
             <td style="text-align: center;">
@@ -343,7 +360,7 @@ async function loadDanhSachGiaiDau_chon() {
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_giai_dau;
-        option.textContent = `${item.ma_giai_dau} - ${item.ten_giai_dau}`;
+        option.textContent = `${item.ten_giai_dau}`;
         selectElement.appendChild(option);
     });
 }
@@ -376,7 +393,7 @@ async function loadDanhSachDoiBong_chon(maGiaiDau) {
     data.forEach(item => {
         const option = document.createElement("option");
         option.value = item.ma_doi_bong;
-        option.textContent = `${item.ma_doi_bong} - ${item.ten_doi_bong}`;
+        option.textContent = `${item.ten_doi_bong}`;
         selectElement.appendChild(option);
     });
 }

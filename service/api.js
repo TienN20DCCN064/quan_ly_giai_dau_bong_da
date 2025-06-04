@@ -221,8 +221,9 @@ Object.entries(tables).forEach(([table, keys]) => {
 
         db.query(sql, params, (err) => {
             if (err) return res.status(500).send(`Lỗi khi xóa từ ${table}: ${err.message}`);
-            // res.send(`Xóa từ ${table} thành công`);
+            res.send(`Xóa từ ${table} thành công`); // ✅ Phải có
         });
+
     });
 
     app.put(`/api/${table}/:${keys.map((_, i) => `id${i + 1}`).join("/:")}`, (req, res) => {
@@ -248,7 +249,8 @@ Object.entries(tables).forEach(([table, keys]) => {
             if (result.affectedRows === 0) {
                 return res.status(404).send(`Không tìm thấy bản ghi để cập nhật.`);
             }
-            // res.send(`Cập nhật ${table} thành công!`);
+            res.status(200).end(); // Thành công, không gửi nội dung
+
         });
     });
 
@@ -269,27 +271,28 @@ Object.entries(tables).forEach(([table, keys]) => {
 
         db.query(sql, values, (err) => {
             if (err) return res.status(500).send(`Lỗi khi thêm vào ${table}: ${err.message}`);
-            // res.status(201).send(`Thêm vào ${table} thành công`);
+            res.status(201).send(`Thêm vào ${table} thành công`);
+            //res.send(`Xóa từ ${table} thành công`); // ✅ Phải có
         });
     });
 
     // Hàm chuyển đổi "YYYY-MM-DD" → "YYYY-MM-DDT00:00:00.000Z"
 
-        //=================================================================API của quản lý===============================
+    //=================================================================API của quản lý===============================
 
     app.get('/api/cau_thu/doibong', (req, res) => {
-        
+
         const { ma_doi_bong } = req.query;
         console.log(req.query);
         // Nếu có ma_doi_bong, thực hiện SELECT kèm WHERE
-            const sql = 'SELECT * FROM cau_thu WHERE ma_doi_bong = ?';
-            db.query(sql, [ma_doi_bong], (err, results) => {
-                if (err) {
-                    return res.status(500).send('Lỗi khi lấy danh sách cầu thủ theo đội bóng.');
-                }
-                res.json(results);
-            });
-        
+        const sql = 'SELECT * FROM cau_thu WHERE ma_doi_bong = ?';
+        db.query(sql, [ma_doi_bong], (err, results) => {
+            if (err) {
+                return res.status(500).send('Lỗi khi lấy danh sách cầu thủ theo đội bóng.');
+            }
+            res.json(results);
+        });
+
     });
 
     //get danh sách đôi bóng theo quản lý
@@ -299,20 +302,20 @@ Object.entries(tables).forEach(([table, keys]) => {
         var var_IDNguoiDung = null;
 
         const sql1 = 'SELECT * FROM nguoi_dung WHERE tai_khoan = ?';
-            db.query(sql1, [ma_ql_doi_bong], (err, results) => {
+        db.query(sql1, [ma_ql_doi_bong], (err, results) => {
+            if (err) return res.status(500).send('Lỗi khi lấy dữ liệu đội bóng.');
+            console.log(results)
+            var_IDNguoiDung = results[0].ma_nguoi_dung
+
+            const sql = "SELECT * FROM doi_bong WHERE ma_ql_doi_bong = ?";
+            db.query(sql, [var_IDNguoiDung], (err, results) => {
                 if (err) return res.status(500).send('Lỗi khi lấy dữ liệu đội bóng.');
-                console.log(results)
-                var_IDNguoiDung = results[0].ma_nguoi_dung
-
-                const sql = "SELECT * FROM doi_bong WHERE ma_ql_doi_bong = ?";
-                db.query(sql, [var_IDNguoiDung], (err, results) => {
-                    if (err) return res.status(500).send('Lỗi khi lấy dữ liệu đội bóng.');
-                    res.json(results);
-                });
+                res.json(results);
             });
+        });
 
 
-        
+
     });
 
     //get danh sách cầu thủ theo quản lý
@@ -325,10 +328,10 @@ Object.entries(tables).forEach(([table, keys]) => {
       JOIN doi_bong db ON c.ma_doi_bong = db.ma_doi_bong
       WHERE db.ma_ql_doi_bong = ?
     `;
-            db.query(sql, [ma_ql_doi_bong], (err, results) => {
-                if (err) return res.status(500).send('Lỗi khi lấy dữ liệu cầu thủ.');
-                res.json(results);
-            });
+        db.query(sql, [ma_ql_doi_bong], (err, results) => {
+            if (err) return res.status(500).send('Lỗi khi lấy dữ liệu cầu thủ.');
+            res.json(results);
+        });
     });
 
     // danh sách trận đấu theo quản lý
@@ -337,50 +340,50 @@ Object.entries(tables).forEach(([table, keys]) => {
 
         // lấy ID quản lý từ username
         const sql = 'SELECT ma_nguoi_dung FROM `nguoi_dung` WHERE tai_khoan = ?';
-            db.query(sql, [maQL], (err, results) => {
-                if (err) {
-                    return res.status(500).send('Lỗi khi xóa trận đấu.');
-                }
+        db.query(sql, [maQL], (err, results) => {
+            if (err) {
+                return res.status(500).send('Lỗi khi xóa trận đấu.');
+            }
 
-                const id_quan_ly = results[0]?.ma_nguoi_dung;
-                console.log(id_quan_ly)
+            const id_quan_ly = results[0]?.ma_nguoi_dung;
+            console.log(id_quan_ly)
 
-                const sql1 = 'CALL sp_get_lich_thi_dau_theo_ql(?)';
+            const sql1 = 'CALL sp_get_lich_thi_dau_theo_ql(?)';
 
-                
-                db.query(sql1, [id_quan_ly], (err, results) => {
-                    if (err) return res.status(500).send('Lỗi khi lấy dữ liệu trận đấu');
-                    console.log(results[0])
-                    res.json(results[0]);
-                });
+
+            db.query(sql1, [id_quan_ly], (err, results) => {
+                if (err) return res.status(500).send('Lỗi khi lấy dữ liệu trận đấu');
+                console.log(results[0])
+                res.json(results[0]);
             });
+        });
     });
 
     // danh sách đơn đăng ký giải theo quản lý
     app.get('/api/dondangky/quanly', (req, res) => {
-        const { maQL }  = req.query;
+        const { maQL } = req.query;
 
         // lấy ID quản lý từ username
         const sql = 'SELECT ma_nguoi_dung FROM `nguoi_dung` WHERE tai_khoan = ?';
-            db.query(sql, [maQL], (err, results) => {
-                if (err) {
-                    return res.status(500).send('Lỗi khi xóa trận đấu.');
-                }
+        db.query(sql, [maQL], (err, results) => {
+            if (err) {
+                return res.status(500).send('Lỗi khi xóa trận đấu.');
+            }
 
-                const id_quan_ly = results[0]?.ma_nguoi_dung;
-                console.log(id_quan_ly)
+            const id_quan_ly = results[0]?.ma_nguoi_dung;
+            console.log(id_quan_ly)
 
-                const sql1 = 'CALL sp_danh_sach_don_dang_ky_giai(?)';
+            const sql1 = 'CALL sp_danh_sach_don_dang_ky_giai(?)';
 
-                
-                db.query(sql1, [id_quan_ly], (err, results) => {
-                    if (err) return res.status(500).send('Lỗi khi lấy dữ liệu trận đấu');
-                    console.log(results[0])
-                    res.json(results[0]);
-                });
+
+            db.query(sql1, [id_quan_ly], (err, results) => {
+                if (err) return res.status(500).send('Lỗi khi lấy dữ liệu trận đấu');
+                console.log(results[0])
+                res.json(results[0]);
             });
+        });
     });
-    
+
 
     //=================================================================API đăng nhập===============================
 
@@ -403,11 +406,11 @@ Object.entries(tables).forEach(([table, keys]) => {
         db.query(sql, [tai_khoan], async (err, results) => {
             if (err) return res.status(500).json({ message: "Lỗi máy chủ." });
 
-            
+
             if (results.length === 0) return res.status(401).json({ message: "Sai tài khoản hoặc mật khẩu." });
 
             const user = results[0];
-        
+
             // So sánh mật khẩu - nếu bạn chưa mã hóa thì so sánh trực tiếp
             //const match = await bcrypt.compare(mat_khau, user.mat_khau);
 
@@ -430,7 +433,7 @@ Object.entries(tables).forEach(([table, keys]) => {
                 JWT_SECRET,
                 { expiresIn: "24h" }
             );
-            
+
 
             res.json({
                 token,

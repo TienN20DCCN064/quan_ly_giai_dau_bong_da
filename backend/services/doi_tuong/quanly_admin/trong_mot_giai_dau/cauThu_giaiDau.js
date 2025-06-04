@@ -54,6 +54,8 @@ async function viewTbody(data) {
     if (data === undefined) {
         data = await hamChung.layDanhSach("cau_thu_giai_dau");
     }
+    // Giới hạn chỉ lấy 20 cầu thủ
+    data = data.slice(0, 20);
     console.log(data);
     console.log(maGiaiDau_chon_viewbody.value);
     console.log(maDoiBong_chon_viewbody.value);

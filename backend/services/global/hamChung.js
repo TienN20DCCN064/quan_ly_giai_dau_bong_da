@@ -159,30 +159,6 @@ async function taoID_theoBang(table) {
 
 
 function them(data, table_name) {
-
-    const primaryKeys = {
-        "tai_khoan": ["tai_khoan"],         // Khóa chính là tài khoản
-        "nguoi_dung": ["ma_nguoi_dung"],      // Giữ mã người dùng thay vì tài khoản vì có thể có thông tin bổ sung
-        "vai_tro": ["ma_vai_tro"],           // Khóa chính là mã vai trò
-        "giai_dau": ["ma_giai_dau"],          // Khóa chính là mã giải đấu
-        "doi_bong": ["ma_doi_bong"],          // Khóa chính là mã đội bóng
-        "vi_tri_cau_thu": ["ma_vi_tri"],      // Đổi tên từ "vi_tri" thành "vi_tri_cau_thu" để khớp với CSDL
-        "cau_thu": ["ma_cau_thu"],            // Khóa chính là mã cầu thủ
-        "cau_thu_giai_dau": ["ma_cau_thu", "ma_giai_dau"], // Khóa chính là (ma_cau_thu, ma_giai_dau)
-        "doi_bong_giai_dau": ["ma_doi_bong", "ma_giai_dau"], //// newwwww
-        "trong_tai": ["ma_trong_tai"],        // Bảng trọng tài, khóa chính là mã trọng tài
-
-        "vong_dau": ["ma_vong_dau"],         // Thêm bảng vòng đấu
-        "tran_dau": ["ma_tran_dau"],          // Khóa chính là mã trận đấu
-        "ket_qua_tran_dau": ["ma_tran_dau"],  // Sử dụng ma_tran_dau làm khóa chính thay vì tạo ma_ket_qua riêng
-        "bang_dau": ["ma_bang_dau"],          // Thêm bảng bảng đấu
-        //  "bang_xep_hang_vong_loai": ["ma_doi_bong", "ma_bang_dau"], // Khóa chính là (ma_doi_bong, ma_bang_dau)
-        "dang_ky_tham_gia_giai": ["ma_giai_dau", "ma_doi_bong"],         // Thêm bảng vòng đấu
-        "loai_trong_tai": ["ma_loai_trong_tai"],
-        "trong_tai_tran_dau": ["ma_tran_dau", "ma_trong_tai"],
-        "san_van_dong": ["ma_san"],
-    }[table_name];
-
     if (!data) {
         console.error("Dữ liệu không hợp lệ!");
         alert("Dữ liệu không hợp lệ!");
@@ -208,8 +184,9 @@ function them(data, table_name) {
             return JSON.parse(text);
         })
         .then(resData => {
-            //      alert(resData.message || "Thêm dữ liệu thành công.");
-            // table();
+            // alert(resData.message || "Thêm dữ liệu thành công.");
+            console.log("Thêm thành công:", resData.message);
+            //  table();
         })
         .catch(error => {
             console.error("Có lỗi xảy ra khi thêm:", error.message);
@@ -282,7 +259,7 @@ function sua(data, table_name) {
             return JSON.parse(text); // Nếu JSON hợp lệ, parse bình thường
         })
         .then(resData => {
-            alert(resData.message || "Sửa dữ liệu thành công.");
+            //   alert(resData.message || "Sửa dữ liệu thành công.");
             // table();
         })
         .catch(error => {
@@ -357,7 +334,7 @@ async function xoa(keys, table_name) {
         const text = await response.text();
         const resData = text.trim().startsWith("{") || text.trim().startsWith("[") ? JSON.parse(text) : { message: text };
 
-        alert(resData.message || "Xóa dữ liệu thành công.");
+        //  alert(resData.message || "Xóa dữ liệu thành công.");
     } catch (error) {
         console.error("Có lỗi xảy ra khi xóa:", error.message);
         alert(`Lỗi: ${error.message}`);

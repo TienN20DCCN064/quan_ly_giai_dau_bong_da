@@ -56,7 +56,7 @@ async function viewTbody(data) {
         }
         // console.log(hinh_anh);
         row.innerHTML = `
-            <td style="text-align: center;">${item.ma_trong_tai}</td>
+          
             <td style="text-align: center;">${item.ho_ten}</td>
             <td style="text-align: center;">${item.ngay_sinh}</td>
             <td style="text-align: center;">${item.gioi_tinh}</td>
