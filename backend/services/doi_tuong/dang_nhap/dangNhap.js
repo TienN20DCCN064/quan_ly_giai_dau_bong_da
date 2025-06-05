@@ -5,7 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   loginForm.addEventListener("submit", async function (e) {
     e.preventDefault(); // Ngăn form gửi theo kiểu cũ
-
+    GlobalStore.setUsername(null);
+    console.log(GlobalStore.getUsername());
     const tai_khoan = taiKhoanInput.value.trim();
     const mat_khau = matKhauInput.value.trim();
 

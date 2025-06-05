@@ -70,12 +70,13 @@ async function viewTbody() {
         }
         const viTriCT = await hamChung.layThongTinTheo_ID("vi_tri_cau_thu", item.ma_vi_tri);
         row.innerHTML = `
+            <td style="text-align: start;">${item.ten_doi_bong}</td>
             <td style="text-align: start;">${item.ho_ten}</td>
             <td style="text-align: start;">${new Date(item.ngay_sinh).toLocaleDateString('vi-VN')}</td>
             <td style="text-align: start;">${item.so_ao}</td>
             
             <td style="text-align: start;">${viTriCT.ten_vi_tri}</td>
-            <td style="text-align: start;">${item.ten_doi_bong}</td>
+            
             <td style="text-align: start;"><img src="${hinh_anh}" alt="Hình ảnh" width="50"></td>
             <td style="text-align: start;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
             <td style="text-align: start;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
@@ -137,7 +138,7 @@ async function handleLuuThayDoi(event) {
             ma_doi_bong: maDoiBong.value,
             hinh_anh: id_Hinh_anh_thay
         };
-        //  await hamChung.them(formData, "cau_thu");
+        await hamChung.them(formData, "cau_thu");
         alert("Thêm thành công!");
 
         // update ảnh nếu cócó
@@ -152,7 +153,7 @@ async function handleLuuThayDoi(event) {
             ma_doi_bong: maDoiBong.value,
             hinh_anh: id_Hinh_anh_thay
         };
-        //    await hamChung.sua(formData, "cau_thu");
+        await hamChung.sua(formData, "cau_thu");
         alert("Sửa thành công!");
     }
 
@@ -161,17 +162,17 @@ async function handleLuuThayDoi(event) {
     if (inputFile.value != "") {
         await hamChung.uploadImage(inputFile.files[0]);
     }
-    // maCauThu.value = "";
-    // hoTen.value = "";
-    // ngaySinh.value = "";
-    // soAo.value = "";
-    // maGioiTinh.value = "";
-    // maViTri.value = "";
-    // maDoiBong.value = "";
-    // hinhAnhFile.value = null;
-    // hinhAnh.value = "";
-    // document.getElementById("previewImage").src = "https://cdn4.vectorstock.com/i/1000x1000/58/48/blank-photo-icon-vector-3265848.jpg"
-    // viewTbody();
+    maCauThu.value = "";
+    hoTen.value = "";
+    ngaySinh.value = "";
+    soAo.value = "";
+    maGioiTinh.value = "";
+    maViTri.value = "";
+    maDoiBong.value = "";
+    hinhAnhFile.value = null;
+    hinhAnh.value = "";
+    document.getElementById("previewImage").src = "https://cdn4.vectorstock.com/i/1000x1000/58/48/blank-photo-icon-vector-3265848.jpg"
+    viewTbody();
 }
 
 // Xử lý tải lại trang

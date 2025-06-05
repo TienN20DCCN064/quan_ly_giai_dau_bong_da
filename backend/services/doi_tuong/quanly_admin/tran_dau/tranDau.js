@@ -533,7 +533,7 @@ function button_sua_ket_qua() {
 
     document.querySelectorAll(".edit-kq-btn").forEach((btn) => {
         btn.addEventListener("click", async () => {
-            const tranDauId = btn.closest("tr").children[0].textContent;
+            const tranDauId = btn.closest("tr").children[2].textContent;
             const item = await hamChung.layThongTinTheo_ID("tran_dau", tranDauId);
 
             const doi1 = await hamChung.layThongTinTheo_2_ID("doi_bong_giai_dau", item.ma_doi_1, item.ma_giai_dau);
