@@ -10,19 +10,19 @@ const hinhAnh = document.getElementById("logo");
 const inputFile = document.getElementById("logoFile");
 const form = document.getElementById("inputForm");
 const maQlDoiBong = GlobalStore.getUsername();
-const quill = new Quill('#editor', {
-    theme: 'snow',
-    placeholder: 'Nhập mô tả đội bóng...',
-    modules: {
-        toolbar: [
-            [{ 'header': [1, 2, false] }],
-            ['bold', 'italic', 'underline'],
-            ['image', 'link'],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            ['clean']
-        ]
-    }
-});
+// const quill = new Quill('#editor', {
+//     theme: 'snow',
+//     placeholder: 'Nhập mô tả đội bóng...',
+//     modules: {
+//         toolbar: [
+//             [{ 'header': [1, 2, false] }],
+//             ['bold', 'italic', 'underline'],
+//             ['image', 'link'],
+//             [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+//             ['clean']
+//         ]
+//     }
+// });
 
 document.addEventListener("DOMContentLoaded", async function () {
     //loadDanhSachNguoiDung_quanLyDoiBong();
@@ -111,13 +111,23 @@ async function handleLuuThayDoi(event) {
     let formData = {};
     let id_Hinh_anh_thay = "";
     //  không chọn hình ảnh mới
-    console.log(inputFile.value === "")
+    console.log(inputFile.value === "");
+
+    const linkLogo = document.getElementById("logo");
+
+
+
+
+
     if (inputFile.value === "")
         id_Hinh_anh_thay = hinhAnh.value;
     else {
-        id_Hinh_anh_thay = "/logos/" + inputFile.files[0].name; // Lấy tệp đầu tiên (nếu có)
+        id_Hinh_anh_thay = inputFile.files[0].name; // Lấy tệp đầu tiên (nếu có)
     }
     id_Hinh_anh_thay = hamChung.doiKhoangTrangThanhGachDuoi(id_Hinh_anh_thay);
+    if (linkLogo.value === "") {
+        id_Hinh_anh_thay = "";
+    }
     console.log(id_Hinh_anh_thay);
 
     if (maDoiBong.value === "") {
@@ -127,8 +137,7 @@ async function handleLuuThayDoi(event) {
             ten_doi_bong: tenDoiBong.value,
             quoc_gia: quocGia.value,
             gioi_tinh: maGioiTinh.value,
-            logo: id_Hinh_anh_thay,
-            mo_ta: quill.root.innerHTML
+            logo: id_Hinh_anh_thay
         };
         await hamChung.them(formData, "doi_bong");
         alert("Thêm thành công!");
@@ -138,9 +147,7 @@ async function handleLuuThayDoi(event) {
             ten_doi_bong: tenDoiBong.value,
             quoc_gia: quocGia.value,
             gioi_tinh: maGioiTinh.value,
-            logo: id_Hinh_anh_thay,
-            ma_ql_doi_bong: localStorage.getItem("id_quanLy"),
-            mo_ta: quill.root.innerHTML
+            logo: id_Hinh_anh_thay
         };
         await hamChung.sua(formData, "doi_bong");
         alert("Sửa thành công!");
@@ -149,7 +156,7 @@ async function handleLuuThayDoi(event) {
     if (inputFile.value != "") {
         await hamChung.uploadImage(inputFile.files[0]);
     }
-    viewTbody();
+    await viewTbody();
 }
 
 
@@ -173,19 +180,20 @@ function button_sua(data) {
     document.querySelectorAll(".edit-btn").forEach((btn, index) => {
         btn.addEventListener("click", () => {
             const item = data[index];
+            // console.log(document.getElementById("logoFile").value);
             console.log(item.logo)
             maDoiBong.value = item.ma_doi_bong;
             tenDoiBong.value = item.ten_doi_bong;
             quocGia.value = item.quoc_gia;
             maGioiTinh.value = item.gioi_tinh;
-            hinhAnh.value = item.logo.replace("/logos/", "") ?? "";
+            hinhAnh.value = item.logo;
             document.getElementById("previewImage").src = "https://res.cloudinary.com/dyilzwziv/image/upload/" + item.logo
 
 
             maQlDoiBong.value = item.ma_ql_doi_bong;
-            quill.clipboard.dangerouslyPasteHTML(item.mo_ta ?? "");
+            // quill.clipboard.dangerouslyPasteHTML(item.mo_ta ?? "");
             console.log(item.mo_ta)
-            console.log("Quill: " + quill)
+            // console.log("Quill: " + quill)
             // Scroll lên đầu trang
             window.scrollTo({
                 top: 0,
@@ -208,25 +216,3 @@ function button_xoa(data) {
     });
 }
 
-
-// async function loadDanhSachNguoiDung_quanLyDoiBong() {
-//     const selectElement = document.getElementById("maQlDoiBong");
-//     selectElement.innerHTML = '<option value="">-- Chưa Nhập --</option>'; // Reset danh sách
-
-//     const dataTaiKhoan = await hamChung.layDanhSach("tai_khoan");
-//     const dataNguoiDung = await hamChung.layDanhSach("nguoi_dung");
-
-//     // Lọc danh sách tài khoản có ma_vai_tro === 3
-//     const taiKhoanQuanLyDoiBong = dataTaiKhoan.filter(tk => tk.ma_vai_tro === 3);
-
-//     // Lọc danh sách người dùng có tài khoản trong nhóm trên
-//     const nguoiDungQuanLyDoiBong = dataNguoiDung.filter(nd =>
-//         taiKhoanQuanLyDoiBong.some(tk => tk.tai_khoan === nd.tai_khoan)
-//     );
-//     nguoiDungQuanLyDoiBong.forEach(item => {
-//         const option = document.createElement("option");
-//         option.value = item.ma_nguoi_dung;
-//         option.textContent = `${item.ma_nguoi_dung} - ${item.ho_ten}`;
-//         selectElement.appendChild(option);
-//     });
-// }

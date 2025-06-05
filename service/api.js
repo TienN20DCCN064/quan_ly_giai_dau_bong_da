@@ -323,20 +323,40 @@ Object.entries(tables).forEach(([table, keys]) => {
 
 
     });
+    // app.get('/api/get_user', (req, res) => {
+    //     const { user_name } = req.query;
+
+    //     const sql1 = 'SELECT * FROM nguoi_dung WHERE tai_khoan = ?';
+    //     db.query(sql1, [user_name], (err, results) => {
+    //         if (err) return res.status(500).send('Lỗi khi lấy dữ liệu đội bóng.');
+
+    //         var_IDNguoiDung = results[0].ma_nguoi_dung
+    //         res.json(results);
+    //     });
+
+    // });
     app.get('/api/get_user', (req, res) => {
         const { user_name } = req.query;
 
-        const sql1 = 'SELECT * FROM nguoi_dung WHERE tai_khoan = ?';
-        db.query(sql1, [user_name], (err, results) => {
-            if (err) return res.status(500).send('Lỗi khi lấy dữ liệu đội bóng.');
+        if (!user_name) {
+            return res.status(400).json({ error: 'Thiếu tham số user_name' });
+        }
 
-            var_IDNguoiDung = results[0].ma_nguoi_dung
+        const sql = 'SELECT * FROM nguoi_dung WHERE tai_khoan = ?';
+        db.query(sql, [user_name], (err, results) => {
+            if (err) {
+                console.error('Lỗi SQL:', err); // Ghi log lỗi
+                return res.status(500).json({ error: 'Lỗi truy vấn cơ sở dữ liệu' });
+            }
+
+            if (results.length === 0) {
+                return res.status(404).json({ error: 'Không tìm thấy người dùng' });
+            }
+
             res.json(results);
         });
-
-
-
     });
+
 
     //get danh sách cầu thủ theo quản lý
     app.get('/api/cauthu/quanly', (req, res) => {

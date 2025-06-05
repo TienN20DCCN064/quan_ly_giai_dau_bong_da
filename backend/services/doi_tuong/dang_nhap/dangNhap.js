@@ -1,9 +1,9 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.getElementById("loginForm");
   const taiKhoanInput = document.getElementById("taiKhoan");
   const matKhauInput = document.getElementById("matKhau");
 
-  loginForm.addEventListener("submit", async function(e) {
+  loginForm.addEventListener("submit", async function (e) {
     e.preventDefault(); // Ngăn form gửi theo kiểu cũ
 
     const tai_khoan = taiKhoanInput.value.trim();
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
       console.log(formData)
       const res = await hamChiTiet.dangNhap(formData);
       // Gọi API đăng nhập (thay URL bằng endpoint thực tế)
-     
+
       console.log(res)
       if (res.token) {
         GlobalStore.setUsername(res.user.tai_khoan);
@@ -26,18 +26,21 @@ document.addEventListener("DOMContentLoaded", function() {
         const id_quanly = await hamChiTiet.getThongtinUser(res.user.tai_khoan);
         localStorage.setItem("id_quanLy", id_quanly[0].ma_nguoi_dung);
         console.log(id_quanly[0].ma_nguoi_dung)
-        if(res.user.vai_tro === "Quản lý đội bóng"){
+        if (res.user.vai_tro === "Quản lý đội bóng") {
           //window.location.href = "/frontend/view/quanly/doi_bong/cau_thu.html";
 
           console.log(res.user.tai_khoan)
           const data = await hamChiTiet.layDoiBongTheoQL(res.user.tai_khoan);
           console.log(data);
           //load danh sách đội bóng
-
-          if (data.length === 1) {
+          if (data.length === 0) {
+            alert("Chưa quản lý đôi bóng nào!");
+            return;
+          }
+          else if (data.length === 1) {
             const maDoi = data[0].ma_doi_bong;
             DoiTuyen.setDoiTuyen_dangChon(maDoi);
-            localStorage.setItem("ma_doi_bong", maDoi);            
+            localStorage.setItem("ma_doi_bong", maDoi);
             ///????
             window.location.href = `/frontend/view/quanly/doi_bong/cau_thu.html`;
             return;
@@ -52,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const item = document.createElement("div");
             item.className = "dialog-item";
             item.innerText = doi.ten_doi_bong;
-            
+
             item.onclick = () => {
               //??????
               DoiTuyen.setDoiTuyen_dangChon(doi.ma_doi_bong);
@@ -67,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function() {
           dialog.style.display = "flex";
         }
 
-        if(res.user.vai_tro === "Admin"){
+        if (res.user.vai_tro === "Admin") {
           window.location.href = "/frontend/view/quanly_admin/giai_dau/giaiDau.html";
         }
       } else {
@@ -80,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     } catch (err) {
       console.error("Lỗi kết nối:", err);
-      alert("Không thể kết nối máy chủ!");
+      alert("Chưa có thông tin người dùng!");
     }
   });
 });

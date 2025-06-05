@@ -15,16 +15,20 @@ const form = document.getElementById("inputForm");
 let user_name = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
-    console.log(GlobalStore.getUsername());
     user_name = GlobalStore.getUsername();
-    console.log(GlobalStore.getUsername());
     loadDanhSachViTri();
     await loadDanhSachDoiBong();
     await viewTbody();
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
     //btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
 
+    document.getElementById("filterDoiBong").addEventListener("change", async function () {
+        //   console.log(gioiTinh_chon_viewbody.value);
+        // maVongDau_chon_viewbody.value = "All";
+        // let data = await hamChung.layDanhSach("doi_bong");
 
+        await viewTbody();
+    });
 
 
 
@@ -35,27 +39,26 @@ document.addEventListener("DOMContentLoaded", async function () {
 async function viewTbody() {
 
     const maDoiBong = document.getElementById("filterDoiBong").value;
+    const tableBody = document.getElementById("dataTable");
     // Lấy mã đội bóng user đã chọn
     console.log("Madb" + maDoiBong);
-    let data;
+    let data = await hamChiTiet.laycauThuTheoQuanLy(user_name);
+    console.log(data);
+    if (maDoiBong !== "ALL") {
+        console.log(maDoiBong);
+        // console.log(data);
 
-    if (maDoiBong) {
-        data = await hamChiTiet.laycauThuTheoDoiBong(maDoiBong);
-    } else {
-        data = await hamChiTiet.laycauThuTheoQuanLy(user_name);
+        data = data.filter(item => item.ma_doi_bong === maDoiBong);
+
     }
+    console.log(data);
 
 
-    const tableBody = document.getElementById("dataTable");
+
     tableBody.innerHTML = "";
 
-    // Dùng Promise.all để chờ tất cả hình ảnh tải xong
-
     for (let i = 0; i < data.length; i++) {
-        // const row = document.createElement("tr");
-        // const hinh_anh = await hamChiTiet.getImage(item.hinh_anh);
         const item = data[i];
-        // console.log(item.hinh_anh);
         let hinh_anh;
         const row = document.createElement("tr");
         // C:\Users\vanti\Desktop\quan_ly_tran_dau\frontend\public\images\cat-2.png
@@ -65,12 +68,13 @@ async function viewTbody() {
         } else {
             hinh_anh = await hamChung.getImage(item.hinh_anh);
         }
+        const viTriCT = await hamChung.layThongTinTheo_ID("vi_tri_cau_thu", item.ma_vi_tri);
         row.innerHTML = `
             <td style="text-align: start;">${item.ho_ten}</td>
             <td style="text-align: start;">${new Date(item.ngay_sinh).toLocaleDateString('vi-VN')}</td>
             <td style="text-align: start;">${item.so_ao}</td>
             
-            <td style="text-align: start;">${item.ma_vi_tri}</td>
+            <td style="text-align: start;">${viTriCT.ten_vi_tri}</td>
             <td style="text-align: start;">${item.ten_doi_bong}</td>
             <td style="text-align: start;"><img src="${hinh_anh}" alt="Hình ảnh" width="50"></td>
             <td style="text-align: start;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
@@ -78,9 +82,6 @@ async function viewTbody() {
         `;
         tableBody.appendChild(row);
     }
-
-
-
 
     button_sua(data);
     button_xoa(data);
@@ -136,7 +137,7 @@ async function handleLuuThayDoi(event) {
             ma_doi_bong: maDoiBong.value,
             hinh_anh: id_Hinh_anh_thay
         };
-        await hamChung.them(formData, "cau_thu");
+        //  await hamChung.them(formData, "cau_thu");
         alert("Thêm thành công!");
 
         // update ảnh nếu cócó
@@ -151,7 +152,7 @@ async function handleLuuThayDoi(event) {
             ma_doi_bong: maDoiBong.value,
             hinh_anh: id_Hinh_anh_thay
         };
-        await hamChung.sua(formData, "cau_thu");
+        //    await hamChung.sua(formData, "cau_thu");
         alert("Sửa thành công!");
     }
 
@@ -160,17 +161,17 @@ async function handleLuuThayDoi(event) {
     if (inputFile.value != "") {
         await hamChung.uploadImage(inputFile.files[0]);
     }
-    maCauThu.value = "";
-    hoTen.value = "";
-    ngaySinh.value = "";
-    soAo.value = "";
-    maGioiTinh.value = "";
-    maViTri.value = "";
-    maDoiBong.value = "";
-    hinhAnhFile.value = null;
-    hinhAnh.value = "";
-    document.getElementById("previewImage").src = "https://cdn4.vectorstock.com/i/1000x1000/58/48/blank-photo-icon-vector-3265848.jpg"
-    viewTbody();
+    // maCauThu.value = "";
+    // hoTen.value = "";
+    // ngaySinh.value = "";
+    // soAo.value = "";
+    // maGioiTinh.value = "";
+    // maViTri.value = "";
+    // maDoiBong.value = "";
+    // hinhAnhFile.value = null;
+    // hinhAnh.value = "";
+    // document.getElementById("previewImage").src = "https://cdn4.vectorstock.com/i/1000x1000/58/48/blank-photo-icon-vector-3265848.jpg"
+    // viewTbody();
 }
 
 // Xử lý tải lại trang
@@ -245,7 +246,7 @@ async function loadDanhSachDoiBong() {
     // Lặp qua từng <select> tìm được
     selectElements.forEach(selectElement => {
         // Reset option
-        selectElement.innerHTML = '<option value="">-- Chọn Đội Bóng --</option>';
+        selectElement.innerHTML = '<option value="ALL">-- ALL đội --</option>';
 
         // Nạp dữ liệu
         data.forEach(item => {
@@ -256,77 +257,6 @@ async function loadDanhSachDoiBong() {
         });
     });
 
-    //const urlParams = new URLSearchParams(window.location.search);
-    doiBongJson = localStorage.getItem("doi_bong");
-    console.log("Mã đội bóng:", doiBongJson);
-    doiBong = JSON.parse(doiBongJson)
-    if (doiBong) {
-        //maDoiBong.value = maDoi;
-        selectElements.forEach(selectElement => {
-            selectElement.value = doiBong.ma_doi_bong;
-        });
-        console.log("Mã đội bóng:", doiBong);
-    } else {
-        alert("Có lỗi khi tìm mã đội bóng");
-    }
 }
 
 //filter theo danh sách đội bóng
-
-document.addEventListener("DOMContentLoaded", () => {
-    // Lấy thẻ <select> qua ID
-    const filterSelect = document.getElementById("filterDoiBong");
-
-    // Lắng nghe sự kiện "change"
-    filterSelect.addEventListener("change", async () => {
-        await viewTbody();
-        // Lấy mã đội bóng user đã chọn
-        // const maDoiBong = filterSelect.value;
-        // console.log(maDoiBong);
-        // if(!maDoiBong){
-        //     console.log("Vao");
-        //     const data = await hamChiTiet.laycauThuTheoDoiBong(maDoiBong);
-
-        //     const tableBody = document.getElementById("dataTable");
-        //     tableBody.innerHTML = "";
-
-        //     // Dùng Promise.all để chờ tất cả hình ảnh tải xong
-        //     const rows = await Promise.all(data.map(async item => {
-
-        //         // const row = document.createElement("tr");
-        //         // const hinh_anh = await hamChiTiet.getImage(item.hinh_anh);
-        //         // console.log(item.hinh_anh);
-        //         let hinh_anh;
-        //         const row = document.createElement("tr");
-        //         // C:\Users\vanti\Desktop\quan_ly_tran_dau\frontend\public\images\cat-2.png
-
-        //         if (item.hinh_anh === null) {
-        //             hinh_anh = "/frontend/public/images/cat-2.png";
-        //         } else {
-        //             hinh_anh = await hamChiTiet.getImage(item.hinh_anh);
-        //         }
-        //         row.innerHTML = `
-        //             <td style="text-align: center;">${item.ma_cau_thu}</td>
-        //             <td style="text-align: center;">${item.ho_ten}</td>
-        //             <td style="text-align: center;">${item.ngay_sinh}</td>
-        //             <td style="text-align: center;">${item.so_ao}</td>
-        //             <td style="text-align: center;">${item.ma_gioi_tinh}</td>
-        //             <td style="text-align: center;">${item.ma_vi_tri}</td>
-        //             <td style="text-align: center;">${item.ma_doi_bong}</td>
-        //             <td style="text-align: center;"><img src="${hinh_anh}" alt="Hình ảnh" width="50"></td>
-        //             <td style="text-align: center;"><button class="edit-btn btn btn-warning btn-sm">Sửa</button></td>
-        //             <td style="text-align: center;"><button class="delete-btn btn btn-danger btn-sm">Xóa</button></td>
-        //         `;
-        //         return row;
-        //     }));
-
-        //     // Thêm tất cả hàng vào bảng cùng lúc
-        //     rows.forEach(row => tableBody.appendChild(row));
-        //     button_sua(data);
-        //     button_xoa(data);
-        // }
-        // else{
-        //     await viewTbody();
-        // }
-    });
-});

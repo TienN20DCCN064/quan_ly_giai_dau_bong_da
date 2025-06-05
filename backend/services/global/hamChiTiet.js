@@ -10,7 +10,7 @@ const hamChiTiet = {
     async laycauThuTheoDoiBong(doiBongID) {
         return await laycauThuTheoDoiBong(doiBongID);
     },
-    async layDsTranDau(maQL, ma_doi1,  ma_giai_dau, ma_vong_dau, ma_san, date_from, date_to) {
+    async layDsTranDau(maQL, ma_doi1, ma_giai_dau, ma_vong_dau, ma_san, date_from, date_to) {
         return await layDsTranDau(maQL, ma_doi1, ma_giai_dau, ma_vong_dau, ma_san, date_from, date_to);
     },
     //===================================Dang nhap================
@@ -47,7 +47,7 @@ async function laycauThuTheoQuanLy(maQL) {
         alert('Thiếu ID quản lý');
         return;
     }
-    
+
     const url = GlobalStore.getLinkCongAPI() + 'cauthu/quanly?ma_ql_doi_bong=' + maQL;
     //console.log(url);
     try {
@@ -66,7 +66,7 @@ async function layDonDangKyTheoQuanLy(maQL) {
         alert('Thiếu ID quản lý');
         return;
     }
-    
+
     const url = GlobalStore.getLinkCongAPI() + 'dondangky/quanly?ma_ql_doi_bong=' + maQL;
     //console.log(url)
     try {
@@ -88,7 +88,7 @@ async function layDoiBongTheoQL(maQL) {
         alert('Thiếu ID quản lý');
         return;
     }
-    
+
 
     const url = GlobalStore.getLinkCongAPI() + 'doi_bong/quanly?ma_ql_doi_bong=' + maQL;
     //console.log(url);
@@ -112,7 +112,7 @@ async function layDsTranDau(maQL, ma_doi1, ma_giai_dau, ma_vong_dau, ma_san, dat
     if (ma_san) queryParams.append("san_van_dong", ma_san);
     if (date_from) queryParams.append("tu_ngay", date_from);
     if (date_to) queryParams.append("den_ngay", date_to);
-    
+
     const url = GlobalStore.getLinkCongAPI() + 'trandau/quanly?' + queryParams;
     console.log("URL: " + url);
     try {
@@ -131,7 +131,7 @@ async function dangNhap(data) {
     const url = GlobalStore.getLinkCongAPI() + 'dangnhap';
     console.log(url);
     try {
-        const response = await fetch(url,{
+        const response = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
@@ -140,16 +140,17 @@ async function dangNhap(data) {
     } catch (error) {
         console.error('Lỗi khi lấy danh sách đội bóng theo quản lý:', error);
         return [];
-    } 
+    }
 }
 
 async function getThongtinUser(data) {
 
     const url = GlobalStore.getLinkCongAPI() + 'get_user?user_name=' + data;
+    console.log(url);
     try {
-        const response = await fetch(url,{
+        const response = await fetch(url, {
             method: "Get",
-            headers: { "Content-Type": "application/json" }            
+            headers: { "Content-Type": "application/json" }
         });
         return await response.json();
     } catch (error) {

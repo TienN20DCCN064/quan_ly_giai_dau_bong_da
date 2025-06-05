@@ -167,7 +167,7 @@ async function handleLuuThayDoi(event) {
     if (inputFile.value != "") {
         await hamChung.uploadImage(inputFile.files[0]);
     }
-
+    await viewTbody();
     console.log("Thông tin từ ô nhập:", formData);
 }
 
