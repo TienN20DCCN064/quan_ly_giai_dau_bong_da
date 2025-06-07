@@ -1,57 +1,77 @@
-const maTranDau = document.getElementById("maTranDau");
-const maGiaiDau = document.getElementById("maGiaiDau");
-const maDoi1 = document.getElementById("maDoi1");
-const dateFrom = document.getElementById("startDate");
-const dateTo = document.getElementById("endDate");
-const ngayDienRa = document.getElementById("ngayDienRa");
-const gioDienRa = document.getElementById("gioDienRa");
-const sanVanDong = document.getElementById("sanVanDong");
-const maTrongTai = document.getElementById("maTrongTai");
-const trangThai = document.getElementById("trangThai");
-const maVongDau = document.getElementById("maVongDau");
-const locQuanLy = document.getElementById("upcomingOnly");
 
 
 document.addEventListener("DOMContentLoaded", async function () {
-    loadDanhSachGiaiDau();
-    loadDanhSachDoiBong_maDoi1();
-    loadDanhSachSanDau();
-    //loadDanhSachTrongTai();
-    loadDanhSachVongDau();
-    const data = await layDanhSachTranDau();
-    viewTbody(data);
+    console.log("Đã vào trang qldt_dangKyGiaiDau");
+    console.log(DoiTuyen.getDoiTuyen_dangChon());
+    console.log(GlobalStore.getUsername());
 
-    locQuanLy.addEventListener("change", async function () {
-        const data = await layDanhSachTranDau();
-        viewTbody(data);
-    });
+
+
+
+    const data_tranDau = await hamChung.layDanhSach("tran_dau");
+
+    // Lấy danh sách trận đấu mà ma_doi_1 hoặc ma_doi_2 === DoiTuyen.getDoiTuyen_dangChon()
+    const doiTuyenDangChon = DoiTuyen.getDoiTuyen_dangChon();
+    const danhSachTranDau_theoDoiTuyen = data_tranDau.filter(tranDau =>
+        tranDau.ma_doi_1 === doiTuyenDangChon || tranDau.ma_doi_2 === doiTuyenDangChon
+    );
+
+    // Danh sách trận đấu đã lọc
+    console.log(danhSachTranDau_theoDoiTuyen);
+
+
+    console.log(data_tranDau);
+    console.log(danhSachTranDau_theoDoiTuyen);
+    if (danhSachTranDau_theoDoiTuyen.length > 0) {
+        viewTbody(danhSachTranDau_theoDoiTuyen);
+
+
+        // hiện thị danh sách trận đấu có kq
+        // Gọi danh sách các trận đấu và kết quả trận đấu
+        const dsTranDau = await hamChung.layDanhSach("tran_dau");
+        const dsKetQua = await hamChung.layDanhSach("ket_qua_tran_dau");
+
+        document.getElementById("button_ALL_tranDau").addEventListener("click", async function () {
+            location.reload();
+        });
+
+        // Xử lý sự kiện khi nhấn nút "Trận đấu chưa kết quả"
+        document.getElementById("button_chua_da").addEventListener("click", async function () {
+
+            // Lọc các trận đấu chưa có kết quả
+            const dsTranDauChuaKQ = danhSachTranDau_theoDoiTuyen.filter(tranDau =>
+                !dsKetQua.some(kq => kq.ma_tran_dau === tranDau.ma_tran_dau)
+            );
+
+            // Gọi hàm hiển thị danh sách trận đấu chưa có kết quả
+            viewTbody(dsTranDauChuaKQ);
+        });
+    }
+
+
+
+
+    // btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
+    // btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
 });
 
-async function layDanhSachTranDau() {
-    const data = await hamChiTiet.layDsTranDau(locQuanLy.checked ? GlobalStore.getUsername() : null, 
-                    maDoi1?.value || null,
-                    maGiaiDau?.value || null,
-                    maVongDau?.value || null,
-                    sanVanDong?.value || null,
-                    dateFrom?.value || null,
-                    dateTo?.value || null);
-    
-    return data;
-}
+// Hiển thị danh sách trận đấu
 async function layKetQua(ma_tran_dau) {
     const data = await hamChung.layThongTinTheo_ID("ket_qua_tran_dau", ma_tran_dau);
     let stringKetQua = "--";
     if (data != null) {
-        stringKetQua = data.so_ban_doi_1 + ":" + data.so_ban_doi_2;
-
-        // stringKetQua = data.ma_doi_thang + " " + data.so_ban_doi_1 + ":" + data.so_ban_doi_2;
+        const dataDoiThang = await hamChung.layThongTinTheo_ID("doi_bong", data.ma_doi_thang);
+        stringKetQua = dataDoiThang.ten_doi_bong + " " + data.so_ban_doi_1 + ":" + data.so_ban_doi_2;
     }
 
     return stringKetQua;
-}
 
+}
 async function viewTbody(data) {
     //console.log("ma_tran_dau:New " + await hamChung.taoID_theoBang("tran_dau"));
+    if (data == null || data.length === 0) {
+        data = await hamChung.layDanhSach("tran_dau");
+    }
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
@@ -60,86 +80,28 @@ async function viewTbody(data) {
         const ketQua = await layKetQua(item.ma_tran_dau);
         console.log(ketQua);
         const row = document.createElement("tr");
+        const dataGiaiDau = await hamChung.layThongTinTheo_ID("giai_dau", item.ma_giai_dau);
+        const dataDoiBong1 = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_1);
+        const dataDoiBong2 = await hamChung.layThongTinTheo_ID("doi_bong", item.ma_doi_2);
+        const dataVongDau = await hamChung.layThongTinTheo_ID("vong_dau", item.ma_vong_dau);
+        const data1SVD = await hamChung.layThongTinTheo_ID("san_van_dong", item.ma_san);
+
         row.innerHTML = `
-            <td style="text-align: start;">${item.ten_giai_dau}</td>
-            <td style="text-align: start;">${item.ten_vong}</td>
-            <td style="text-align: start;">${item.ten_doi_quan_ly}</td>
-            <td style="text-align: start;">${item.ten_doi_doi_thu}</td>
-            <td style="text-align: start;">${new Date(item.ngay_dien_ra).toLocaleDateString('vi-VN')} - ${item.gio_dien_ra}</td>
-            <td style="text-align: start;">${item.ten_san}</td>
-            <td style="text-align: start;">${ketQua}</td>   
-            
-                 `;
+            <td style="text-align: center;">${item.ma_tran_dau}</td>
+            <td style="text-align: center;">${dataGiaiDau.ten_giai_dau}</td>
+            <td style="text-align: center;">${dataDoiBong1.ten_doi_bong}</td>
+            <td style="text-align: center;">${dataDoiBong2.ten_doi_bong}</td>
+            <td style="text-align: center;">${item.ngay_dien_ra}</td>
+            <td style="text-align: center;">${item.gio_dien_ra}</td>
+            <td style="text-align: center;">${data1SVD.ten_san}</td>
+            <td style="text-align: center;">${item.trang_thai}</td>
+            <td style="text-align: center;">${dataVongDau.ten_vong}</td>
+            <td style="text-align: center;">${ketQua}</td>
+        `;
         tableBody.appendChild(row);
     }
+
+
 }
 
 
-async function loadDanhSachGiaiDau() {
-    const selectElement = document.getElementById("maGiaiDau");
-    selectElement.innerHTML = '<option value="">-- Chọn Mã Giải Đấu --</option>'; // Reset danh sách
-    const data = await hamChung.layDanhSach("giai_dau");
-    data.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.ma_giai_dau;
-        option.textContent = `${item.ten_giai_dau}`;
-        selectElement.appendChild(option);
-    });
-
-    selectElement.addEventListener("change", async function () {
-        const data = await layDanhSachTranDau();
-        viewTbody(data);
-    })
-}
-
-
-async function loadDanhSachSanDau() {
-    const selectElement = document.getElementById("maSanDau");
-    selectElement.innerHTML = '<option value="">-- Chọn Mã Sân Đấu --</option>'; // Reset danh sách
-    const data = await hamChung.layDanhSach("san_van_dong");
-    data.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.ID;
-        option.textContent = `${item.ten_san}`;
-        selectElement.appendChild(option);
-    });
-
-    selectElement.addEventListener("change", async function () {
-        const data = await layDanhSachTranDau();
-        viewTbody(data);
-    })
-}
-
-
-async function loadDanhSachDoiBong_maDoi1() {
-    const selectElement = document.getElementById("maDoi1");
-    selectElement.innerHTML = '<option value="">-- Chọn Đội 1 --</option>'; // Reset danh sách
-    const data = await hamChung.layDanhSach("doi_bong");
-    data.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.ma_doi_bong;
-        option.textContent = `${item.ten_doi_bong}`;
-        selectElement.appendChild(option);
-    });
-
-    selectElement.addEventListener("change", async function () {
-        const data = await layDanhSachTranDau();
-        viewTbody(data);
-    })
-}
-async function loadDanhSachVongDau() {
-    const selectElement = document.getElementById("maVongDau");
-    selectElement.innerHTML = '<option value="">-- Chọn Vòng Đấu --</option>'; // Reset danh sách
-    const data = await hamChung.layDanhSach("vong_dau");
-    data.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.ma_vong_dau;
-        option.textContent = `${item.ten_vong}`;
-        selectElement.appendChild(option);
-    });
-
-    selectElement.addEventListener("change", async function () {
-        const data = await layDanhSachTranDau();
-        viewTbody(data);
-    })
-}
