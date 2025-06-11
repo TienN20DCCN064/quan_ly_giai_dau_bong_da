@@ -53,6 +53,7 @@
             <div class="container-fluid px-4">
                 <div class="card-header">
                     <label class="font-weight-bold" style="font-size: 20px; color: #800000">ĐỘI BÓNG GIẢI ĐẤU</label>
+
                 </div>
                 <div class="card-header">
                     <form class="row mb-3" id="inputForm">
@@ -68,7 +69,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="font-weight-bold">Bảng Đấu</label>
-                            <select class="form-control" id="maBangDau" >
+                            <select class="form-control" id="maBangDau">
                                 <option value="">-- Chọn Bảng Đấu --</option>
                             </select>
                         </div>
@@ -121,7 +122,8 @@
                 <div class="card mb-4">
                     <div class="card-header">
                         <i class="fas fa-table me-1"></i> DANH SÁCH CẦU THỦ
-
+                        <button id="button_locDanhSach" class="btn btn-primary float-end">Lọc Danh Sách
+                            ra</button>
                     </div>
                     <div style="margin-left: 100px;">
                         <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
@@ -181,6 +183,111 @@
                 </div>
             </div>
         </main>
+
+        <!-- Bảng ẩn sẽ hiển thị khi người dùng nhấn nút -->
+        <div id="popupOverlay" class="overlay hidden">
+            <div class="popup-content">
+                <h3>Danh sách Giải Đấu</h3>
+
+                <div class="card-header">
+                    <style>
+                        .form-row-inline {
+                            display: flex;
+                            gap: 20px;
+                        }
+
+                        .form-row-inline>div {
+                            flex: 1;
+                        }
+                    </style>
+                    <form class="row mb-3" id="inputForm_chon">
+                        <div class="col-md-4">
+                            <label class="font-weight-bold">Mã Giải Đấu</label>
+                            <select class="form-control" id="maGiaiDau_chon" required>
+                                <option value="All">Tất Cả</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="font-weight-bold">Mã Đội Bóng</label>
+                            <select class="form-control" id="maDoiBong_chon" required>
+                                <option value="All">Tất Cả</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Popup xác nhận -->
+
+                <div class="card mb-4">
+                    <table id="dataTable_chon">
+
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Giải Đâu</th>
+                                <th style="text-align: center;">Tên Hiện Tại</th>
+                                <th style="text-align: center;">Tên Trong Giải</th>
+                                <th style="text-align: center;">Bảng Đấu</th>
+                                <th style="text-align: center;">Quốc Gia</th>
+                                <th style="text-align: center;">Hình Ảnh</th>
+                                <th style="text-align: center;">Hạt Giống</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dữ liệu bảng sẽ được thêm vào đây -->
+                        </tbody>
+                    </table>
+                </div>
+                <button id="closePopup" class="btn btn-secondary">Đóng</button>
+            </div>
+        </div>
+        <style>
+            /* Bảng ẩn mặc định */
+            /* Kiểm tra xem lớp hidden có áp dụng đúng hay không */
+            .hidden {
+                display: none !important;
+            }
+
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                /* Căn popup lên trên */
+                z-index: 1000;
+                overflow-y: auto;
+                /* Cho phép cuộn nếu cần */
+            }
+
+            .popup-content {
+                background-color: white;
+                padding: 20px;
+                border-radius: 10px;
+                width: 80%;
+                max-width: 800px;
+                margin-top: 100px;
+                /* Cách mép trên 100px */
+                margin-bottom: 40px;
+                /* Lề dưới để tránh đụng đáy */
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+
+            /* Nút đóng */
+            #closePopup {
+                margin-top: 20px;
+            }
+
+            #confirmModal p {
+                font-size: 18px;
+                font-weight: bold;
+            }
+        </style>
 
 
 

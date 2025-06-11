@@ -283,7 +283,10 @@ async function viewTbody_chon(maGiaiDau_chon, maDoiBong_chon) {
 
     const tableBody = document.querySelector("#dataTable_chon tbody");
     tableBody.innerHTML = "";
+    // for(let i = 0;i<data.length;i++){
+    //     const item = data[i];
 
+    // }
     const rows = await Promise.all(data.map(async item => {
         // const hinh_anh = await hamChung.getImage(item.hinh_anh);
         // console.log(item.hinh_anh);

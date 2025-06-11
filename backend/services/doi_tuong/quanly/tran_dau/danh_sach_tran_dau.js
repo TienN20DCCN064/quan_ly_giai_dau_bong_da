@@ -61,7 +61,7 @@ async function layKetQua(ma_tran_dau) {
     let stringKetQua = "--";
     if (data != null) {
         const dataDoiThang = await hamChung.layThongTinTheo_ID("doi_bong", data.ma_doi_thang);
-        stringKetQua = dataDoiThang.ten_doi_bong + " " + data.so_ban_doi_1 + ":" + data.so_ban_doi_2;
+        stringKetQua = dataDoiThang?.ten_doi_bong + " " + data.so_ban_doi_1 + ":" + data.so_ban_doi_2;
     }
 
     return stringKetQua;

@@ -90,7 +90,6 @@ async function viewTbody(data) {
 async function handleLuuThayDoi(event) {
     event.preventDefault();
     const form = document.getElementById("inputForm");
-
     if (!form.checkValidity()) {
         form.reportValidity();
         return;
@@ -108,16 +107,24 @@ async function handleLuuThayDoi(event) {
     const daTonTai = data.some(
         item => item.ma_giai_dau === formData.ma_giai_dau && item.ma_doi_bong === formData.ma_doi_bong
     );
+    const dataDangKyThamGiaGiai = data.find(
+        item => item.ma_giai_dau === formData.ma_giai_dau && item.ma_doi_bong === formData.ma_doi_bong
+    );
 
+    alert("Sửa thành công!");
+    capNhat_doiBongGiaiDau_theo_trangThai_dangKyGiaiDau(dataDangKyThamGiaGiai, formData);
     if (daTonTai) {
         await hamChung.sua(formData, "dang_ky_tham_gia_giai");
+
+
         alert("Sửa thành công!");
     } else {
         await hamChung.them(formData, "dang_ky_tham_gia_giai");
         alert("Thêm thành công!");
     }
 
-    viewTbody();
+
+    // viewTbody();
 }
 
 function handleTaiLaiTrang(event) {
@@ -220,14 +227,17 @@ function handle_view_GiaiDau(event) {
                 "trang_thai": "Đã duyệt"
             };
             hamChung.sua(formData, "dang_ky_tham_gia_giai");
+            const dataDangKyThamGiaGiai_cu = await hamChung.layThongTinTheo_2_ID("dang_ky_tham_gia_giai", data[i].ma_giai_dau, data[i].ma_doi_bong);
+            capNhat_doiBongGiaiDau_theo_trangThai_dangKyGiaiDau(dataDangKyThamGiaGiai_cu, formData);
             console.log(formData);
             // GỌI LẠI HÀM SAU KHI CẬP NHẬT DỮ LIỆU
-            await viewTbody_chon(ma_GiaiDau_chon, trangThai_chon);
+            // await viewTbody_chon(ma_GiaiDau_chon, trangThai_chon);
         }
         await viewTbody_chon(ma_GiaiDau_chon, trangThai_chon);
 
         alert("Đã duyệt tất cả!");
     });
+    //capNhat_doiBongGiaiDau_theo_trangThai_dangKyGiaiDau(dataDangKyThamGiaGiai, formData);
 
     document.getElementById("confirmNo").addEventListener("click", function () {
         document.getElementById("confirmModal").classList.add("hidden");
@@ -349,7 +359,7 @@ async function viewTbody_chon(maGiaiDau, trangThai_chon) {
 
         const xemDoiBtn = row.querySelector('.xem_doi');
         // Hàm thay đổi màu nền của select khi thay đổi giá trị
-        select.addEventListener('change', (e) => {
+        select.addEventListener('change', async (e) => {
             const selectedOption = e.target.options[e.target.selectedIndex];
             const selectedColor = selectedOption.style.backgroundColor;
             e.target.style.backgroundColor = selectedColor;
@@ -364,6 +374,8 @@ async function viewTbody_chon(maGiaiDau, trangThai_chon) {
                 "trang_thai": newTrangThai
             };
             hamChung.sua(formData, "dang_ky_tham_gia_giai");
+            const dataDangKyThamGiaGiai_cu = await hamChung.layThongTinTheo_2_ID("dang_ky_tham_gia_giai", item.ma_giai_dau, item.ma_doi_bong);
+            capNhat_doiBongGiaiDau_theo_trangThai_dangKyGiaiDau(dataDangKyThamGiaGiai_cu, formData);
             console.log(formData);
 
         });
@@ -542,4 +554,80 @@ async function loadDanhSachGiaiDau_chon_viewBody() {
         option.textContent = `${item.ten_giai_dau}`;
         selectElement.appendChild(option);
     });
+}
+
+async function capNhat_doiBongGiaiDau_theo_trangThai_dangKyGiaiDau(dataDangKyThamGiaGiai_cu, dataDangKyThamGiaGiai_new) {
+    let trangThai_them_hay_xoa = "K";
+    const trangThaiMoi = dataDangKyThamGiaGiai_new.trang_thai;
+    if (dataDangKyThamGiaGiai_cu.trang_thai === trangThaiMoi) {
+        console.log("Trạng thai ko đổi");
+        return;
+    }
+    // kiểm tra đã có trong đổi bóng giải đấu chưa
+    const dataLoc_doiBongGiaiDau = await hamChung.layDanhSach("doi_bong_giai_dau");
+    // Thay `idDoiBong` và `idGiaiDau` bằng giá trị thực tế bạn đang kiểm tra
+    const check_trong_doiBongGiaiDau = dataLoc_doiBongGiaiDau.some(item =>
+        item.ma_doi_bong === dataDangKyThamGiaGiai_cu.ma_doi_bong && item.ma_giai_dau === dataDangKyThamGiaGiai_cu.ma_giai_dau
+    );
+    if (check_trong_doiBongGiaiDau) {
+        console.log("Đội bóng đã có trong giải đấu.");
+        // đã có và đã duyệt
+        if (trangThaiMoi === "Đã duyệt") {
+            // ko cần thêm vào
+            trangThai_them_hay_xoa = "K"
+        }
+        else if (trangThaiMoi === "Chờ duyệt") {
+            // ko cần thêm vào
+            trangThai_them_hay_xoa = "X"
+        }
+        else if (trangThaiMoi === "Từ chối") {
+            // ko cần thêm vào
+            trangThai_them_hay_xoa = "X"
+        }
+
+    }
+    else {
+        console.log("Đội bóng chưa có trong giải đấu.");
+        // chưa có và đã duyệt
+        if (trangThaiMoi === "Đã duyệt") {
+            // ko cần thêm vào
+            trangThai_them_hay_xoa = "T"
+        }
+        else if (trangThaiMoi === "Chờ duyệt") {
+            // ko cần thêm vào
+            trangThai_them_hay_xoa = "K"
+        }
+        else if (trangThaiMoi === "Từ chối") {
+            // ko cần thêm vào
+            trangThai_them_hay_xoa = "K"
+        }
+
+
+    }
+
+    const data1DoiBong = await hamChung.layThongTinTheo_ID("doi_bong", dataDangKyThamGiaGiai_cu.ma_doi_bong);
+
+    let formData = {
+        ma_doi_bong: data1DoiBong.ma_doi_bong,
+        ma_giai_dau: dataDangKyThamGiaGiai_cu.ma_giai_dau,
+
+        ten_doi_bong: data1DoiBong.ten_doi_bong,
+        logo: data1DoiBong.logo,
+        quoc_gia: data1DoiBong.quoc_gia,
+        // hat_giong: hatGiong.value,
+
+    };
+
+
+    if (trangThai_them_hay_xoa === "T") {
+        await hamChung.them(formData, "doi_bong_giai_dau");
+        alert("Thêm T thành công!");
+    }
+    else if (trangThai_them_hay_xoa === "X") {
+        await hamChung.xoa(formData, "doi_bong_giai_dau");
+        alert("Xoa X thành công!");
+    }
+    else {
+        alert("Khoong ddoiri thành công!");
+    }
 }
