@@ -621,13 +621,13 @@ async function capNhat_doiBongGiaiDau_theo_trangThai_dangKyGiaiDau(dataDangKyTha
 
     if (trangThai_them_hay_xoa === "T") {
         await hamChung.them(formData, "doi_bong_giai_dau");
-        alert("Thêm T thành công!");
+        
     }
     else if (trangThai_them_hay_xoa === "X") {
         await hamChung.xoa(formData, "doi_bong_giai_dau");
-        alert("Xoa X thành công!");
+      
     }
-    else {
-        alert("Khoong ddoiri thành công!");
-    }
+    // else {
+    //     alert("Khoong ddoiri thành công!");
+    // }
 }

@@ -1,5 +1,6 @@
 const btnLuuThayDoi = document.getElementById("button_luu");
 const btnTaiLaiTrang = document.getElementById("button_taiLaiTrang");
+const ngayBatDau_chon_viewbody = document.getElementById("ngayBatDau_chon_viewbody");
 let currentButtonState = ""; // Biến toàn cục
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Đã vào trang qldt_dangKyGiaiDau");
@@ -14,7 +15,13 @@ document.addEventListener("DOMContentLoaded", function () {
     //  document.getElementById("closeModal").onclick = () => {
     //     document.getElementById("modalDangKy").style.display = "none";
     // };
+    ngayBatDau_chon_viewbody.addEventListener("change", async function () {
+        console.log(ngayBatDau_chon_viewbody.value);
+        // maVongDau_chon_viewbody.value = "All";
+        // let data = await hamChung.layDanhSach("giai_dau");
 
+        viewTbody();
+    });
     document.getElementById("huyDangKy").onclick = () => {
         document.getElementById("modalDangKy").style.display = "none";
     };
@@ -104,12 +111,15 @@ function handleTaiLaiTrang(event) {
 
 
 async function viewTbody() {
-    const data = await hamChung.layDanhSach("giai_dau"); // Lấy danh sách giải đấu
+    let data = await hamChung.layDanhSach("giai_dau"); // Lấy danh sách giải đấu
     const tableBody = document.getElementById("dataTable");
     tableBody.innerHTML = "";
 
     const doiTuyenDangChon = DoiTuyen.getDoiTuyen_dangChon();
 
+    if (ngayBatDau_chon_viewbody.value !== "") {
+        data = data.filter(item => item.ngay_bat_dau >= ngayBatDau_chon_viewbody.value);
+    }
     for (const item of data) {
         const row = document.createElement("tr");
 

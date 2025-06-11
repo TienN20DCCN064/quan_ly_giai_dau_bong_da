@@ -53,50 +53,77 @@
             <div class="container-fluid px-4">
                 <div class="card-header">
                     <label class="font-weight-bold" style="font-size: 20px; color: #800000">XEM TRẬN ĐẤU</label>
-                    
+
                 </div>
                 <div class="card-header">
                     <!--  -->
                 </div>
 
+                <div style="margin-left: 100px;">
+                    <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
+                        <div class="col-md-3">
+                            <label class="font-weight-bold">Giải Đấu</label>
+                            <select class="form-control" id="maGiaiDau_chon_viewbody" required>
+                                <option value="All">-- Chọn giải đấu--</option>
+                            </select>
+                        </div>
+                        <!-- <div class="col-md-3">
+                            <label class="font-weight-bold">Trạng thái kết quả</label>
+                            <select class="form-control" id="trangThai_ketQua_viewbody" required>
+                                <option value="All">-- All trận--</option>
+                                <option value="chua_da">-- trận chưa đá--</option>
+                            </select>
+                        </div> -->
+
+                        <!-- <div class="col-md-3">
+                                <label class="font-weight-bold">Chọn Kết Quả</label>
+                                <select class="form-control" id="checkKetQua_chon_viewbody" required>
+                                    <option value="co_kq">Có kết quả</option>
+                                    <option value="chua_kq">Chưa kết quả</option>
+                                </select>
+                            </div> -->
+
+                    </form:form>
+                </div>
                 <div class="card mb-4">
                     <div class="card-header">
                         <i class="fas fa-table me-1"></i> DANH SÁCH TRẬN ĐẤU
-                        <button id="button_ALL_tranDau" class="btn btn-primary float-end">Tất cả trận đấu</button>
-                        <button id="button_chua_da" class="btn btn-danger float-end me-2">Trận đấu chưa đá</button>
+                        <!-- <button id="button_ALL_tranDau" class="btn btn-primary float-end">Tất cả trận đấu</button>
+                        <button id="button_chua_da" class="btn btn-danger float-end me-2">Trận đấu chưa đá</button> -->
                     </div>
+
                     <div class="card-body">
                         <table id="table">
                             <thead>
                                 <tr>
-                                    <th style="text-align: center;">Mã Trận Đấu</th>
-                                    <th style="text-align: center;">Mã Giải Đấu</th>
-                                    <th style="text-align: center;">Mã Đội 1</th>
-                                    <th style="text-align: center;">Mã Đội 2</th>
+
+                                    <th style="text-align: center;">Giải Đấu</th>
+                                    <th style="text-align: center;">Đội 1</th>
+                                    <th style="text-align: center;">Đội 2</th>
                                     <th style="text-align: center;">Ngày Diễn Ra</th>
                                     <th style="text-align: center;">Giờ Diễn Ra</th>
                                     <th style="text-align: center;">Sân Vận Động</th>
-                                   
-                                    <th style="text-align: center;">Trạng Thái</th>
-                                    <th style="text-align: center;">Mã Vòng Đấu</th>
+
+                                    <!-- <th style="text-align: center;">Trạng Thái</th> -->
+                                    <th style="text-align: center;">Vòng Đấu</th>
                                     <th style="text-align: center;">Kết quả</th>
-                                   
+
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th style="text-align: center;">Mã Trận Đấu</th>
-                                    <th style="text-align: center;">Mã Giải Đấu</th>
-                                    <th style="text-align: center;">Mã Đội 1</th>
-                                    <th style="text-align: center;">Mã Đội 2</th>
+
+                                    <th style="text-align: center;">Giải Đấu</th>
+                                    <th style="text-align: center;">Đội 1</th>
+                                    <th style="text-align: center;">Đội 2</th>
                                     <th style="text-align: center;">Ngày Diễn Ra</th>
                                     <th style="text-align: center;">Giờ Diễn Ra</th>
                                     <th style="text-align: center;">Sân Vận Động</th>
-                                   
-                                    <th style="text-align: center;">Trạng Thái</th>
-                                    <th style="text-align: center;">Mã Vòng Đấu</th>
+
+                                    <!-- <th style="text-align: center;">Trạng Thái</th> -->
+                                    <th style="text-align: center;">Vòng Đấu</th>
                                     <th style="text-align: center;">Kết quả</th>
-                                   
+
                                 </tr>
                             </tfoot>
                             <tbody id="dataTable">
@@ -110,7 +137,7 @@
 
         <div id="modalKetQua" class="modal">
             <div class="modal-content">
-               
+
                 <h5>Sửa kết quả trận đấu</h5>
                 <div id="formKetQua">
 
@@ -132,8 +159,8 @@
                         <label>Đội thắng:</label>
                         <select id="doiThang" required>
                             <option value="">-- Chọn đội thắng --</option>
-                            <option id="optionDoi1" ></option>
-                            <option id="optionDoi2" ></option>
+                            <option id="optionDoi1"></option>
+                            <option id="optionDoi2"></option>
                         </select>
                     </div>
 
@@ -141,7 +168,7 @@
                     <button id="bt_huyThayDoi" type="button" class="btn btn-danger btn-sm">Hủy thay đổi</button>
 
 
-                  
+
                 </div>
             </div>
         </div>

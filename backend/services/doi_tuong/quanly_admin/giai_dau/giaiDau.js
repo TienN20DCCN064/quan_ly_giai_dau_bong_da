@@ -109,6 +109,15 @@ async function handleLuuThayDoi(event) {
     event.preventDefault(); // Ngăn chặn form reload
 
     const form = document.getElementById("inputForm");
+    if (ngayBatDau.value >= ngayKetThuc.value) {
+        alert("Ngày bắt đầu phải bé hơn ngày kết thúc");
+        return;
+    }
+    if (ngayHetDangKy.value >= ngayBatDau.value) {
+        alert("Ngày hết đăng ký phải bé hơn ngày bắt đầu");
+        return;
+    }
+
 
     // Kiểm tra xem form có hợp lệ không
     if (!form.checkValidity()) {

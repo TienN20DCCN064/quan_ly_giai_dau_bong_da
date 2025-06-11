@@ -99,6 +99,22 @@
                     <div class="card-header">
                         <i class="fas fa-table me-1"></i> DANH SÁCH GIẢI ĐẤU
                     </div>
+                    <div style="margin-left: 100px;">
+                        <form:form class="row mb-3" modelAttribute="doiBongTrongBangEntity" action="" method="post">
+                            <div class="col-md-3">
+                                <label class="font-weight-bold">Ngày Bắt Đầu</label>
+                                <input type="date" class="form-control" id="ngayBatDau_chon_viewbody" required />
+                                <script>
+                                    window.addEventListener('DOMContentLoaded', () => {
+                                        const input = document.getElementById("ngayBatDau_chon_viewbody");
+                                        const today = new Date().toISOString().split('T')[0];
+                                        input.value = today;
+                                    });
+                                </script>
+                            </div>
+
+                        </form:form>
+                    </div>
                     <div class="card-body">
                         <table id="table">
                             <thead>
@@ -136,7 +152,7 @@
                         <div id="modalDanhSachCauThu" class="modal" style="display: none;">
                             <div class="modal-content"
                                 style="margin-top: 100px; max-height: calc(100vh - 150px); overflow-y: auto;">
-                                
+
                                 <h5>Danh Sách Cầu Thủ</h5>
                                 <table id="playerTable">
                                     <thead>
