@@ -2,7 +2,7 @@ const congAPI = 4002;
 const congAPI_image = 5000;
 const congAPI_taoTranDau = 5001;
 const congAPI_gmail = 5002; // Phần tạo trận đấu
-const IPv4_Address = "192.168.114.113";
+const IPv4_Address = "192.168.2.97";
 // const linkCongAPI = "http://localhost:" + congAPI + "/api/";
 // ex : http://192.168.1.136:4002/api
 // ex : http://localhost:4002/api

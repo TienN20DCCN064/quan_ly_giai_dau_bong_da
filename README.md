@@ -15,7 +15,14 @@
 ### 🧱 Cài đặt
 
 Mở terminal và chạy:
-    npm install express mysql2 cors
+    npm install express mysql2 cors moment jsonwebtoken
+    python -m ensurepip --default-pip
+    python -m pip install flask
+    python -m pip install flask-cors
+    python -m pip install cloudinary
+
+
+
 
 ##### 🧱 Chạy
 + Chạy sql trên xampp
@@ -24,10 +31,10 @@ Mở terminal và chạy:
         Vào file : backend\services\global\global.js  
         Cập nhật : const IPv4_Address =  "192.168.1.40";
 + Chạy API  
-          Mở terminal và chạy: cd "C:\Users\vanti\Desktop\5_2\6A _ NMCN Phần Mềm_ Châu Văn Vân\DO_AN\quan_ly_tran_dau_mini_app\service"
+          Mở terminal và chạy: cd "C:\Users\vanti\Desktop\tt\quan_ly_tran_dau\service\"
                 node api.js
                 python api_gmail.py
                 python api_image.py
-                api_taoTranDau.py
+                python api_taoTranDau.py
                 
 
