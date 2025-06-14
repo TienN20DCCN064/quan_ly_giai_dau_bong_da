@@ -37,4 +37,5 @@ Mở terminal và chạy:
                 python api_image.py
                 python api_taoTranDau.py
                 
+                <<  Sửa lại 2 file api gmail với image >>
 
