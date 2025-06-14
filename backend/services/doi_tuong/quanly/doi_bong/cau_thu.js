@@ -18,16 +18,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     user_name = GlobalStore.getUsername();
     loadDanhSachViTri();
     await loadDanhSachDoiBong();
-    await viewTbody();
+    
+    
+    document.getElementById("filterDoiBong").value = DoiTuyen.getDoiTuyen_dangChon();
+    viewTbody();
     btnLuuThayDoi.addEventListener("click", handleLuuThayDoi);
-    //btnTaiLaiTrang.addEventListener("click", handleTaiLaiTrang);
 
     document.getElementById("filterDoiBong").addEventListener("change", async function () {
-        //   console.log(gioiTinh_chon_viewbody.value);
-        // maVongDau_chon_viewbody.value = "All";
-        // let data = await hamChung.layDanhSach("doi_bong");
 
-        await viewTbody();
+        viewTbody();
     });
 
 

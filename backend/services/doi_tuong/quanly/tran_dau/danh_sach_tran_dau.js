@@ -58,7 +58,7 @@ async function layKetQua(ma_tran_dau) {
         let doiThang = "";
 
         if (data1kq.ma_doi_thang != null) {
-            const dataDoiThang = await hamChung.layThongTinTheo_ID("doi_bong", data.ma_doi_thang);
+            const dataDoiThang = await hamChung.layThongTinTheo_ID("doi_bong", data1kq.ma_doi_thang);
             doiThang = dataDoiThang.ten_doi_bong;
 
         }
@@ -84,7 +84,9 @@ async function viewTbody(data) {
     );
     data = danhSachTranDau_theoDoiTuyen;
 
-
+    console.log(data);
+    console.log(danhSachTranDau_theoDoiTuyen);
+    
     if (maGiaiDau_chon_viewbody.value !== "All") {
         data = data.filter(item => item.ma_giai_dau === maGiaiDau_chon_viewbody.value);
     }
@@ -147,3 +149,4 @@ async function loadDanhSachGiaiDau_chon_viewbody(maDoiBong) {
         selectElement.appendChild(option);
     }
 }
+
