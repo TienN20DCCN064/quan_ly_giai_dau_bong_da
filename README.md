@@ -3,6 +3,11 @@
 Đây là service backend viết bằng Node.js và MySQL, phục vụ cho Mini App quản lý giải đấu bóng đá. Hướng dẫn dưới đây giúp bạn cài đặt và cấu hình server để chạy trên máy cục bộ và cho phép máy khác trong cùng mạng LAN truy cập được.
 
 ---
+## 🎥 Video demo
+Xem video hướng dẫn tại: [![Video demo](https://img.youtube.com/vi/kNEQzcXxYTs/0.jpg)](https://www.youtube.com/watch?v=kNEQzcXxYTs)
+
+---
+
 
 ## 📦 1. Cài đặt thư viện
 
